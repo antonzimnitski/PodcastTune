@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import ApolloClient, { HttpLink, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
-import App from "./../../ui/App";
+import App from "./../../ui/components/App";
 
 const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")

@@ -1,0 +1,10 @@
+type PodcastPreview {
+  id: String!
+  name: String!
+  artworkUrl: String!
+  itunesUrl: String
+}
+
+type Query {
+  podcastsPreviews: [PodcastPreview]
+}
