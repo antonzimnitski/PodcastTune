@@ -13,10 +13,29 @@ export default {
     }
   },
   PodcastPreview: {
-    id: data => data["id"].attributes["im:id"],
-    name: data => data["im:name"].label,
-    artworkUrl: data => data["im:image"][0].label,
-    itunesUrl: data => data["id"].label,
-    summary: data => (data["summary"] ? data["summary"].label : null)
+    id: data => getId(data),
+    name: data => getName(data),
+    artworkUrl: data => getArtwork(data),
+    itunesUrl: data => getItunesUrl(data),
+    summary: data => getSummary(data)
   }
 };
+
+function getId(data) {
+  return data["id"].attributes["im:id"];
+}
+
+function getName(data) {
+  return data["im:name"].label;
+}
+function getArtwork(data) {
+  return data["im:image"][0].label;
+}
+
+function getItunesUrl(data) {
+  return data["id"].label;
+}
+
+function getSummary(data) {
+  return data["summary"] ? data["summary"].label : null;
+}
