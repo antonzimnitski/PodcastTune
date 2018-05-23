@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query PodcastsPreviews {
-    podcastsPreviews {
+  query PodcastsPreviews($genreId: String!) {
+    podcastsPreviews(genreId: $genreId) {
       id
       name
       artworkUrl

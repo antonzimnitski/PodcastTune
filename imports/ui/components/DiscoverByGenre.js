@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
@@ -12,7 +11,7 @@ class DiscoverByGenre extends Component {
           <div>{podcast.name}</div>
           <img src={podcast.artworkUrl} alt="" />
           <a href={podcast.itunesUrl}>Itunes page</a>
-          <div>{podcast.summary}</div>
+          {podcast.summary ? <div>{podcast.summary}</div> : null}
         </div>
       );
     });
@@ -30,4 +29,12 @@ class DiscoverByGenre extends Component {
   }
 }
 
-export default graphql(fetchPodcastsPreviews)(DiscoverByGenre);
+export default graphql(fetchPodcastsPreviews, {
+  options: props => {
+    return {
+      variables: {
+        genreId: props.match.params.genreId
+      }
+    };
+  }
+})(DiscoverByGenre);

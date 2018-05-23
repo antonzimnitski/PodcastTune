@@ -7,5 +7,5 @@ type PodcastPreview {
 }
 
 extend type Query {
-  podcastsPreviews: [PodcastPreview]
+  podcastsPreviews(genreId: String!): [PodcastPreview]
 }

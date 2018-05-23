@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { graphql } from "react-apollo";
+import { Link } from "react-router-dom";
 
 import fetchGenres from "./../queries/fetchGenres";
 
@@ -7,11 +8,11 @@ class Discover extends Component {
   renderGenres(arr) {
     return (
       <ul>
-        {arr.map(genre => {
+        {arr.map(({ id, name, subgenres }) => {
           return (
-            <li key={genre.id}>
-              {genre.name}
-              {genre.subgenres ? this.renderGenres(genre.subgenres) : null}
+            <li key={id}>
+              <Link to={`discover/${id}`}>{name}</Link>
+              {subgenres ? this.renderGenres(subgenres) : null}
             </li>
           );
         })}
