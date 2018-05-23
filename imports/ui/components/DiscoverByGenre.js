@@ -4,7 +4,7 @@ import { graphql } from "react-apollo";
 
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
 
-class App extends Component {
+class DiscoverByGenre extends Component {
   renderPodcasts() {
     return this.props.data.podcastsPreviews.map(podcast => {
       return (
@@ -24,11 +24,10 @@ class App extends Component {
     }
     return (
       <div>
-        <h1>FmCast app</h1>
         <div>{this.renderPodcasts()}</div>
       </div>
     );
   }
 }
 
-export default graphql(fetchPodcastsPreviews)(App);
+export default graphql(fetchPodcastsPreviews)(DiscoverByGenre);

@@ -1,0 +1,9 @@
+type Genre {
+  id: String!
+  name: String!
+  subgenres: [Genre]
+}
+
+type Query {
+  genres: [Genre]
+}

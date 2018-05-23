@@ -5,15 +5,18 @@ export default {
     podcastsPreviews(obj, args) {
       return axios
         .get(
-          "https://rss.itunes.apple.com/api/v1/us/podcasts/top-podcasts/all/100/explicit.json"
+          "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppodcasts/sf=143441/limit=100/genre=1402/json"
         )
         .then(res => {
-          return res.data.feed.results;
+          return res.data.feed.entry;
         });
     }
   },
   PodcastPreview: {
-    artworkUrl: podcast => podcast.artworkUrl100,
-    itunesUrl: podcast => podcast.url
+    id: data => data["id"].attributes["im:id"],
+    name: data => data["im:name"].label,
+    artworkUrl: data => data["im:image"][0].label,
+    itunesUrl: data => data["id"].label,
+    summary: data => data["summary"].label
   }
 };

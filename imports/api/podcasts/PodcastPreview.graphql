@@ -3,8 +3,9 @@ type PodcastPreview {
   name: String!
   artworkUrl: String!
   itunesUrl: String
+  summary: String
 }
 
-type Query {
+extend type Query {
   podcastsPreviews: [PodcastPreview]
 }

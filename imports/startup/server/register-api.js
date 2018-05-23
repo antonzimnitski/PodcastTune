@@ -4,10 +4,14 @@ import merge from "lodash/merge";
 
 import PodcastsPreviewsSchema from "./../../api/podcasts/PodcastPreview.graphql";
 import PodcastsPreviewsResolvers from "./../../api/podcasts/resolvers";
-//dadas
-const typeDefs = [PodcastsPreviewsSchema];
 
-const resolvers = merge(PodcastsPreviewsResolvers);
+import GenresSchema from "./../../api/genres/Genre.graphql";
+import GenresResolvers from "./../../api/genres/resolvers";
+
+//dad
+const typeDefs = [GenresSchema, PodcastsPreviewsSchema];
+
+const resolvers = merge(PodcastsPreviewsResolvers, GenresResolvers);
 
 const schema = makeExecutableSchema({
   typeDefs,
