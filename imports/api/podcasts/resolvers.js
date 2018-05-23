@@ -5,7 +5,7 @@ export default {
     podcastsPreviews(obj, { genreId }) {
       return axios
         .get(
-          `http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppodcasts/sf=143441/limit=100/genre=${genreId}/json`
+          `https://itunes.apple.com/us/rss/topaudiopodcasts/limit=100/genre=${genreId}/json`
         )
         .then(res => {
           return res.data.feed.entry;
@@ -17,7 +17,8 @@ export default {
     name: data => getName(data),
     artworkUrl: data => getArtwork(data),
     itunesUrl: data => getItunesUrl(data),
-    summary: data => getSummary(data)
+    summary: data => getSummary(data),
+    feedUrl: data => getFeedUrl(data, getId(data))
   }
 };
 
@@ -38,4 +39,9 @@ function getItunesUrl(data) {
 
 function getSummary(data) {
   return data["summary"] ? data["summary"].label : null;
+}
+function getFeedUrl(data, id) {
+  return axios
+    .get(`https://itunes.apple.com/lookup?id=${id}`)
+    .then(res => res.data.results[0].feedUrl);
 }

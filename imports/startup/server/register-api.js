@@ -8,7 +8,7 @@ import PodcastsPreviewsResolvers from "./../../api/podcasts/resolvers";
 import GenresSchema from "./../../api/genres/Genre.graphql";
 import GenresResolvers from "./../../api/genres/resolvers";
 
-//daddsda
+//daddsdazczxds
 const typeDefs = [GenresSchema, PodcastsPreviewsSchema];
 
 const resolvers = merge(PodcastsPreviewsResolvers, GenresResolvers);
