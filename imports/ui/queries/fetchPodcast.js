@@ -5,6 +5,9 @@ export default gql`
     podcast(podcastId: $podcastId) {
       id
       title
+      image
+      link
+      author
       summary
       feed {
         title

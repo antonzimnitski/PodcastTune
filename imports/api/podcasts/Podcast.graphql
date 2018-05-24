@@ -1,6 +1,9 @@
 type Podcast {
   id: String!
   title: String
+  image: String
+  link: String
+  author: String
   summary: String
   feed: [Episode]
 }

@@ -7,10 +7,14 @@ import fetchPodcast from "./../queries/fetchPodcast";
 class PodcastPage extends Component {
   renderPodcast() {
     const { podcast } = this.props.data;
+    console.log(podcast);
     return (
       <div>
         <p>{podcast.title}</p>
         <p>{podcast.summary}</p>
+        <p>{podcast.image}</p>
+        <p>{podcast.link}</p>
+        <p>{podcast.author}</p>
         <ul>
           {podcast.feed.map(episode => {
             const unixTime = moment(episode.pubDate).unix();

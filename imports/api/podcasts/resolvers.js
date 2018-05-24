@@ -1,4 +1,5 @@
 import axios from "axios";
+import find from "lodash/find";
 import X2JS from "x2js";
 
 export default {
@@ -16,7 +17,9 @@ export default {
       // console.log(data);
       return "id";
     },
-    feed: data => data.item
+    feed: data => data.item,
+    image: data => findProperty(data.image, "url"),
+    link: data => findProperty(data.image, "link")
   }
 };
 
@@ -29,4 +32,8 @@ function getFeedUrl(podcastId) {
 function xml2json(xml) {
   const x2js = new X2JS();
   return x2js.xml2js(xml);
+}
+
+function findProperty(data, property) {
+  return Array.isArray(data) ? find(data, property)[property] : data;
 }
