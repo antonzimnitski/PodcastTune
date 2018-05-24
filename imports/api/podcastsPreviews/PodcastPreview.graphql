@@ -4,7 +4,6 @@ type PodcastPreview {
   artworkUrl: String!
   itunesUrl: String
   summary: String
-  feedUrl: String!
 }
 
 extend type Query {

@@ -1,0 +1,10 @@
+type Podcast {
+  id: String!
+  title: String
+  summary: String
+  feed: [Episode]
+}
+
+extend type Query {
+  podcast(podcastId: String!): Podcast
+}

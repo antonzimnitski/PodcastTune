@@ -2,16 +2,32 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-import PodcastsPreviewsSchema from "./../../api/podcasts/PodcastPreview.graphql";
-import PodcastsPreviewsResolvers from "./../../api/podcasts/resolvers";
+//daddsdazc7465vxczssdascvcxvxcvxc
+import PodcastsPreviewsSchema from "./../../api/podcastsPreviews/PodcastPreview.graphql";
+import PodcastsPreviewsResolvers from "./../../api/podcastsPreviews/resolvers";
 
 import GenresSchema from "./../../api/genres/Genre.graphql";
 import GenresResolvers from "./../../api/genres/resolvers";
 
-//daddsdazczxds
-const typeDefs = [GenresSchema, PodcastsPreviewsSchema];
+import PodcastSchema from "./../../api/podcasts/Podcast.graphql";
+import PodcastResolvers from "./../../api/podcasts/resolvers";
 
-const resolvers = merge(PodcastsPreviewsResolvers, GenresResolvers);
+import EpisodeSchema from "./../../api/episodes/Episode.graphql";
+import EpisodeResolvers from "./../../api/episodes/resolvers";
+
+const typeDefs = [
+  GenresSchema,
+  PodcastsPreviewsSchema,
+  PodcastSchema,
+  EpisodeSchema
+];
+
+const resolvers = merge(
+  PodcastsPreviewsResolvers,
+  GenresResolvers,
+  PodcastResolvers,
+  EpisodeResolvers
+);
 
 const schema = makeExecutableSchema({
   typeDefs,

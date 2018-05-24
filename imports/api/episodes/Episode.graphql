@@ -1,0 +1,8 @@
+type Episode {
+  title: String!
+  pubDate: String
+  description: String
+  duration: String
+  mediaUrl: String!
+  summary: String
+}

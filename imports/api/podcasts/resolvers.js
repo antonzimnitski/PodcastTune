@@ -1,47 +1,32 @@
 import axios from "axios";
+import X2JS from "x2js";
 
 export default {
   Query: {
-    podcastsPreviews(obj, { genreId }) {
-      return axios
-        .get(
-          `https://itunes.apple.com/us/rss/topaudiopodcasts/limit=100/genre=${genreId}/json`
-        )
-        .then(res => {
-          return res.data.feed.entry;
-        });
+    async podcast(obj, { podcastId }) {
+      const feedUrl = await getFeedUrl(podcastId);
+      return await axios
+        .get(feedUrl)
+        .then(res => xml2json(res.data))
+        .then(res => res.rss.channel);
     }
   },
-  PodcastPreview: {
-    id: data => getId(data),
-    name: data => getName(data),
-    artworkUrl: data => getArtwork(data),
-    itunesUrl: data => getItunesUrl(data),
-    summary: data => getSummary(data),
-    feedUrl: data => getFeedUrl(data, getId(data))
+  Podcast: {
+    id: data => {
+      // console.log(data);
+      return "id";
+    },
+    feed: data => data.item
   }
 };
 
-function getId(data) {
-  return data["id"].attributes["im:id"];
-}
-
-function getName(data) {
-  return data["im:name"].label;
-}
-function getArtwork(data) {
-  return data["im:image"][0].label;
-}
-
-function getItunesUrl(data) {
-  return data["id"].label;
-}
-
-function getSummary(data) {
-  return data["summary"] ? data["summary"].label : null;
-}
-function getFeedUrl(data, id) {
+function getFeedUrl(podcastId) {
   return axios
-    .get(`https://itunes.apple.com/lookup?id=${id}`)
+    .get(`https://itunes.apple.com/lookup?id=${podcastId}`)
     .then(res => res.data.results[0].feedUrl);
+}
+
+function xml2json(xml) {
+  const x2js = new X2JS();
+  return x2js.xml2js(xml);
 }

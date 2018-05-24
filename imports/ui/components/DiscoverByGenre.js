@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { graphql } from "react-apollo";
 
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
@@ -12,6 +13,7 @@ class DiscoverByGenre extends Component {
           <img src={podcast.artworkUrl} alt="" />
           <a href={podcast.itunesUrl}>Itunes page</a>
           {podcast.summary ? <div>{podcast.summary}</div> : null}
+          <Link to={`/podcasts/${podcast.id}`}>To podcast</Link>
         </div>
       );
     });
