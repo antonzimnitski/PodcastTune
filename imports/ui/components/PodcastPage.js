@@ -7,7 +7,6 @@ import fetchPodcast from "./../queries/fetchPodcast";
 class PodcastPage extends Component {
   renderPodcast() {
     const { podcast } = this.props.data;
-    console.log(podcast);
     return (
       <div>
         <p>{podcast.title}</p>

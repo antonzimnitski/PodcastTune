@@ -17,6 +17,7 @@ export default {
       // console.log(data);
       return "id";
     },
+    author: data => checkForDuplicates(data.author),
     feed: data => data.item,
     image: data => findProperty(data.image, "url"),
     link: data => findProperty(data.image, "link")
@@ -36,4 +37,8 @@ function xml2json(xml) {
 
 function findProperty(data, property) {
   return Array.isArray(data) ? find(data, property)[property] : data;
+}
+
+function checkForDuplicates(data) {
+  return Array.isArray(data) ? data[0].toString() : data;
 }
