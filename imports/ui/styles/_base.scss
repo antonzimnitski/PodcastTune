@@ -1,0 +1,31 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+.app {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100vw;
+}
+
+body {
+  background: $body-background-color;
+  color: $body-default-color;
+  font-family: $body-default-font-family;
+  font-size: $base-font-size;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: $body-default-color;
+  text-decoration: none;
+}

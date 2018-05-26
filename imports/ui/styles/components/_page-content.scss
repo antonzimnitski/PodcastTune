@@ -1,0 +1,19 @@
+.page-content {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row;
+}
+
+.page-content__sidebar {
+  width: $page-content-sidebar-width;
+  height: 100vh;
+  flex-shrink: 0;
+  background: $sidebar-bg;
+  color: $sidebar-color;
+}
+
+.page-content__main {
+  overflow-y: scroll;
+  flex: 1 1 auto;
+}

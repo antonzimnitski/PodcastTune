@@ -10,15 +10,19 @@ import DiscoverByGenre from "./DiscoverByGenre";
 const App = () => {
   return (
     <BrowserRouter>
-      <div>
-        <SideBar />
-        <Switch>
-          <Route path="/" exact component={Podcasts} />
-          <Route path="/podcasts/:podcastId" component={PodcastPage} />
-          <Route path="/discover" exact component={Discover} />
-          <Route path="/discover/:genreId" component={DiscoverByGenre} />
-          <Redirect to="/" />
-        </Switch>
+      <div className="page-content">
+        <div className="page-content__sidebar">
+          <SideBar />
+        </div>
+        <div className="page-content__main">
+          <Switch>
+            <Route path="/" exact component={Podcasts} />
+            <Route path="/podcasts/:podcastId" component={PodcastPage} />
+            <Route path="/discover" exact component={Discover} />
+            <Route path="/discover/:genreId" component={DiscoverByGenre} />
+            <Redirect to="/" />
+          </Switch>
+        </div>
       </div>
     </BrowserRouter>
   );

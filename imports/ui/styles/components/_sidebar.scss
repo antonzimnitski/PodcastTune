@@ -1,0 +1,19 @@
+.sidebar__logo {
+  display: block;
+  margin: 2 * $sidebar-spacing;
+}
+
+.sidebar__link {
+  display: block;
+  color: inherit;
+  transition: color 0.3s ease;
+  font-size: $sidebar-font-size;
+  line-height: $sidebar-font-size;
+  padding: $sidebar-spacing 0 $sidebar-spacing 3 * $sidebar-spacing;
+  text-align: left;
+}
+
+.sidebar__link--selected,
+.sidebar__link:hover {
+  color: $sidebar-color-active;
+}
