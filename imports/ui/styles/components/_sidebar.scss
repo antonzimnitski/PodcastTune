@@ -1,6 +1,6 @@
 .sidebar__logo {
   display: block;
-  margin: 2 * $sidebar-spacing;
+  margin: $space;
 }
 
 .sidebar__link {
@@ -9,7 +9,7 @@
   transition: color 0.3s ease;
   font-size: $sidebar-font-size;
   line-height: $sidebar-font-size;
-  padding: $sidebar-spacing 0 $sidebar-spacing 3 * $sidebar-spacing;
+  padding: $small-space 0 $small-space $large-space;
   text-align: left;
 }
 

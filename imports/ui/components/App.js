@@ -16,9 +16,17 @@ const App = () => {
         </div>
         <div className="page-content__main">
           <Switch>
-            <Route path="/" exact component={Podcasts} />
+            <Route
+              path="/"
+              exact
+              component={() => <Podcasts title="Podcasts" />}
+            />
             <Route path="/podcasts/:podcastId" component={PodcastPage} />
-            <Route path="/discover" exact component={Discover} />
+            <Route
+              path="/discover"
+              exact
+              component={() => <Discover title="Discover" />}
+            />
             <Route path="/discover/:genreId" component={DiscoverByGenre} />
             <Redirect to="/" />
           </Switch>

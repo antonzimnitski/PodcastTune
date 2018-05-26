@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { graphql } from "react-apollo";
 
+import InnerHeader from "./InnerHeader";
+import Loader from "./helpers/Loader";
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
 
 class DiscoverByGenre extends Component {
@@ -20,12 +22,16 @@ class DiscoverByGenre extends Component {
   }
 
   render() {
-    if (this.props.data.loading) {
-      return <div>Loading...</div>;
-    }
+    const content = this.props.data.loading ? (
+      <Loader />
+    ) : (
+      <div>{this.renderPodcasts()}</div>
+    );
+
     return (
       <div>
-        <div>{this.renderPodcasts()}</div>
+        <InnerHeader title="Discover" />
+        {content}
       </div>
     );
   }

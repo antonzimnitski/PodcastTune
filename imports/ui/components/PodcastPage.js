@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import moment from "moment";
 import { graphql } from "react-apollo";
 
+import InnerHeader from "./InnerHeader";
+import Loader from "./helpers/Loader";
 import fetchPodcast from "./../queries/fetchPodcast";
 
 class PodcastPage extends Component {
@@ -32,10 +34,14 @@ class PodcastPage extends Component {
   }
 
   render() {
-    if (this.props.data.loading) {
-      return <div>Loading...</div>;
-    }
-    return <div>{this.renderPodcast()}</div>;
+    const content = this.props.data.loading ? <Loader /> : this.renderPodcast();
+
+    return (
+      <div>
+        <InnerHeader />
+        {content}
+      </div>
+    );
   }
 }
 

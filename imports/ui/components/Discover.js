@@ -2,31 +2,37 @@ import React, { Component } from "react";
 import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
 
+import InnerHeader from "./InnerHeader";
+import Loader from "./helpers/Loader";
 import fetchGenres from "./../queries/fetchGenres";
 
 class Discover extends Component {
   renderGenres(arr) {
     return (
-      <ul>
+      <div className="discover__group">
         {arr.map(({ id, name, subgenres }) => {
           return (
-            <li key={id}>
+            <div key={id}>
               <Link to={`discover/${id}`}>{name}</Link>
               {subgenres ? this.renderGenres(subgenres) : null}
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     );
   }
 
   render() {
-    if (this.props.data.loading) {
-      return <div>Loading...</div>;
-    }
+    const content = this.props.data.loading ? (
+      <Loader />
+    ) : (
+      <div>{this.renderGenres(this.props.data.genres)}</div>
+    );
+
     return (
       <div>
-        <div>{this.renderGenres(this.props.data.genres)}</div>
+        <InnerHeader title={this.props.title} />
+        {content}
       </div>
     );
   }

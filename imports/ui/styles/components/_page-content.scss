@@ -1,6 +1,6 @@
 .page-content {
   display: flex;
-  width: 100vw;
+  width: $site-width;
   height: 100vh;
   flex-direction: row;
 }
@@ -14,6 +14,7 @@
 }
 
 .page-content__main {
+  padding: $space;
   overflow-y: scroll;
-  flex: 1 1 auto;
+  width: $page-content-main-width;
 }
