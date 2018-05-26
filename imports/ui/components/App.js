@@ -1,34 +1,27 @@
-import React, { Component } from "react";
-import gql from "graphql-tag";
-import { graphql } from "react-apollo";
+import React from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
+import SideBar from "./SideBar";
+import Podcasts from "./Podcasts";
+import PodcastPage from "./PodcastPage";
+import Discover from "./Discover";
+import DiscoverByGenre from "./DiscoverByGenre";
 
-class App extends Component {
-  renderPodcasts() {
-    return this.props.data.podcastsPreviews.map(podcast => {
-      return (
-        <div key={podcast.id}>
-          <div>{podcast.name}</div>
-          <img src={podcast.artworkUrl} alt="" />
-          <a href={podcast.itunesUrl}>Itunes page</a>
-          <div>{podcast.summary}</div>
-        </div>
-      );
-    });
-  }
-
-  render() {
-    if (this.props.data.loading) {
-      return <div>Loading...</div>;
-    }
-    return (
+const App = () => {
+  return (
+    <BrowserRouter>
       <div>
-        <h1>FmCast app</h1>
-        <div>{this.renderPodcasts()}</div>
+        <SideBar />
+        <Switch>
+          <Route path="/" exact component={Podcasts} />
+          <Route path="/podcasts/:podcastId" component={PodcastPage} />
+          <Route path="/discover" exact component={Discover} />
+          <Route path="/discover/:genreId" component={DiscoverByGenre} />
+          <Redirect to="/" />
+        </Switch>
       </div>
-    );
-  }
-}
+    </BrowserRouter>
+  );
+};
 
-export default graphql(fetchPodcastsPreviews)(App);
+export default App;
