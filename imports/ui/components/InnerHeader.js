@@ -3,9 +3,15 @@ import { history } from "react-router-dom";
 
 const InnerHeader = ({ title }) => {
   return (
-    <div>
-      {title ? <h1>{title}</h1> : null}
-      <button onClick={() => this.history.back()}>Go Back</button>
+    <div className="inner-header">
+      {title ? <h1 className="inner-header__title">{title}</h1> : null}
+      <div
+        className="inner-header__back-btn"
+        onClick={() => this.history.back()}
+      >
+        <div className="inner-header__back-arrow" />
+        Go Back
+      </div>
     </div>
   );
 };
