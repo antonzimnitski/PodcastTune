@@ -2,10 +2,10 @@ import axios from "axios";
 
 export default {
   Query: {
-    podcastsPreviews(obj, { genreId }) {
+    podcastsPreviews(obj, { genreId, limit = 100 }) {
       return axios
         .get(
-          `https://itunes.apple.com/us/rss/topaudiopodcasts/limit=100/genre=${genreId}/json`
+          `https://itunes.apple.com/us/rss/topaudiopodcasts/limit=${limit}/genre=${genreId}/json`
         )
         .then(res => {
           return res.data.feed.entry;
@@ -16,7 +16,6 @@ export default {
     id: data => getId(data),
     name: data => getName(data),
     artworkUrl: data => getArtwork(data),
-    itunesUrl: data => getItunesUrl(data),
     summary: data => getSummary(data)
   }
 };
@@ -29,11 +28,7 @@ function getName(data) {
   return data["im:name"].label;
 }
 function getArtwork(data) {
-  return data["im:image"][0].label;
-}
-
-function getItunesUrl(data) {
-  return data["id"].label;
+  return data["im:image"][data["im:image"].length - 1].label;
 }
 
 function getSummary(data) {

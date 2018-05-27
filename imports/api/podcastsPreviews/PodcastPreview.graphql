@@ -2,10 +2,9 @@ type PodcastPreview {
   id: String!
   name: String!
   artworkUrl: String!
-  itunesUrl: String
   summary: String
 }
 
 extend type Query {
-  podcastsPreviews(genreId: String!): [PodcastPreview]
+  podcastsPreviews(genreId: String!, limit: Int): [PodcastPreview]
 }
