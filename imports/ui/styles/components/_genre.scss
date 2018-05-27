@@ -1,0 +1,36 @@
+.genre-nav {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: $genre-nav-height;
+}
+
+.genre-nav__group {
+  width: calc(100% / 3);
+  margin-bottom: $space;
+}
+
+.genre-nav__group-title {
+  font-size: $genre-title-font-size;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 30rem;
+  display: block;
+  margin-bottom: $genre-spacing;
+}
+
+.genre-nav__subgenre-group {
+  margin-left: $space;
+}
+
+.genre-nav__subgenre-item {
+  display: block;
+  padding-bottom: $genre-spacing;
+}
+
+.genre-nav__group-title:hover,
+.genre-nav__subgenre-item:hover {
+  text-decoration: underline;
+}

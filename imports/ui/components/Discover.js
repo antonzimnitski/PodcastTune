@@ -9,24 +9,46 @@ import fetchGenres from "./../queries/fetchGenres";
 class Discover extends Component {
   renderGenres(arr) {
     return (
-      <div className="discover__group">
+      <ul className="genre-nav">
         {arr.map(({ id, name, subgenres }) => {
           return (
-            <div key={id}>
-              <Link to={`discover/${id}`}>{name}</Link>
-              {subgenres ? this.renderGenres(subgenres) : null}
-            </div>
+            <li className="genre-nav__group" key={id}>
+              <Link
+                title={name}
+                className="genre-nav__group-title"
+                to={`discover/${id}`}
+              >
+                {name}
+              </Link>
+              {subgenres.length !== 0 ? (
+                <ul className="genre-nav__subgenre-group">
+                  {subgenres.map(el => {
+                    return (
+                      <li key={el.id}>
+                        <Link
+                          className="genre-nav__subgenre-item"
+                          to={`discover/${el.id}`}
+                        >
+                          {el.name}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : null}
+            </li>
           );
         })}
-      </div>
+      </ul>
     );
   }
+  // {subgenres ? this.renderGenres(subgenres) : null}
 
   render() {
     const content = this.props.data.loading ? (
       <Loader />
     ) : (
-      <div>{this.renderGenres(this.props.data.genres)}</div>
+      this.renderGenres(this.props.data.genres)
     );
 
     return (
