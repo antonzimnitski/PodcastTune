@@ -1,0 +1,28 @@
+.button {
+  display: inline-block;
+  background: $button-bg;
+  color: $button-color;
+  border: none;
+  cursor: pointer;
+  font-size: $base-font-size;
+  line-height: 1.2;
+  padding: $small-space;
+  text-transform: uppercase;
+  border-radius: 10rem;
+  outline: none;
+}
+
+.button--load {
+  display: block;
+  margin: 0 auto;
+}
+
+.button:hover {
+  transform: translateY(-0.3rem);
+  box-shadow: 0 $button-spacing (2 * $button-spacing) $button-shadow-color;
+}
+
+.button:active {
+  transform: translateY(-0.1rem);
+  box-shadow: 0 (0.5 * $button-spacing) $button-spacing $button-shadow-color;
+}

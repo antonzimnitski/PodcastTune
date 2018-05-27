@@ -3,10 +3,11 @@ $dark-blue: #1c203c;
 $light-blue: #77d0ff;
 $dark-gray: #626262;
 $white: #fafafa;
+$black: #333;
 
 //Body
 $body-background-color: $white;
-$body-default-color: #333;
+$body-default-color: $black;
 $body-default-font-family: Helvetica, Arial, sans-serif;
 
 //Spacing
@@ -21,6 +22,12 @@ $base-font-size: 1.4rem;
 //Page Content
 $page-content-sidebar-width: 24rem;
 $page-content-main-width: calc(#{$site-width} - #{$page-content-sidebar-width});
+
+//Button
+$button-bg: $light-blue;
+$button-color: $white;
+$button-shadow-color: rgba($black, 0.2);
+$button-spacing: $small-space;
 
 // Sidebar
 $sidebar-bg: $dark-blue;
