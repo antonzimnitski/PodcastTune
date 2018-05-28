@@ -18,3 +18,8 @@
   overflow-y: scroll;
   width: $page-content-main-width;
 }
+
+.main {
+  max-width: $main-width;
+  margin: 0 auto;
+}

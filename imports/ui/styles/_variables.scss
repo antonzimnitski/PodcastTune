@@ -22,6 +22,7 @@ $base-font-size: 1.4rem;
 //Page Content
 $page-content-sidebar-width: 24rem;
 $page-content-main-width: calc(#{$site-width} - #{$page-content-sidebar-width});
+$main-width: 120rem;
 
 //Button
 $button-bg: $light-blue;
@@ -34,6 +35,10 @@ $sidebar-bg: $dark-blue;
 $sidebar-color: $white;
 $sidebar-color-active: $light-blue;
 $sidebar-font-size: 2rem;
+
+//Preview
+$preview-title-font-size: 2.5rem;
+$preview-desc-font-size: 1.6rem;
 
 //Inner header
 $title-font-size: 3.5rem;

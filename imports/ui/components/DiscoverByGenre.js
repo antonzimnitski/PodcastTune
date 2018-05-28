@@ -25,12 +25,23 @@ class DiscoverByGenre extends Component {
   renderPodcasts() {
     return this.props.data.podcastsPreviews.map(podcast => {
       return (
-        <div key={podcast.id}>
-          <div>{podcast.name}</div>
-          <img src={podcast.artworkUrl} alt="" />
-          {podcast.summary ? <div>{podcast.summary}</div> : null}
-          <Link to={`/podcasts/${podcast.id}`}>To podcast</Link>
-        </div>
+        <Link to={`/podcasts/${podcast.id}`} key={podcast.id}>
+          <div className="preview">
+            <div>
+              <img
+                className="preview__image"
+                src={podcast.artworkUrl}
+                alt={`${podcast.name} - logo`}
+              />
+            </div>
+            <div className="preview__info">
+              <div className="preview__title">{podcast.name}</div>
+              {podcast.summary ? (
+                <div className="preview__description">{podcast.summary}</div>
+              ) : null}
+            </div>
+          </div>
+        </Link>
       );
     });
   }

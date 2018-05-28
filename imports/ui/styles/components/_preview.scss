@@ -1,0 +1,38 @@
+.preview {
+  border: 0.2rem solid transparent;
+  display: flex;
+  height: 17rem;
+  width: 100%;
+  margin-bottom: $space;
+  transition: all 0.3s ease;
+}
+
+.preview:hover {
+  border-color: $light-blue;
+  transform: scale(1.02);
+}
+
+.preview__image {
+  height: 100%;
+}
+
+.preview__info {
+  margin: $small-space $space;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.preview__title {
+  font-size: $preview-title-font-size;
+  line-height: 1.2;
+  margin-bottom: $small-space;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.preview__description {
+  width: 100%;
+  font-size: $preview-desc-font-size;
+  line-height: 1.4;
+}
