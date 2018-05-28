@@ -4,7 +4,7 @@ export default {
     pubDate: data => data.pubDate,
     description: data => data.description,
     duration: data => data.duration,
-    mediaUrl: data => data.enclosure._url,
+    mediaUrl: data => (data.enclosure ? data.enclosure._url : null),
     summary: data => data.summary
   }
 };

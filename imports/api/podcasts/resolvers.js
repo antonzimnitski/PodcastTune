@@ -1,6 +1,7 @@
 import axios from "axios";
 import find from "lodash/find";
 import X2JS from "x2js";
+import IdUrlPairs from "./podcasts";
 
 export default {
   Query: {
@@ -14,7 +15,6 @@ export default {
   },
   Podcast: {
     id: data => {
-      // console.log(data);
       return "id";
     },
     author: data => checkForDuplicates(data.author),
@@ -25,9 +25,23 @@ export default {
 };
 
 function getFeedUrl(podcastId) {
-  return axios
-    .get(`https://itunes.apple.com/lookup?id=${podcastId}`)
-    .then(res => res.data.results[0].feedUrl);
+  const pair = IdUrlPairs.findOne({ podcastId });
+
+  if (!pair) {
+    return axios
+      .get(`https://itunes.apple.com/lookup?id=${podcastId}`)
+      .then(res => {
+        const feedUrl = res.data.results[0].feedUrl;
+        IdUrlPairs.insert({
+          podcastId,
+          feedUrl
+        });
+
+        return feedUrl;
+      });
+  }
+
+  return pair.feedUrl;
 }
 
 function xml2json(xml) {

@@ -3,6 +3,6 @@ type Episode {
   pubDate: String
   description: String
   duration: String
-  mediaUrl: String!
+  mediaUrl: String
   summary: String
 }
