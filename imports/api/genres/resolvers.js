@@ -5,13 +5,8 @@ export default {
   Query: {
     genres() {
       return axios
-        .get(
-          "https://itunes.apple.com/WebObjects/MZStoreServices.woa/ws/genres?id=26"
-        )
-        .then(res => values(res.data[26]["subgenres"]));
+        .get("https://podcast-rest-api.herokuapp.com/api/genres")
+        .then(res => res.data.genres);
     }
-  },
-  Genre: {
-    subgenres: genre => values(genre["subgenres"])
   }
 };
