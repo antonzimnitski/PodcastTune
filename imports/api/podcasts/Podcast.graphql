@@ -1,11 +1,12 @@
 type Podcast {
-  id: String!
+  podcastId: String!
+  feedUrl: String
   title: String
-  image: String
-  link: String
   author: String
+  website: String
+  description: String
   summary: String
-  feed: [Episode]
+  episodes: [Episode]
 }
 
 extend type Query {

@@ -2,7 +2,7 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-//da342ddsdazc746bxcvczcxvvcxxcvxc
+//da342ddadsdazc746bxcvczcxvcxzvcxxcvxc
 import PodcastsPreviewsSchema from "./../../api/podcastsPreviews/PodcastPreview.graphql";
 import PodcastsPreviewsResolvers from "./../../api/podcastsPreviews/resolvers";
 
@@ -13,7 +13,7 @@ import PodcastSchema from "./../../api/podcasts/Podcast.graphql";
 import PodcastResolvers from "./../../api/podcasts/resolvers";
 
 import EpisodeSchema from "./../../api/episodes/Episode.graphql";
-import EpisodeResolvers from "./../../api/episodes/resolvers";
+// import EpisodeResolvers from "./../../api/episodes/resolvers";
 
 const typeDefs = [
   GenresSchema,
@@ -25,8 +25,7 @@ const typeDefs = [
 const resolvers = merge(
   PodcastsPreviewsResolvers,
   GenresResolvers,
-  PodcastResolvers,
-  EpisodeResolvers
+  PodcastResolvers
 );
 
 const schema = makeExecutableSchema({

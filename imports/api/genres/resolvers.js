@@ -1,5 +1,4 @@
 import axios from "axios";
-import values from "lodash/values";
 
 export default {
   Query: {
