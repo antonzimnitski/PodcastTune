@@ -7,19 +7,8 @@ export default {
       return axios
         .get(`https://podcast-rest-api.herokuapp.com/api/genres/${genreId}`)
         .then(res => {
-          writeTofile(res.data);
           return res.data.previews;
         });
     }
   }
 };
-
-function writeTofile(data) {
-  fs.writeFile(
-    "C:/Web/data/data-from-api.json",
-    JSON.stringify(data),
-    (err, res) => {
-      if (!err) console.log("HELLLLLLLLLp");
-    }
-  );
-}
