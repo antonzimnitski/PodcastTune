@@ -1,0 +1,59 @@
+.feed {
+  margin-top: $space;
+}
+
+.episode {
+  display: flex;
+  border-bottom: 0.1rem solid $dark-gray;
+  width: 100%;
+  height: 7rem;
+  transition: all 0.2s ease;
+  align-items: center;
+}
+
+.episode:hover {
+  color: $light-blue;
+}
+
+.episode__title {
+  width: 70%;
+  padding-right: $space;
+}
+
+.episode__title p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.episode__controls {
+  margin-left: auto;
+  width: 15%;
+}
+
+.episode__pub-date {
+  width: 15%;
+}
+
+.controls__play {
+  fill: $light-blue;
+  width: 3rem;
+}
+
+.controls__play:hover {
+  transform: scale(1.2);
+}
+
+.controls__play .circle {
+  fill: $white;
+}
+
+.controls__play:hover .circle {
+  fill: $light-blue;
+}
+
+.controls__play:hover .icon {
+  fill: $white;
+}

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import moment from "moment";
 import { graphql } from "react-apollo";
 
 import InnerHeader from "./InnerHeader";
+import Feed from "./Feed";
 import Loader from "./helpers/Loader";
 import fetchPodcast from "./../queries/fetchPodcast";
 
@@ -31,13 +31,18 @@ class PodcastPage extends Component {
                 {podcast.author}
               </a>
             </h2>
-            <p className="podcast__description">
-              {podcast.description || podcast.summary}
-            </p>
+            <p
+              className="podcast__description"
+              dangerouslySetInnerHTML={{
+                __html: podcast.description || podcast.summary
+              }}
+            />
           </div>
         </div>
 
-        <ul>
+        <Feed episodes={podcast.episodes} />
+
+        {/* <ul>
           {podcast.episodes.map(episode => {
             if (!episode) return;
             const unixTime = moment(episode.pubDate).unix();
@@ -52,7 +57,7 @@ class PodcastPage extends Component {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
       </div>
     );
   }
