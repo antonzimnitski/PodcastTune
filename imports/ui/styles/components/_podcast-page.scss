@@ -1,0 +1,34 @@
+.podcast {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.podcast__header {
+  display: flex;
+}
+
+.podcast__image {
+  width: $podcast-image-size;
+  height: $podcast-image-size;
+  margin-right: $space;
+}
+
+.podcast__title {
+  font-size: $podcast-title;
+  line-height: 1.2;
+  letter-spacing: -0.1rem;
+}
+
+.podcast__link {
+  font-size: 1.6rem;
+  color: $dark-gray;
+}
+
+.podcast__link:hover {
+  text-decoration: underline;
+}
+
+.podcast__description {
+  margin-top: $small-space;
+}

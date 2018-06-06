@@ -6,6 +6,7 @@ type Podcast {
   website: String
   description: String
   summary: String
+  artwork: String
   episodes: [Episode]
 }
 

@@ -3,17 +3,20 @@ import gql from "graphql-tag";
 export default gql`
   query Podcast($podcastId: String!) {
     podcast(podcastId: $podcastId) {
-      id
+      podcastId
+      feedUrl
       title
-      image
-      link
       author
+      website
+      description
       summary
-      feed {
+      artwork
+      episodes {
         title
-        pubDate
-        duration
+        description
         mediaUrl
+        pubDate
+        linkToEpisode
       }
     }
   }

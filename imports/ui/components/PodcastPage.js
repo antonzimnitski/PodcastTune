@@ -9,15 +9,37 @@ import fetchPodcast from "./../queries/fetchPodcast";
 class PodcastPage extends Component {
   renderPodcast() {
     const { podcast } = this.props.data;
+    console.log(podcast);
     return (
-      <div>
-        <p>{podcast.title}</p>
-        <p>{podcast.summary}</p>
-        <p>{podcast.image}</p>
-        <p>{podcast.link}</p>
-        <p>{podcast.author}</p>
+      <div className="podcast">
+        <div className="podcast__header">
+          <div>
+            <img
+              className="podcast__image"
+              src={podcast.artwork}
+              alt={`${podcast.title} artwork`}
+            />
+          </div>
+          <div className="podcast__info">
+            <h1 className="podcast__title">{podcast.title}</h1>
+            <h2>
+              <a
+                className="podcast__link"
+                href={podcast.website}
+                target="_blank"
+              >
+                {podcast.author}
+              </a>
+            </h2>
+            <p className="podcast__description">
+              {podcast.description || podcast.summary}
+            </p>
+          </div>
+        </div>
+
         <ul>
-          {podcast.feed.map(episode => {
+          {podcast.episodes.map(episode => {
+            if (!episode) return;
             const unixTime = moment(episode.pubDate).unix();
 
             return (
@@ -25,6 +47,8 @@ class PodcastPage extends Component {
                 <div>{episode.title}</div>
                 <div>{episode.pubDate}</div>
                 <div>{episode.mediaUrl}</div>
+                <div>{episode.description}</div>
+                <div>{episode.linkToEpisode}</div>
               </li>
             );
           })}
@@ -37,10 +61,10 @@ class PodcastPage extends Component {
     const content = this.props.data.loading ? <Loader /> : this.renderPodcast();
 
     return (
-      <div>
+      <React.Fragment>
         <InnerHeader />
         {content}
-      </div>
+      </React.Fragment>
     );
   }
 }
