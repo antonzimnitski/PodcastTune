@@ -1,4 +1,5 @@
 import React from "react";
+import { Session } from "meteor/session";
 import moment from "moment";
 
 const Feed = ({ episodes }) => {
@@ -22,7 +23,11 @@ const Feed = ({ episodes }) => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 191 191"
               >
-                <g id="Layer_2" data-name="Layer 2">
+                <g
+                  onClick={() => handleClick(episode)}
+                  id="Layer_2"
+                  data-name="Layer 2"
+                >
                   <g id="Layer_1-2" data-name="Layer 1">
                     <circle className="circle" cx="95.5" cy="95.5" r="87.5" />
                     <path d="M95.5,16A79.5,79.5,0,1,1,16,95.5,79.59,79.59,0,0,1,95.5,16m0-16A95.5,95.5,0,1,0,191,95.5,95.5,95.5,0,0,0,95.5,0Z" />
@@ -43,3 +48,8 @@ const Feed = ({ episodes }) => {
 };
 
 export default Feed;
+
+function handleClick(episode) {
+  Session.set("isPlayerOpen", true);
+  Session.set("episode", episode);
+}

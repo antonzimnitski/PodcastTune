@@ -52,10 +52,10 @@ class Discover extends Component {
     );
 
     return (
-      <div>
+      <React.Fragment>
         <InnerHeader title={this.props.title} />
         {content}
-      </div>
+      </React.Fragment>
     );
   }
 }

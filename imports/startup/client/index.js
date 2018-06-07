@@ -1,5 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import React from "react";
+import { Session } from "meteor/session";
+import { Tracker } from "meteor/tracker";
 import { render } from "react-dom";
 import ApolloClient, { HttpLink, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
@@ -24,6 +26,12 @@ const ApolloApp = () => (
   </ApolloProvider>
 );
 
+Tracker.autorun(() => {
+  const isPlayerOpen = Session.get("isPlayerOpen");
+  document.body.classList.toggle("player-is-open", isPlayerOpen);
+});
+
 Meteor.startup(() => {
+  Session.set("isPlayerOpen", false);
   render(<ApolloApp />, document.getElementById("app"));
 });

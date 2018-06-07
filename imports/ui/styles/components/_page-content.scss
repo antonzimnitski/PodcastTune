@@ -23,3 +23,12 @@
   max-width: $main-width;
   margin: 0 auto;
 }
+
+.player-is-open .page-content__sidebar,
+.player-is-open .page-content__main {
+  height: calc(#{100vh} - #{$player-height});
+}
+
+.player-is-open .player {
+  display: flex;
+}

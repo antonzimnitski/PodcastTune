@@ -9,7 +9,6 @@ import fetchPodcast from "./../queries/fetchPodcast";
 class PodcastPage extends Component {
   renderPodcast() {
     const { podcast } = this.props.data;
-    console.log(podcast);
     return (
       <div className="podcast">
         <div className="podcast__header">
@@ -41,23 +40,6 @@ class PodcastPage extends Component {
         </div>
 
         <Feed episodes={podcast.episodes} />
-
-        {/* <ul>
-          {podcast.episodes.map(episode => {
-            if (!episode) return;
-            const unixTime = moment(episode.pubDate).unix();
-
-            return (
-              <li key={unixTime}>
-                <div>{episode.title}</div>
-                <div>{episode.pubDate}</div>
-                <div>{episode.mediaUrl}</div>
-                <div>{episode.description}</div>
-                <div>{episode.linkToEpisode}</div>
-              </li>
-            );
-          })}
-        </ul> */}
       </div>
     );
   }
