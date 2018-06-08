@@ -14,6 +14,7 @@ export default gql`
       episodes {
         title
         description
+        author
         mediaUrl
         pubDate
         linkToEpisode

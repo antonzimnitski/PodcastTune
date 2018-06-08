@@ -1,6 +1,7 @@
 type Episode {
   title: String!
   description: String
+  author: String
   mediaUrl: String
   pubDate: String
   linkToEpisode: String

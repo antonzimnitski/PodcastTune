@@ -38,7 +38,9 @@ class App extends Component {
               </Switch>
             </div>
           </div>
-          {this.props.isPlayerOpen ? <AudioPlayer /> : null}
+          {this.props.isPlayerOpen ? (
+            <AudioPlayer episode={this.props.episode} playing={true} />
+          ) : null}
         </div>
       </BrowserRouter>
     );
