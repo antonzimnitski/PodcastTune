@@ -110,29 +110,45 @@ class AudioPlayer extends Component {
   }
 
   setPlaybackRate(playbackRate) {
-    this.setState({ playbackRate });
-    this.player.current.playbackRate = this.state.playbackRate;
+    this.setState({ playbackRate }, () => {
+      this.player.current.playbackRate = this.state.playbackRate;
+    });
   }
 
   onTimeChange(e) {
-    this.setState({ playedSeconds: e.target.value });
-    this.player.current.currentTime = this.state.playedSeconds;
+    this.setState({ playedSeconds: e.target.value }, () => {
+      this.player.current.currentTime = this.state.playedSeconds;
+    });
   }
 
-  onVolumeChange(e) {
-    this.setState({ volume: Number(e.target.value) });
-    console.log(this.state.volume);
-    this.player.current.volume = this.state.volume;
-  }
-
-  onMute() {
-    if (this.state.isMuted) {
-      this.setState({ isMuted: false });
+  setVolume(volume) {
+    const isMuted = volume <= 0;
+    if (isMuted !== this.state.isMuted) {
+      this.onMute(isMuted);
     } else {
-      this.setState({ isMuted: true });
+      this._lastVolume = volume !== 0 ? volume : this._lastVolume;
     }
+    this.setState({ volume }, () => {
+      this.player.current.volume = this.state.volume;
+    });
+  }
 
-    this.player.current.muted = !this.state.isMuted;
+  onMute(isMuted) {
+    if (isMuted) {
+      this._lastVolume = this.state.volume;
+      this.setState({ isMuted: true }, () => {
+        this.setVolume(0);
+      });
+    } else {
+      const volume = this._lastVolume > 0 ? this._lastVolume : 0.1;
+      this.setState({ isMuted: false }, () => {
+        this.setVolume(volume);
+      });
+    }
+  }
+
+  handleMute() {
+    this.onMute(!this.state.isMuted);
   }
 
   render() {
@@ -175,16 +191,16 @@ class AudioPlayer extends Component {
         <div />
         <div>
           <p>Volume control</p>
-          <button onClick={() => this.onMute()}>
+          <button onClick={() => this.handleMute()}>
             {this.state.isMuted ? "Unmute" : "Mute"}
           </button>
           <input
-            onChange={e => this.onVolumeChange(e)}
+            onChange={e => this.setVolume(Number(e.target.value))}
             value={this.state.volume}
             type="range"
             min="0"
             max="1"
-            step="0.05"
+            step="0.1"
           />
         </div>
 
@@ -195,6 +211,7 @@ class AudioPlayer extends Component {
           onCanPlay={() => this.onReady()}
           onPlay={() => this.onPlay()}
           onPause={() => this.onPause()}
+          muted={this.state.isMuted}
           preload="auto"
           controls
         />
