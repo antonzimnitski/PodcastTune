@@ -21,21 +21,47 @@ const Feed = ({ episodes }) => {
               <svg
                 className="controls__play"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 191 191"
+                viewBox="0 0 250 250"
               >
-                <g
-                  onClick={() => handleClick(episode)}
-                  id="Layer_2"
-                  data-name="Layer 2"
-                >
-                  <g id="Layer_1-2" data-name="Layer 1">
-                    <circle className="circle" cx="95.5" cy="95.5" r="87.5" />
-                    <path d="M95.5,16A79.5,79.5,0,1,1,16,95.5,79.59,79.59,0,0,1,95.5,16m0-16A95.5,95.5,0,1,0,191,95.5,95.5,95.5,0,0,0,95.5,0Z" />
-                    <polygon
-                      className="icon"
-                      points="69.02 58.05 133.75 95.75 68.73 132.96 69.02 58.05"
+                <g onClick={() => handleClick(episode)} id="icon">
+                  <g id="circle">
+                    <circle
+                      className="play__circle"
+                      cx="125"
+                      cy="125"
+                      r="115"
+                      fill="#fff"
                     />
-                    <path d="M69.14,58.26,133.5,95.75l-64.64,37,.28-74.48m-.25-.43-.28,75.34L134,95.75,68.89,57.83Z" />
+                    <path d="M125,20A105,105,0,1,1,20,125,105.12,105.12,0,0,1,125,20m0-20A125,125,0,1,0,250,125,125,125,0,0,0,125,0Z" />
+                  </g>
+                  <g className="play__inner" id="inner">
+                    <g className="play__bars" id="bars">
+                      <g id="left">
+                        <rect
+                          x="92.5"
+                          y="87.5"
+                          width="15"
+                          height="75"
+                          fill="#fff"
+                        />
+                        <polygon points="117.5 77.5 82.5 77.5 82.5 172.5 117.5 172.5 117.5 77.5 117.5 77.5" />
+                      </g>
+                      <g id="right">
+                        <rect
+                          x="142.5"
+                          y="87.5"
+                          width="15"
+                          height="75"
+                          fill="#fff"
+                        />
+                        <polygon points="167.5 77.5 132.5 77.5 132.5 172.5 167.5 172.5 167.5 77.5 167.5 77.5" />
+                      </g>
+                    </g>
+                    <path
+                      className="play__triangle"
+                      id="triangle"
+                      d="M183.25,125,95.87,175.45V74.55Z"
+                    />
                   </g>
                 </g>
               </svg>

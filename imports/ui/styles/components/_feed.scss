@@ -46,14 +46,15 @@
   transform: scale(1.2);
 }
 
-.controls__play .circle {
-  fill: $white;
-}
-
-.controls__play:hover .circle {
+.controls__play:hover .play__circle {
   fill: $light-blue;
 }
 
-.controls__play:hover .icon {
+.controls__play:hover .play__triangle,
+.controls__play:hover .play__bars {
   fill: $white;
+}
+
+.play__bars {
+  display: none;
 }
