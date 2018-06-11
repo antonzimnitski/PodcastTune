@@ -7,10 +7,9 @@ const Feed = ({ episodes }) => {
     <div className="feed">
       {episodes.map(episode => {
         if (!episode) return;
-        const unixTime = moment(episode.pubDate).unix();
 
         return (
-          <div key={unixTime} className="episode">
+          <div key={episode.id} className="episode">
             <div className="episode__title">
               <p>{episode.title}</p>
             </div>

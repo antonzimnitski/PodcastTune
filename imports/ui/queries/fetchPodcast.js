@@ -12,6 +12,7 @@ export default gql`
       summary
       artwork
       episodes {
+        id
         title
         description
         author

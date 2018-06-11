@@ -1,5 +1,6 @@
 export default {
   Episode: {
+    id: data => data.id,
     title: data => data.title,
     description: data => data.description,
     author: data => data.author,
