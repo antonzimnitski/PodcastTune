@@ -48,9 +48,9 @@ class AudioPlayer extends Component {
       this.state.isReady &&
       this.state.isPlaying
     ) {
-      console.log(this.player.current.currentTime);
+      this.setState({ playedSeconds: this.player.current.currentTime });
     }
-    this.getSecondsTimeout = setTimeout(this.getSeconds, 2000);
+    this.getSecondsTimeout = setTimeout(this.getSeconds, 1000);
   };
 
   componentWillReceiveProps(nextProps) {
@@ -115,8 +115,8 @@ class AudioPlayer extends Component {
     });
   }
 
-  onTimeChange(e) {
-    this.setState({ playedSeconds: e.target.value }, () => {
+  setTime(value) {
+    this.setState({ playedSeconds: value }, () => {
       this.player.current.currentTime = this.state.playedSeconds;
     });
   }
@@ -147,6 +147,30 @@ class AudioPlayer extends Component {
     }
   }
 
+  skipTime(amount) {
+    const { episode } = this.props;
+    const { duration, playedSeconds } = this.state;
+    const newTime = +(playedSeconds + amount).toFixed(10);
+    if (episode && this.player.current && this.state.isReady) {
+      console.log(
+        "duration",
+        duration,
+        "playedSeconds",
+        playedSeconds,
+        "newTime",
+        newTime
+      );
+      if (newTime <= 0) {
+        this.setTime(0);
+      } else if (newTime >= duration) {
+        //TODO next or stop
+        this.setTime(duration);
+      } else {
+        this.setTime(newTime);
+      }
+    }
+  }
+
   handleMute() {
     this.onMute(!this.state.isMuted);
   }
@@ -155,7 +179,9 @@ class AudioPlayer extends Component {
     const { episode } = this.props;
     return (
       <div className="player">
-        <p>CurrentTime {this.state.playedSeconds}</p>
+        <button onClick={() => this.skipTime(-10)}>Skip -10</button>
+        <button onClick={() => this.skipTime(30)}>Skip +30</button>
+        <p>PlayedSeconds {this.state.playedSeconds}</p>
         <p>{episode ? episode.title : "Select episode to play"}</p>
         <p>{episode ? episode.author : "-"}</p>
         <p>
@@ -173,7 +199,7 @@ class AudioPlayer extends Component {
             Duration bar instead of audio element {this.state.duration}
           </span>
           <input
-            onChange={e => this.onTimeChange(e)}
+            onChange={e => this.setTime(Number(e.target.value))}
             value={this.state.playedSeconds}
             type="range"
             min="0"
