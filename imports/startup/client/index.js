@@ -33,8 +33,8 @@ Tracker.autorun(() => {
 
 Meteor.startup(() => {
   //https://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage#2010948
-  const episode = JSON.parse(localStorage.getItem("episode"));
-  Session.set("episode", episode);
-  Session.set("isPlayerOpen", !!episode ? true : false);
+  const feed = JSON.parse(localStorage.getItem("feed"));
+  Session.set("feed", feed);
+  Session.set("isPlayerOpen", !!feed ? true : false);
   render(<ApolloApp />, document.getElementById("app"));
 });

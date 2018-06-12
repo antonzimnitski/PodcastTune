@@ -77,5 +77,15 @@ export default Feed;
 
 function handleClick(episode) {
   Session.set("isPlayerOpen", true);
-  setValue("episode", episode);
+
+  setValue("feed", setFeed(episode));
+}
+
+function setFeed(episode) {
+  const feed = Session.get("feed");
+  if (!feed) {
+    return [episode];
+  } else if (Array.isArray(feed)) {
+    return [episode, ...feed];
+  }
 }

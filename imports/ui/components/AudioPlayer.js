@@ -12,6 +12,7 @@ class AudioPlayer extends Component {
     this.player = React.createRef();
 
     this.state = {
+      episode: null,
       isReady: false,
       isPlaying: false,
       mounted: false,
@@ -30,10 +31,10 @@ class AudioPlayer extends Component {
   _lastVolume = 0;
 
   componentDidMount() {
-    const { episode } = this.props;
+    const { feed } = this.props;
     this.setState({ mounted: true });
-    if (episode) {
-      this.player.current.src = episode.mediaUrl;
+    if (feed.length > 0) {
+      this.setState({ episode: feed[0] });
     }
 
     this.getSeconds();
@@ -44,7 +45,7 @@ class AudioPlayer extends Component {
   }
 
   getSeconds = () => {
-    const { episode } = this.props;
+    const { episode } = this.state;
     if (
       episode &&
       this.player.current &&
@@ -59,28 +60,34 @@ class AudioPlayer extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const { episode } = this.props;
+    const { episode } = this.state;
 
-    if (!nextProps.episode) {
+    if (!nextProps || nextProps.feed.length === 0) {
       this.clearEpisode();
       return;
     }
 
-    if (!episode || episode.mediaUrl !== nextProps.episode.mediaUrl) {
-      this.setState({ isLoading: true, isPlaying: false });
-      this.player.current.src = nextProps.episode.mediaUrl;
+    if (!episode || episode.mediaUrl !== nextProps.feed[0].mediaUrl) {
+      console.log(nextProps);
+      this.setState({
+        isLoading: true,
+        isPlaying: false,
+        episode: nextProps.feed[0]
+      });
     }
   }
 
   clearEpisode() {
-    setValue("episode", null);
+    const newFeed = Session.get("feed");
+    newFeed.shift();
+    setValue("feed", newFeed);
     this.setState({
+      episode: null,
       isReady: false,
       isPlaying: false,
       duration: 0,
       playedSeconds: 0
     });
-    this.player.current.src = null;
   }
 
   onReady() {
@@ -167,7 +174,7 @@ class AudioPlayer extends Component {
   }
 
   skipTime(amount) {
-    const { episode } = this.props;
+    const { episode } = this.state;
     const { duration, playedSeconds } = this.state;
     const newTime = +(playedSeconds + amount).toFixed(10);
     if (episode && this.player.current && this.state.isReady) {
@@ -191,7 +198,7 @@ class AudioPlayer extends Component {
   }
 
   render() {
-    const { episode } = this.props;
+    const { episode } = this.state;
     return (
       <div className="player">
         <div className="player__controls-left">
@@ -202,10 +209,7 @@ class AudioPlayer extends Component {
           >
             <span className="player__skip-text">15</span>
           </button>
-          <button
-            disabled={!this.state.isReady}
-            onClick={() => this.handlePlayPause()}
-          >
+          <button disabled={!this.state.isReady}>
             <svg
               className={
                 this.state.isPlaying
@@ -215,7 +219,7 @@ class AudioPlayer extends Component {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 250 250"
             >
-              <g id="icon">
+              <g onClick={() => this.handlePlayPause()} id="icon">
                 <g id="circle">
                   <circle
                     className="player__play-circle"
@@ -376,6 +380,7 @@ class AudioPlayer extends Component {
         <audio
           style={{ display: "none" }}
           ref={this.player}
+          src={episode ? episode.mediaUrl : null}
           onLoadedMetadata={() => this.setDuration()}
           onCanPlay={() => this.onReady()}
           onEnded={() => this.clearEpisode()}
@@ -392,6 +397,6 @@ class AudioPlayer extends Component {
 
 export default withTracker(() => {
   return {
-    episode: Session.get("episode")
+    feed: Session.get("feed")
   };
 })(AudioPlayer);
