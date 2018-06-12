@@ -76,5 +76,9 @@ export default Feed;
 
 function handleClick(episode) {
   Session.set("isPlayerOpen", true);
-  Session.set("episode", episode);
+  // Session.set("episode", episode);
+  console.log("episode", episode);
+  localStorage.setItem("episode", JSON.stringify(episode));
+  console.log("localstorage", localStorage.getItem("episode"));
+  Session.set("episode", JSON.parse(localStorage.getItem("episode")));
 }
