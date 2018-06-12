@@ -32,6 +32,9 @@
 
 .player__skip {
   background-repeat: no-repeat;
+}
+
+.player__play {
   margin: 0 $space;
 }
 
@@ -78,10 +81,11 @@
 }
 
 .player__controls-center {
+  max-width: 75rem;
   flex: 1 1 auto;
   align-self: center;
   text-align: center;
-  margin-right: $large-space;
+  margin: 0 $space;
 }
 
 .player__title {
@@ -174,4 +178,8 @@
 
 .player__volume--muted .volume__cross {
   opacity: 1;
+}
+
+.volume__range {
+  width: 5rem;
 }
