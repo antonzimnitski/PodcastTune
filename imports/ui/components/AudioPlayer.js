@@ -283,31 +283,68 @@ class AudioPlayer extends Component {
         </div>
         <div className="player__controls-right">
           <div className="player__playback-rate">
-            <button className="playback-rate__button" onClick={() => this.decreasePlaybackRate()}>-</button>
-            <div className="playback-rate__text">{this.state.playbackRate}x</div>
-            <button className="playback-rate__button" onClick={() => this.increasePlaybackRate()}>+</button>
+            <svg
+              className="playback-rate__button"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 250 250"
+            >
+              <g
+                onClick={() => this.increasePlaybackRate()}
+                id="Layer_1-2"
+                data-name="Layer 1"
+              >
+                <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,138H137.5v62.5h-25V138H50V113h62.5V50.5h25V113H200Z" />
+              </g>
+            </svg>
+            <div className="playback-rate__text">
+              {this.state.playbackRate}x
+            </div>
+            <svg
+              className="playback-rate__button"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 250 250"
+            >
+              <g
+                onClick={() => this.decreasePlaybackRate()}
+                id="Layer_1-2"
+                data-name="Layer 1"
+              >
+                <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,137H50V112H200Z" />
+              </g>
+            </svg>
           </div>
-          <div className={this.state.isMuted ? "player__volume player__volume--muted" : "player__volume"} >
-            <svg className="volume__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555.17 442.85">
-              <g onClick={() => this.handleMute()}> <g  className="volume__megaphone" id="volume">
-                <polygon  points="145.86 320.5 0.5 320.5 0.5 121.5 147.1 121.5 323.5 0.95 323.5 441.9 145.86 320.5"/>
-                <path d="M323,1.89V441L146.27,320.17,146,320H1V122H147.26l.25-.17L323,1.89M324,0,147,121H0V321H145.7L324,442.85V0Z"/>
+          <div
+            className={
+              this.state.isMuted
+                ? "player__volume player__volume--muted"
+                : "player__volume"
+            }
+          >
+            <svg
+              className="volume__icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 555.17 442.85"
+            >
+              <g onClick={() => this.handleMute()}>
+                <g className="volume__megaphone" id="volume">
+                  <polygon points="145.86 320.5 0.5 320.5 0.5 121.5 147.1 121.5 323.5 0.95 323.5 441.9 145.86 320.5" />
+                  <path d="M323,1.89V441L146.27,320.17,146,320H1V122H147.26l.25-.17L323,1.89M324,0,147,121H0V321H145.7L324,442.85V0Z" />
+                </g>
+                <g className="volume__cross" id="cross">
+                  <polygon points="459 251.41 393.95 316.46 363.54 286.05 428.59 221 363.54 155.95 393.95 125.54 459 190.59 524.05 125.54 554.46 155.95 489.41 221 554.46 286.05 524.05 316.46 459 251.41" />
+                  <path d="M394,126.25l64.34,64.34.71.71.71-.71,64.34-64.34,29.7,29.7-64.34,64.34-.71.71.71.71,64.34,64.34-29.7,29.7-64.34-64.34-.71-.71-.71.71L394,315.75l-29.7-29.7,64.34-64.34.71-.71-.71-.71L364.25,156l29.7-29.7m130.1-1.42-65,65.06L394,124.83,362.83,156,427.89,221l-65.06,65.05L394,317.17,459,252.11l65,65.06,31.12-31.12L490.11,221,555.17,156l-31.12-31.12Z" />
+                </g>
               </g>
-              <g className="volume__cross" id="cross">
-                <polygon points="459 251.41 393.95 316.46 363.54 286.05 428.59 221 363.54 155.95 393.95 125.54 459 190.59 524.05 125.54 554.46 155.95 489.41 221 554.46 286.05 524.05 316.46 459 251.41"/>
-                <path d="M394,126.25l64.34,64.34.71.71.71-.71,64.34-64.34,29.7,29.7-64.34,64.34-.71.71.71.71,64.34,64.34-29.7,29.7-64.34-64.34-.71-.71-.71.71L394,315.75l-29.7-29.7,64.34-64.34.71-.71-.71-.71L364.25,156l29.7-29.7m130.1-1.42-65,65.06L394,124.83,362.83,156,427.89,221l-65.06,65.05L394,317.17,459,252.11l65,65.06,31.12-31.12L490.11,221,555.17,156l-31.12-31.12Z"/>
-              </g>
-            </g>
-          </svg>
+            </svg>
             <div className="volume__slider">
-            <input
-              onChange={e => this.setVolume(Number(e.target.value))}
-              value={this.state.volume}
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-            />
+              <input
+                onChange={e => this.setVolume(Number(e.target.value))}
+                value={this.state.volume}
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+              />
             </div>
           </div>
         </div>
