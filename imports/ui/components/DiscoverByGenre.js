@@ -7,8 +7,17 @@ import Loader from "./helpers/Loader";
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
 
 class DiscoverByGenre extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      limit: 10
+    };
+  }
+
   renderPodcasts() {
-    return this.props.data.podcastsPreviews.map(podcast => {
+    return this.props.data.podcastsPreviews.map((podcast, index) => {
+      if (index >= this.state.limit) return;
       return (
         <Link to={`/podcasts/${podcast.id}`} key={podcast.id}>
           <div className="preview">
@@ -35,7 +44,17 @@ class DiscoverByGenre extends Component {
     const content = this.props.data.loading ? (
       <Loader />
     ) : (
-      <div>{this.renderPodcasts()}</div>
+      <React.Fragment>
+        <div>{this.renderPodcasts()}</div>
+        {this.state.limit <= this.props.data.podcastsPreviews.length - 1 ? (
+          <button
+            className="button button--load"
+            onClick={() => this.setState({ limit: this.state.limit + 10 })}
+          >
+            fetch more
+          </button>
+        ) : null}
+      </React.Fragment>
     );
 
     return (
