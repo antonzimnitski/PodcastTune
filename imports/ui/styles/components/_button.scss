@@ -2,14 +2,12 @@
   display: inline-block;
   background: $button-bg;
   color: $button-color;
-  border: none;
   cursor: pointer;
   font-size: $base-font-size;
   line-height: 1.2;
   padding: $small-space;
   text-transform: uppercase;
   border-radius: 10rem;
-  outline: none;
 }
 
 .button--load {

@@ -59,16 +59,27 @@ class AudioPlayer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { episode } = this.props;
-    console.log(nextProps);
 
-    if (
-      !episode ||
-      !nextProps.episode ||
-      episode.mediaUrl !== nextProps.episode.mediaUrl
-    ) {
+    if (!nextProps.episode) {
+      this.clearEpisode();
+      return;
+    }
+
+    if (!episode || episode.mediaUrl !== nextProps.episode.mediaUrl) {
       this.setState({ isLoading: true, isPlaying: false });
       this.player.current.src = nextProps.episode.mediaUrl;
     }
+  }
+
+  clearEpisode() {
+    Session.set("episode", null);
+    this.setState({
+      isReady: false,
+      isPlaying: false,
+      duration: 0,
+      playedSeconds: 0
+    });
+    this.player.current.src = null;
   }
 
   onReady() {
@@ -162,7 +173,6 @@ class AudioPlayer extends Component {
       if (newTime <= 0) {
         this.setTime(0);
       } else if (newTime >= duration) {
-        //TODO next or stop
         this.setTime(duration);
       } else {
         this.setTime(newTime);
@@ -184,13 +194,17 @@ class AudioPlayer extends Component {
     return (
       <div className="player">
         <div className="player__controls-left">
-          <div
+          <button
             onClick={() => this.skipTime(-15)}
             className="player__skip player__skip-back"
+            disabled={!this.state.isReady}
           >
             <span className="player__skip-text">15</span>
-          </div>
-          <div>
+          </button>
+          <button
+            disabled={!this.state.isReady}
+            onClick={() => this.handlePlayPause()}
+          >
             <svg
               className={
                 this.state.isPlaying
@@ -200,7 +214,7 @@ class AudioPlayer extends Component {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 250 250"
             >
-              <g onClick={() => this.handlePlayPause()} id="icon">
+              <g id="icon">
                 <g id="circle">
                   <circle
                     className="player__play-circle"
@@ -242,13 +256,14 @@ class AudioPlayer extends Component {
                 </g>
               </g>
             </svg>
-          </div>
-          <div
+          </button>
+          <button
+            disabled={!this.state.isReady}
             onClick={() => this.skipTime(30)}
             className="player__skip player__skip-forward"
           >
             <span className="player__skip-text">30</span>
-          </div>
+          </button>
         </div>
 
         <div className="player__controls-center">
@@ -360,6 +375,7 @@ class AudioPlayer extends Component {
           ref={this.player}
           onLoadedMetadata={() => this.setDuration()}
           onCanPlay={() => this.onReady()}
+          onEnded={() => this.clearEpisode()}
           onPlay={() => this.onPlay()}
           onPause={() => this.onPause()}
           muted={this.state.isMuted}
