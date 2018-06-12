@@ -3,6 +3,7 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
+import { setValue } from "./../utils/utils";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class AudioPlayer extends Component {
   }
 
   clearEpisode() {
-    Session.set("episode", null);
+    setValue("episode", null);
     this.setState({
       isReady: false,
       isPlaying: false,
@@ -303,35 +304,37 @@ class AudioPlayer extends Component {
         </div>
         <div className="player__controls-right">
           <div className="player__playback-rate">
-            <svg
-              className="playback-rate__button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 250 250"
+            <div
+              className="playback-rate__control"
+              onClick={() => this.increasePlaybackRate()}
             >
-              <g
-                onClick={() => this.increasePlaybackRate()}
-                id="Layer_1-2"
-                data-name="Layer 1"
+              <svg
+                className="playback-rate__button"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 250 250"
               >
-                <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,138H137.5v62.5h-25V138H50V113h62.5V50.5h25V113H200Z" />
-              </g>
-            </svg>
+                <g id="Layer_1-2" data-name="Layer 1">
+                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,138H137.5v62.5h-25V138H50V113h62.5V50.5h25V113H200Z" />
+                </g>
+              </svg>
+            </div>
             <div className="playback-rate__text">
               {this.state.playbackRate}x
             </div>
-            <svg
-              className="playback-rate__button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 250 250"
+            <div
+              className="playback-rate__control"
+              onClick={() => this.decreasePlaybackRate()}
             >
-              <g
-                onClick={() => this.decreasePlaybackRate()}
-                id="Layer_1-2"
-                data-name="Layer 1"
+              <svg
+                className="playback-rate__button"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 250 250"
               >
-                <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,137H50V112H200Z" />
-              </g>
-            </svg>
+                <g id="Layer_1-2" data-name="Layer 1">
+                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,137H50V112H200Z" />
+                </g>
+              </svg>
+            </div>
           </div>
           <div
             className={

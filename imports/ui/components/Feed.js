@@ -1,6 +1,7 @@
 import React from "react";
 import { Session } from "meteor/session";
 import moment from "moment";
+import { setValue } from "./../utils/utils";
 
 const Feed = ({ episodes }) => {
   return (
@@ -76,9 +77,5 @@ export default Feed;
 
 function handleClick(episode) {
   Session.set("isPlayerOpen", true);
-  // Session.set("episode", episode);
-  console.log("episode", episode);
-  localStorage.setItem("episode", JSON.stringify(episode));
-  console.log("localstorage", localStorage.getItem("episode"));
-  Session.set("episode", JSON.parse(localStorage.getItem("episode")));
+  setValue("episode", episode);
 }
