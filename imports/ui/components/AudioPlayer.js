@@ -4,6 +4,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { setValue } from "./../utils/utils";
+import Modal from "react-modal";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class AudioPlayer extends Component {
       playbackRate: 1,
       minPlaybackRate: 0.5,
       maxPlaybackRate: 4,
-      playbackStep: 0.1
+      playbackStep: 0.1,
+      isPopupOpen: false
     };
   }
 
@@ -68,7 +70,6 @@ class AudioPlayer extends Component {
     }
 
     if (!episode || episode.mediaUrl !== nextProps.feed[0].mediaUrl) {
-      console.log(nextProps);
       this.setState({
         isLoading: true,
         isPlaying: false,
@@ -193,6 +194,59 @@ class AudioPlayer extends Component {
 
   handleMute() {
     this.onMute(!this.state.isMuted);
+  }
+
+  handleUpNextPopup() {
+    this.setState({ isPopupOpen: !this.state.isPopupOpen });
+  }
+
+  onQueueItemClick(index) {
+    const feed = Session.get("feed");
+    feed.unshift(...feed.splice(index, 1));
+    setValue("feed", feed);
+  }
+
+  renderPopup() {
+    const feed = this.props.feed;
+
+    if (!feed || feed.length === 1) {
+      return (
+        <div className="up-next__empty">
+          <h2 className="empty__title">Your Up Next is Empty</h2>
+          <p className="empty__text">Add some episodes</p>
+        </div>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <h2 className="up-next__title">Up Next</h2>
+        <div className="up-next__queue">
+          {this.props.feed.map((episode, index) => {
+            if (index < 1) return;
+            return (
+              <div
+                key={episode.id}
+                className="queue__item"
+                onClick={() => this.onQueueItemClick(index)}
+              >
+                <svg
+                  className="queue__play-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 250 250"
+                >
+                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0ZM85.67,192.79V56.54l118,68.13Z" />
+                </svg>
+                <div className="queue__info">
+                  <div className="queue__title">{episode.title}</div>
+                  <div className="queue__author">{episode.author}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </React.Fragment>
+    );
   }
 
   formatSeconds(seconds) {
@@ -377,7 +431,33 @@ class AudioPlayer extends Component {
               />
             </div>
           </div>
+          <div
+            className="player__up-next"
+            onClick={() => this.handleUpNextPopup()}
+          >
+            <svg
+              className="up-next__icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 251.5 192"
+            >
+              <g id="Layer_1-2" data-name="Layer 1">
+                <g id="up-next">
+                  <path d="M225,121H25A25.07,25.07,0,0,1,0,96H0A25.07,25.07,0,0,1,25,71H225a25.07,25.07,0,0,1,25,25h0A25.07,25.07,0,0,1,225,121Zm25.5,46h0a25.07,25.07,0,0,0-25-25H25.5a25.07,25.07,0,0,0-25,25h0a25.07,25.07,0,0,0,25,25h200A25.07,25.07,0,0,0,250.5,167Zm1-142h0a25.07,25.07,0,0,0-25-25H26.5a25.07,25.07,0,0,0-25,25h0a25.07,25.07,0,0,0,25,25h200A25.07,25.07,0,0,0,251.5,25Z" />
+                </g>
+              </g>
+            </svg>
+          </div>
         </div>
+
+        <Modal
+          isOpen={this.state.isPopupOpen}
+          onRequestClose={() => this.handleUpNextPopup()}
+          ariaHideApp={false}
+          className="up-next__modal"
+          overlayClassName="modal__overlay"
+        >
+          {this.renderPopup()}
+        </Modal>
 
         <audio
           style={{ display: "none" }}

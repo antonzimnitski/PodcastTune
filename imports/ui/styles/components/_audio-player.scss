@@ -1,6 +1,6 @@
 .player {
   display: none;
-  z-index: 1500;
+  z-index: 100;
   bottom: 0;
   width: 100%;
   height: $player-height;
@@ -28,6 +28,7 @@
 .player__controls-left,
 .player__controls-right {
   display: flex;
+  align-items: center;
 }
 
 .player__skip {
@@ -43,6 +44,7 @@
 }
 
 .player__skip-back {
+  margin-left: $large-space;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 45 45' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3Eplayer/skipback%3C/title%3E%3Cpath d='M12 9h11.5C32.06 9 39 15.94 39 24.5 39 33.06 32.06 40 23.5 40 14.94 40 8 33.06 8 24.5a1 1 0 0 1 2 0C10 31.956 16.044 38 23.5 38S37 31.956 37 24.5 30.956 11 23.5 11H12v4l-6-5 6-5v4z' fill='%23333' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
@@ -81,7 +83,7 @@
 }
 
 .player__controls-center {
-  max-width: 75rem;
+  min-width: 0;
   flex: 1 1 auto;
   align-self: center;
   text-align: center;
@@ -116,7 +118,7 @@
 .seek-bar__text--left,
 .seek-bar__text--right {
   position: absolute;
-  top: 2.5rem;
+  top: 3.5rem;
 }
 .seek-bar__text--left {
   left: 0;
@@ -169,8 +171,7 @@
 }
 
 .player__volume {
-  margin-right: $space;
-  align-self: center;
+  margin-right: $large-space;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,7 +181,7 @@
 .volume__icon {
   height: 100%;
   fill: $black;
-  margin-right: $small-space;
+  margin-right: $small-space / 2;
 }
 
 .volume__cross {
@@ -192,5 +193,112 @@
 }
 
 .volume__range {
-  width: 5rem;
+  width: 6rem;
+}
+
+.player__up-next {
+  margin-right: $large-space;
+}
+
+.up-next__icon {
+  height: 2rem;
+  fill: $black;
+}
+
+.up-next__modal {
+  outline: none;
+  position: fixed;
+  background: $white;
+  right: $large-space;
+  bottom: calc(#{$player-height} - #{$large-space});
+  width: 50rem;
+  height: 40rem;
+  z-index: 301;
+  display: flex;
+  flex-direction: column;
+  border: 0.1rem solid $black;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.1rem 0 rgba($black, 0.3), 0 1rem 1.5rem rgba($black, 0.2);
+}
+
+.up-next__title {
+  font-size: 2.5rem;
+  padding: $small-space $space;
+}
+
+.up-next__queue {
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.modal__overlay {
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 300;
+}
+
+.up-next__empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.empty__title {
+  font-size: 2.2rem;
+  margin-bottom: $small-space;
+}
+
+.empty__text {
+  font-style: italic;
+  font-size: 1.7rem;
+}
+
+.queue__item {
+  height: 6rem;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  margin: 0 $small-space $small-space $small-space;
+  transition: all 0.3s ease;
+}
+
+.queue__item:hover .queue__play-icon {
+  opacity: 1;
+}
+
+.queue__play-icon {
+  width: 6rem;
+  height: 6rem;
+  padding: $small-space;
+  flex-shrink: 0;
+  fill: $black;
+  opacity: 0.3;
+}
+
+.queue__info {
+  //https://stackoverflow.com/questions/45813304/text-overflow-ellipsis-on-flex-child-not-working
+  min-width: 0;
+  padding: $small-space;
+}
+
+.queue__title,
+.queue__author {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queue__title {
+  font-weight: 600;
+  font-size: 1.7rem;
+}
+
+.queue__author {
+  font-style: italic;
 }
