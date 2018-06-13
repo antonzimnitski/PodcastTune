@@ -1,16 +1,23 @@
 import React from "react";
 import { Session } from "meteor/session";
 import moment from "moment";
+import { withTracker } from "meteor/react-meteor-data";
+import { isEqual } from "lodash";
 import { setValue } from "./../utils/utils";
 
-const Feed = ({ episodes }) => {
+const Feed = ({ episodes, feed }) => {
   return (
     <div className="feed">
       {episodes.map(episode => {
         if (!episode) return;
 
+        const className =
+          feed && isEqual(feed[0].title, episode.title)
+            ? "episode episode--active"
+            : "episode";
+
         return (
-          <div key={episode.id} className="episode">
+          <div key={episode.id} className={className}>
             <div className="episode__title">
               <p>{episode.title}</p>
             </div>
@@ -73,7 +80,11 @@ const Feed = ({ episodes }) => {
   );
 };
 
-export default Feed;
+export default withTracker(() => {
+  return {
+    feed: Session.get("feed")
+  };
+})(Feed);
 
 function handleClick(episode) {
   Session.set("isPlayerOpen", true);

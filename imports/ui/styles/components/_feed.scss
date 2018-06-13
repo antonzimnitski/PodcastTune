@@ -56,5 +56,13 @@
 }
 
 .play__bars {
-  display: none;
+  opacity: 0;
+}
+
+.episode--active .play__bars {
+  opacity: 1;
+}
+
+.episode--active .play__triangle {
+  opacity: 0;
 }
