@@ -3,7 +3,7 @@ import { Session } from "meteor/session";
 import moment from "moment";
 import { withTracker } from "meteor/react-meteor-data";
 import { isEqual } from "lodash";
-import { setValue } from "./../utils/utils";
+import { setValue, placeEpisodeFirst } from "./../utils/utils";
 
 const Feed = ({ episodes, feed }) => {
   return (
@@ -94,9 +94,11 @@ function handleClick(episode) {
 
 function setFeed(episode) {
   const feed = Session.get("feed");
+
   if (!feed) {
     return [episode];
   } else if (Array.isArray(feed)) {
-    return [episode, ...feed];
+    const exists = feed.findIndex(el => el.title === episode.title);
+    return exists !== -1 ? placeEpisodeFirst(exists) : [episode, ...feed];
   }
 }

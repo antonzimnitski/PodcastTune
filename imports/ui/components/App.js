@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
-import { Tracker } from "meteor/tracker";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import SideBar from "./SideBar";
@@ -38,9 +37,7 @@ class App extends Component {
               </Switch>
             </div>
           </div>
-          {this.props.isPlayerOpen ? (
-            <AudioPlayer episode={this.props.episode} playing={true} />
-          ) : null}
+          {this.props.isPlayerOpen ? <AudioPlayer /> : null}
         </div>
       </BrowserRouter>
     );
@@ -52,12 +49,3 @@ export default withTracker(() => {
     isPlayerOpen: Session.get("isPlayerOpen")
   };
 })(App);
-
-// function renderPlayer() {
-//   Tracker.autorun(() => {
-//     const showPlayer = Session.get("isPlayerOpen");
-//     console.log("showPlayer", showPlayer);
-//     const episode = Session.get("episode");
-//     showPlayer ? <AudioPlayer episode={episode} /> : null;
-//   });
-// }

@@ -3,7 +3,7 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import { setValue } from "./../utils/utils";
+import { setValue, placeEpisodeFirst } from "./../utils/utils";
 import Modal from "react-modal";
 
 class AudioPlayer extends Component {
@@ -201,9 +201,7 @@ class AudioPlayer extends Component {
   }
 
   onQueueItemClick(index) {
-    const feed = Session.get("feed");
-    feed.unshift(...feed.splice(index, 1));
-    setValue("feed", feed);
+    setValue("feed", placeEpisodeFirst(index));
   }
 
   renderPopup() {
