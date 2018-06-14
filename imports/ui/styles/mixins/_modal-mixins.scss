@@ -1,0 +1,19 @@
+@mixin overlay($background) {
+  position: fixed;
+  z-index: 300;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: $background;
+}
+
+@mixin modal($height, $width, $background) {
+  position: fixed;
+  z-index: 301;
+  width: $width;
+  height: $height;
+  border-radius: 0.5rem;
+  outline: none;
+  background: $background;
+}

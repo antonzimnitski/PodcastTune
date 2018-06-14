@@ -98,6 +98,11 @@
   font-size: $player-title-font-size;
 }
 
+.player__title-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .player__author {
   font-style: italic;
 }

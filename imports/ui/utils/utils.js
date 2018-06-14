@@ -6,7 +6,7 @@ export function setValue(key, value) {
 }
 
 export function placeEpisodeFirst(index) {
-  const feed = Session.get("feed");
-  feed.unshift(...feed.splice(index, 1));
-  return feed;
+  const queue = Session.get("queue");
+  queue.unshift(...queue.splice(index, 1));
+  return queue;
 }

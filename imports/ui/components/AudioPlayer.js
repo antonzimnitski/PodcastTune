@@ -6,6 +6,7 @@ import momentDurationFormatSetup from "moment-duration-format";
 import { setValue, placeEpisodeFirst } from "./../utils/utils";
 import Modal from "react-modal";
 import UpNextPopup from "./helpers/UpNextPopup";
+import EpisodeModal from "./helpers/EpisodeModal";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -27,17 +28,20 @@ class AudioPlayer extends Component {
       minPlaybackRate: 0.5,
       maxPlaybackRate: 4,
       playbackStep: 0.1,
-      isPopupOpen: false
+      isPopupOpen: false,
+      isModalOpen: false
     };
+
+    this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
   }
 
   _lastVolume = 0;
 
   componentDidMount() {
-    const feed = this.props.feed;
+    const queue = this.props.queue;
     this.setState({ mounted: true });
-    if (feed && feed.length > 0) {
-      this.setState({ episode: feed[0] });
+    if (queue && queue.length > 0) {
+      this.setState({ episode: queue[0] });
     }
 
     this.getSeconds();
@@ -65,24 +69,24 @@ class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps) {
     const { episode } = this.state;
 
-    if (!nextProps || nextProps.feed.length === 0) {
+    if (!nextProps || nextProps.queue.length === 0) {
       this.clearEpisode();
       return;
     }
 
-    if (!episode || episode.mediaUrl !== nextProps.feed[0].mediaUrl) {
+    if (!episode || episode.mediaUrl !== nextProps.queue[0].mediaUrl) {
       this.setState({
         isLoading: true,
         isPlaying: false,
-        episode: nextProps.feed[0]
+        episode: nextProps.queue[0]
       });
     }
   }
 
   clearEpisode() {
-    const newFeed = Session.get("feed");
-    newFeed.shift();
-    setValue("feed", newFeed);
+    const newQueue = this.props.queue;
+    newQueue.shift();
+    setValue("queue", newQueue);
     this.setState({
       episode: null,
       isReady: false,
@@ -201,8 +205,12 @@ class AudioPlayer extends Component {
     this.setState({ isPopupOpen: !this.state.isPopupOpen });
   }
 
+  handleEpisodeModal() {
+    this.setState({ isModalOpen: !this.state.isModalOpen });
+  }
+
   onQueueItemClick(index) {
-    setValue("feed", placeEpisodeFirst(index));
+    setValue("queue", placeEpisodeFirst(index));
   }
 
   formatSeconds(seconds) {
@@ -285,7 +293,16 @@ class AudioPlayer extends Component {
 
         <div className="player__controls-center">
           <div className="player__title">
-            <span>{episode ? episode.title : "Select episode to play"}</span>
+            {episode ? (
+              <span
+                className="player__title-link"
+                onClick={() => this.handleEpisodeModal()}
+              >
+                {episode.title}
+              </span>
+            ) : (
+              <span>"Select episode to play"</span>
+            )}
           </div>
           <div className="player__author">
             <span>
@@ -409,14 +426,22 @@ class AudioPlayer extends Component {
           isOpen={this.state.isPopupOpen}
           onRequestClose={() => this.handleUpNextPopup()}
           ariaHideApp={false}
-          className="up-next__modal"
-          overlayClassName="modal__overlay"
+          className="up-next__popup"
+          overlayClassName="up-next__popup-overlay"
         >
           <UpNextPopup
-            feed={this.props.feed}
+            queue={this.props.queue}
             onQueueItemClick={this.onQueueItemClick}
           />
         </Modal>
+
+        {this.state.isModalOpen ? (
+          <EpisodeModal
+            isModalOpen={this.state.isModalOpen}
+            handleEpisodeModal={this.handleEpisodeModal}
+            episode={this.state.episode}
+          />
+        ) : null}
 
         <audio
           style={{ display: "none" }}
@@ -438,6 +463,6 @@ class AudioPlayer extends Component {
 
 export default withTracker(() => {
   return {
-    feed: Session.get("feed")
+    queue: Session.get("queue")
   };
 })(AudioPlayer);

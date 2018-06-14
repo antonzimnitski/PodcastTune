@@ -83,5 +83,14 @@ $track-border-color: $dark-gray;
 $track-radius: 0.5rem;
 $contrast: 5%;
 
-// Modal
-$modal-overlay-bg: $dark-gray;
+// UpNextPopup
+$upnext-height: 40rem;
+$upnext-width: 50rem;
+$upnext-modal-background: $white;
+$upnext-overlay-background: transparent;
+
+// EpisodeModal
+$episode-modal-height: 50rem;
+$episode-modal-width: 60rem;
+$episode-modal-background: $white;
+$episode-modal-overlay-background: rgba($black, 0.3);

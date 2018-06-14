@@ -1,10 +1,10 @@
 import React from "react";
 
-const UpNextPopup = ({ feed, onQueueItemClick }) => {
-  if (!feed || feed.length === 1) {
+const UpNextPopup = ({ queue, onQueueItemClick }) => {
+  if (!queue || queue.length === 1) {
     return (
       <div className="up-next__empty">
-        <h2 className="empty__title">Your Up Next is Empty</h2>
+        <h2 className="up-next__title">Your Up Next is Empty</h2>
         <p className="empty__text">Add some episodes</p>
       </div>
     );
@@ -13,7 +13,7 @@ const UpNextPopup = ({ feed, onQueueItemClick }) => {
     <React.Fragment>
       <h2 className="up-next__title">Up Next</h2>
       <div className="up-next__queue">
-        {feed.map((episode, index) => {
+        {queue.map((episode, index) => {
           if (index < 1) return;
           return (
             <div
