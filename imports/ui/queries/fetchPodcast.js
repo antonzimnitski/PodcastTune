@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query Podcast($podcastId: String!) {
+  query Podcast($podcastId: Int!) {
     podcast(podcastId: $podcastId) {
       podcastId
       feedUrl
@@ -10,9 +10,11 @@ export default gql`
       website
       description
       summary
-      artwork
+      artworkUrl
       episodes {
         id
+        podcastId
+        podcastArtworkUrl
         title
         description
         author

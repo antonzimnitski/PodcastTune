@@ -48,13 +48,23 @@
   opacity: 1;
 }
 
-.queue__play-icon {
+.queue__artwork {
   flex-shrink: 0;
   width: 6rem;
   height: 6rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.queue__play-icon {
+  width: 5rem;
+  height: 5rem;
   padding: $small-space;
   opacity: 0.3;
-  fill: $black;
+  fill: darken($white, 0.5);
 }
 
 .queue__info {

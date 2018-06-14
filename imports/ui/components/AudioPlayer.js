@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { setValue, placeEpisodeFirst } from "./../utils/utils";
@@ -223,6 +224,18 @@ class AudioPlayer extends Component {
     return (
       <div className="player">
         <div className="player__controls-left">
+          {episode ? (
+            <Link
+              className="player__link-to-podcast"
+              to={`/podcasts/${episode.podcastId}`}
+            >
+              <img
+                className="player__podcast-atrwork"
+                src={episode.podcastArtworkUrl}
+                alt=""
+              />
+            </Link>
+          ) : null}
           <button
             onClick={() => this.skipTime(-15)}
             className="player__skip player__skip-back"
@@ -305,13 +318,16 @@ class AudioPlayer extends Component {
             )}
           </div>
           <div className="player__author">
-            <span>
-              {episode
-                ? `${episode.author} - ${moment(episode.pubDate).format(
-                    "MMM D, YYYY"
-                  )}`
-                : "-"}
-            </span>
+            {episode ? (
+              <span>
+                <Link to={`/podcasts/${episode.podcastId}`}>
+                  {episode.author}
+                </Link>{" "}
+                - {moment(episode.pubDate).format("MMM D, YYYY")}
+              </span>
+            ) : (
+              "-"
+            )}
           </div>
           <div className="player__seek-bar">
             <input

@@ -31,6 +31,21 @@
   align-items: center;
 }
 
+.player__link-to-podcast {
+  margin-left: $space;
+}
+
+.player__podcast-atrwork {
+  height: 7rem;
+  width: 7rem;
+  transition: all 0.3s ease;
+  border: 0.1rem solid $black;
+}
+
+.player__podcast-atrwork:hover {
+  transform: scale(1.2);
+}
+
 .player__skip {
   background-repeat: no-repeat;
 }
@@ -44,7 +59,7 @@
 }
 
 .player__skip-back {
-  margin-left: $large-space;
+  margin-left: $space;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 45 45' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3Eplayer/skipback%3C/title%3E%3Cpath d='M12 9h11.5C32.06 9 39 15.94 39 24.5 39 33.06 32.06 40 23.5 40 14.94 40 8 33.06 8 24.5a1 1 0 0 1 2 0C10 31.956 16.044 38 23.5 38S37 31.956 37 24.5 30.956 11 23.5 11H12v4l-6-5 6-5v4z' fill='%23333' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 

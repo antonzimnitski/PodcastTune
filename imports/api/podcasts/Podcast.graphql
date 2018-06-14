@@ -1,15 +1,15 @@
 type Podcast {
-  podcastId: String!
+  podcastId: Int!
   feedUrl: String
   title: String
   author: String
   website: String
   description: String
   summary: String
-  artwork: String
+  artworkUrl: String
   episodes: [Episode]
 }
 
 extend type Query {
-  podcast(podcastId: String!): Podcast
+  podcast(podcastId: Int!): Podcast
 }

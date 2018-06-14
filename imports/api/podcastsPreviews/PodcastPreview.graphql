@@ -6,5 +6,5 @@ type PodcastPreview {
 }
 
 extend type Query {
-  podcastsPreviews(genreId: Int!, limit: Int): [PodcastPreview]
+  podcastsPreviews(genreId: Int!): [PodcastPreview]
 }

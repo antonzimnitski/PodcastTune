@@ -15,7 +15,7 @@ class PodcastPage extends Component {
           <div>
             <img
               className="podcast__image"
-              src={podcast.artwork}
+              src={podcast.artworkUrl}
               alt={`${podcast.title} artwork`}
             />
           </div>

@@ -21,13 +21,21 @@ const UpNextPopup = ({ queue, onQueueItemClick }) => {
               className="queue__item"
               onClick={() => onQueueItemClick(index)}
             >
-              <svg
-                className="queue__play-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 250 250"
+              <div
+                className="queue__artwork"
+                style={{
+                  backgroundImage: `url("${episode.podcastArtworkUrl}")`
+                }}
               >
-                <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0ZM85.67,192.79V56.54l118,68.13Z" />
-              </svg>
+                <svg
+                  className="queue__play-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 250 250"
+                >
+                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0ZM85.67,192.79V56.54l118,68.13Z" />
+                </svg>
+              </div>
+
               <div className="queue__info">
                 <div className="queue__title">{episode.title}</div>
                 <div className="queue__author">{episode.author}</div>
