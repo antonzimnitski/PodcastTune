@@ -15,18 +15,23 @@ import PodcastResolvers from "./../../api/podcasts/resolvers";
 import EpisodeSchema from "./../../api/episodes/Episode.graphql";
 import EpisodeResolvers from "./../../api/episodes/resolvers";
 
+import SearchPreviewsSchema from "./../../api/searchPreviews/SearchPreview.graphql";
+import SearchPreviewsResolvers from "./../../api/searchPreviews/resolvers";
+
 const typeDefs = [
   GenresSchema,
   PodcastsPreviewsSchema,
   PodcastSchema,
-  EpisodeSchema
+  EpisodeSchema,
+  SearchPreviewsSchema
 ];
 
 const resolvers = merge(
   PodcastsPreviewsResolvers,
   GenresResolvers,
   PodcastResolvers,
-  EpisodeResolvers
+  EpisodeResolvers,
+  SearchPreviewsResolvers
 );
 
 const schema = makeExecutableSchema({

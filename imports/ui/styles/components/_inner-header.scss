@@ -8,6 +8,12 @@
   margin-bottom: $small-space;
 }
 
+.inner-header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .inner-header__back-btn {
   cursor: pointer;
   display: inline-block;

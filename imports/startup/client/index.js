@@ -32,6 +32,7 @@ Tracker.autorun(() => {
 });
 
 Meteor.startup(() => {
+  Session.set("isSearchModelOpen", false);
   //https://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage#2010948
   const queue = JSON.parse(localStorage.getItem("queue"));
   Session.set("queue", queue);

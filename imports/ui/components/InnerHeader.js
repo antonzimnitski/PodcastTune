@@ -1,19 +1,37 @@
 import React from "react";
-import { history } from "react-router-dom";
+import { Session } from "meteor/session";
+import { withTracker } from "meteor/react-meteor-data";
+import SearchPopup from "./helpers/SearchPopup";
 
-const InnerHeader = ({ title }) => {
+const InnerHeader = ({ title, isSearchModelOpen }) => {
   return (
     <div className="inner-header">
       {title ? <h1 className="inner-header__title">{title}</h1> : null}
-      <div
-        className="inner-header__back-btn"
-        onClick={() => this.history.back()}
-      >
-        <div className="inner-header__back-arrow" />
-        Go Back
+      <div className="inner-header__content">
+        <div
+          className="inner-header__back-btn"
+          onClick={() => this.history.back()}
+        >
+          <div className="inner-header__back-arrow" />
+          Go Back
+        </div>
+        <div className="inner-header__search">
+          <button onClick={() => openSearchModal()}>Open modal</button>
+          {isSearchModelOpen ? (
+            <SearchPopup isSearchModelOpen={isSearchModelOpen} />
+          ) : null}
+        </div>
       </div>
     </div>
   );
 };
 
-export default InnerHeader;
+function openSearchModal() {
+  Session.set("isSearchModelOpen", true);
+}
+
+export default withTracker(() => {
+  return {
+    isSearchModelOpen: Session.get("isSearchModelOpen")
+  };
+})(InnerHeader);

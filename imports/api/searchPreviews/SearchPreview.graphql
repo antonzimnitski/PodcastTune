@@ -1,0 +1,10 @@
+type SearchPreview {
+  podcastId: Int!
+  title: String!
+  author: String!
+  artworkUrl: String!
+}
+
+extend type Query {
+  searchPreviews(searchTerm: String!): [SearchPreview]
+}
