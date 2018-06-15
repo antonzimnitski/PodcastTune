@@ -14,11 +14,15 @@
   align-items: center;
 }
 
+.inner-header__search-btn,
 .inner-header__back-btn {
   cursor: pointer;
-  display: inline-block;
   font-weight: 500;
   color: $light-blue;
+}
+
+.inner-header__back-btn {
+  display: inline-block;
   position: relative;
   padding-left: $ih-arrow-size + $ih-arrow-wiggle;
   line-height: $ih-arrow-size;

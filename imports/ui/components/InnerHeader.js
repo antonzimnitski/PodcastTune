@@ -16,7 +16,12 @@ const InnerHeader = ({ title, isSearchModelOpen }) => {
           Go Back
         </div>
         <div className="inner-header__search">
-          <button onClick={() => openSearchModal()}>Open modal</button>
+          <button
+            className="inner-header__search-btn"
+            onClick={() => openSearchModal()}
+          >
+            Find podcasts
+          </button>
           {isSearchModelOpen ? (
             <SearchPopup isSearchModelOpen={isSearchModelOpen} />
           ) : null}

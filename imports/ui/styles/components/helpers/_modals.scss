@@ -1,0 +1,156 @@
+// General styles for lists and items
+.modal__list {
+  overflow-y: auto;
+  width: 100%;
+}
+
+.modal__item {
+  display: flex;
+  overflow: hidden;
+  height: 6rem;
+  margin: 0 $small-space $small-space $small-space;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal__item:hover .modal__play-icon {
+  opacity: 1;
+}
+
+.modal-item__artwork {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-item__play-icon {
+  width: 5rem;
+  height: 5rem;
+  padding: $small-space;
+  opacity: 0.3;
+  fill: darken($white, 0.5);
+}
+
+.modal-item__info {
+  min-width: 0;
+  padding: $small-space; //https://stackoverflow.com/questions/45813304/text-overflow-ellipsis-on-flex-child-not-working
+}
+
+.modal-item__title,
+.modal-item__author {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.modal-item__title {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.modal-item__author {
+  font-style: italic;
+}
+
+// UpNext popup
+.up-next__popup {
+  @include modal($upnext-height, $upnext-width, $upnext-modal-background);
+  right: $large-space;
+  bottom: calc(#{$player-height} - #{$large-space});
+  border: 0.1rem solid $black;
+  box-shadow: 0 0 0.1rem 0 rgba($black, 0.3), 0 1rem 1.5rem rgba($black, 0.2);
+}
+
+.up-next__title {
+  padding: $small-space $space;
+  font-size: 2.2rem;
+}
+
+.up-next__popup-overlay {
+  @include overlay($upnext-overlay-background);
+}
+
+.up-next__empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.empty__text {
+  font-size: 1.7rem;
+  font-style: italic;
+}
+
+// Episode detailes modal
+.episode-modal {
+  @include modal(
+    $episode-modal-height,
+    $episode-modal-width,
+    $episode-modal-background
+  );
+  padding: $small-space;
+}
+.episode-modal__overlay {
+  @include overlay($episode-modal-overlay-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.episode-modal__title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: $small-space;
+}
+.episode-modal__author {
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: $space;
+}
+.episode-modal__link-to-episode,
+.episode-modal__description a {
+  text-decoration: underline;
+  color: $light-blue;
+}
+.episode-modal__description {
+  overflow-y: auto;
+  margin-top: $space;
+}
+.episode-modal__description p {
+  margin-bottom: $small-space;
+}
+.episode-modal__description img {
+  width: 100%;
+}
+// Search modal
+.search-modal {
+  @include modal(
+    $search-modal-height,
+    $search-modal-width,
+    $search-modal-background
+  );
+  top: $space;
+  right: calc(
+    (#{$site-width} - #{$page-content-sidebar-width} - #{$main-width}) / 2
+  );
+  padding: $small-space;
+}
+.search-modal__overlay {
+  @include overlay($search-modal-overlay-background);
+}
+.search-modal__input {
+  color: $black;
+  width: 100%;
+  padding: 0.5rem $space;
+  margin-bottom: $small-space;
+  border-radius: 1rem;
+  border: 0.1rem solid rgba($black, 0.4);
+  outline: none;
+  font-size: 1.8rem;
+}

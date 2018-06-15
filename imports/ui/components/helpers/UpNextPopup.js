@@ -1,4 +1,5 @@
 import React from "react";
+import ModalItem from "./ModalItem";
 
 const UpNextPopup = ({ queue, onQueueItemClick }) => {
   if (!queue || queue.length === 1) {
@@ -12,34 +13,16 @@ const UpNextPopup = ({ queue, onQueueItemClick }) => {
   return (
     <React.Fragment>
       <h2 className="up-next__title">Up Next</h2>
-      <div className="up-next__queue">
+      <div className="modal__list">
         {queue.map((episode, index) => {
           if (index < 1) return;
           return (
             <div
               key={episode.id}
-              className="queue__item"
+              className="modal__item"
               onClick={() => onQueueItemClick(index)}
             >
-              <div
-                className="queue__artwork"
-                style={{
-                  backgroundImage: `url("${episode.podcastArtworkUrl}")`
-                }}
-              >
-                <svg
-                  className="queue__play-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 250 250"
-                >
-                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0ZM85.67,192.79V56.54l118,68.13Z" />
-                </svg>
-              </div>
-
-              <div className="queue__info">
-                <div className="queue__title">{episode.title}</div>
-                <div className="queue__author">{episode.author}</div>
-              </div>
+              <ModalItem item={episode} playIcon={true} />
             </div>
           );
         })}

@@ -16,4 +16,6 @@
   border-radius: 0.5rem;
   outline: none;
   background: $background;
+  display: flex;
+  flex-direction: column;
 }

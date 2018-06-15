@@ -7,6 +7,8 @@ class SearchPopup extends Component {
   constructor(props) {
     super(props);
 
+    this.searchBar = React.createRef();
+
     this.state = {
       searchTerm: "",
       isSearchReady: false
@@ -31,7 +33,7 @@ class SearchPopup extends Component {
       if (searchTerm.length > 2) {
         this.setState({ isSearchReady: true });
       }
-    }, 1500);
+    }, 1000);
   }
 
   onFormSubmit(e) {
@@ -48,12 +50,17 @@ class SearchPopup extends Component {
         isOpen={this.props.isSearchModelOpen}
         onRequestClose={() => this.closeSearchModal()}
         ariaHideApp={false}
-        className="episode-modal"
-        overlayClassName="episode-modal__overlay"
+        onAfterOpen={() => {
+          this.searchBar.current.focus();
+        }}
+        className="search-modal"
+        overlayClassName="search-modal__overlay"
       >
         <form onSubmit={e => this.onFormSubmit(e)}>
           <input
+            className="search-modal__input"
             type="text"
+            ref={this.searchBar}
             placeholder="Find podcasts"
             value={this.state.term}
             onChange={e => this.onInputChange(e)}

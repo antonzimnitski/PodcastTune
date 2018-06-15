@@ -3,32 +3,36 @@ import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
 import doSearch from "./../../queries/doSearch";
 import Loader from "./Loader";
+import ModalItem from "./ModalItem";
+import { Session } from "meteor/session";
 
 const SearchResults = props => {
   if (props.data.loading) return <Loader />;
-  console.log(props);
-  return <div>{renderResults(props.data.searchPreviews)}</div>;
+  return (
+    <div className="modal__list">
+      {renderResults(props.data.searchPreviews)}
+    </div>
+  );
 };
 
 function renderResults(results) {
   if (!results) return <div>Nothing was found</div>;
   return results.map(result => {
     return (
-      <div key={result.podcastId}>
-        <Link to={`/podcasts/${result.podcastId}`}>
-          <img
-            src={result.artworkUrl}
-            style={{ width: "3rem", height: "3rem" }}
-            alt={`${result.title} podcast artwork`}
-          />
-          <div>
-            <div>{result.title}</div>
-            <div>{result.author}</div>
-          </div>
-        </Link>
-      </div>
+      <Link
+        className="modal__item"
+        onClick={() => closeSearchModal()}
+        key={result.podcastId}
+        to={`/podcasts/${result.podcastId}`}
+      >
+        <ModalItem item={result} />
+      </Link>
     );
   });
+}
+
+function closeSearchModal() {
+  Session.set("isSearchModelOpen", false);
 }
 
 export default graphql(doSearch, {
