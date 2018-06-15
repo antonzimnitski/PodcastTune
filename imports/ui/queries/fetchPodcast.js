@@ -19,6 +19,8 @@ export default gql`
         description
         author
         mediaUrl
+        playedSeconds
+        duration
         pubDate
         linkToEpisode
       }

@@ -29,13 +29,14 @@
   font-weight: 500;
 }
 
-.episode__controls {
-  margin-left: auto;
-  width: 15%;
+.episode__controls,
+.episode__pub-date,
+.episode__duration {
+  width: 10%;
 }
 
-.episode__pub-date {
-  width: 15%;
+.episode__controls {
+  margin-left: auto;
 }
 
 .controls__play {

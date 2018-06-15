@@ -6,6 +6,8 @@ type Episode {
   description: String
   author: String
   mediaUrl: String
+  playedSeconds: Float
+  duration: Float
   pubDate: String
   linkToEpisode: String
 }

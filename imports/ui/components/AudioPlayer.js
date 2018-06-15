@@ -469,7 +469,8 @@ class AudioPlayer extends Component {
           onPlay={() => this.onPlay()}
           onPause={() => this.onPause()}
           muted={this.state.isMuted}
-          preload="auto"
+          preload="metadata"
+          autoPlay="false"
           controls
         />
       </div>

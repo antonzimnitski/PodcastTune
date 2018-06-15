@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export default {
   Episode: {
     id: data => data.id,
@@ -7,6 +9,8 @@ export default {
     description: data => data.description,
     author: data => data.author,
     mediaUrl: data => data.mediaUrl,
+    playedSeconds: () => 0,
+    duration: data => moment.duration(data.duration).asSeconds(),
     pubDate: data => data.pubDate,
     linkToEpisode: data => data.linkToEpisode
   }

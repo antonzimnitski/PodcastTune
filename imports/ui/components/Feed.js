@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
 import moment from "moment";
+import momentDurationFormatSetup from "moment-duration-format";
 import { withTracker } from "meteor/react-meteor-data";
 import { isEqual } from "lodash";
 import { setValue, placeEpisodeFirst } from "./../utils/utils";
@@ -60,6 +61,9 @@ class Feed extends Component {
               </div>
               <div className="episode__pub-date">
                 <p>{moment(episode.pubDate).format("MMMM DD")}</p>
+              </div>
+              <div className="episode__duration">
+                <p>{moment.duration(episode.duration, "seconds").format()}</p>
               </div>
               <div className="episode__controls">
                 <svg
