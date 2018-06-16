@@ -8,7 +8,11 @@ import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
 
-import { queueSplice } from "./../../ui/utils/utils";
+import {
+  queueSplice,
+  setStorageValue,
+  getStorageValue
+} from "./../../ui/utils/utils";
 
 import App from "./../../ui/components/App";
 import { withClientState } from "apollo-link-state";
@@ -23,8 +27,8 @@ const httpLink = new HttpLink({
 const cache = new InMemoryCache();
 
 const defaultState = {
-  currentEpisode: null,
-  queue: []
+  currentEpisode: getStorageValue("currentEpisode") || null,
+  queue: getStorageValue("queue") || []
 };
 
 const stateLink = withClientState({
@@ -34,7 +38,6 @@ const stateLink = withClientState({
     Mutation: {
       updateCurrentEpisode: (_, { episode }, { cache }) => {
         const prevEpisodeState = cache.readQuery({ query: getCurrentEpisode });
-
         if (prevEpisodeState.currentEpisode) {
           const prevQueueState = cache.readQuery({ query: getQueue });
           let queue;
@@ -59,6 +62,7 @@ const stateLink = withClientState({
             queue
           };
 
+          setStorageValue("queue", queue);
           cache.writeData({ query: getQueue, data: dataQueue });
         }
 
@@ -69,6 +73,7 @@ const stateLink = withClientState({
           }
         };
 
+        setStorageValue("currentEpisode", episode);
         cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
         return null;
       },
@@ -89,9 +94,11 @@ const stateLink = withClientState({
           ...prevEpisodeState,
           currentEpisode
         };
-        console.log("currentEpisode", currentEpisode);
-        console.log("queue", prevQueueState.queue);
+
+        setStorageValue("queue", currentEpisode);
         cache.writeData({ query: getQueue, data: dataQueue });
+
+        setStorageValue("currentEpisode", prevQueueState.queue);
         cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
         return null;
       }
@@ -117,9 +124,6 @@ Tracker.autorun(() => {
 
 Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
-  //https://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage#2010948
-  // const queue = JSON.parse(localStorage.getItem("queue"));
-  // Session.set("queue", queue);
-  Session.set("isPlayerOpen", false);
+  Session.set("isPlayerOpen", !!getStorageValue("currentEpisode"));
   render(<ApolloApp />, document.getElementById("app"));
 });

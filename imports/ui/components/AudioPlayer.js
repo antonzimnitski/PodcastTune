@@ -73,11 +73,6 @@ class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps) {
     const { episode } = this.state;
 
-    // if (!nextProps || nextProps.queue.length === 0) {
-    //   this.clearEpisode();
-    //   return;
-    // }
-
     if (!episode || episode.mediaUrl !== nextProps.currentEpisode.mediaUrl) {
       this.setState({
         isLoading: true,
@@ -497,11 +492,3 @@ export default compose(
     })
   })
 )(AudioPlayer);
-
-// (
-//   withTracker(() => {
-//     return {
-//       queue: Session.get("queue")
-//     };
-//   })(AudioPlayer)
-// );
