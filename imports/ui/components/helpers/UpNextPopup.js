@@ -14,12 +14,12 @@ const UpNextPopup = ({ queue, onQueueItemClick }) => {
     <React.Fragment>
       <h2 className="up-next__title">Up Next</h2>
       <div className="modal__list">
-        {queue.map((episode, index) => {
+        {queue.map(episode => {
           return (
             <div
               key={episode.id}
               className="modal__item"
-              onClick={() => onQueueItemClick(index)}
+              onClick={() => onQueueItemClick(episode)}
             >
               <ModalItem item={episode} playIcon={true} />
             </div>

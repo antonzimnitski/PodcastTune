@@ -10,6 +10,7 @@ import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
 import { graphql, compose } from "react-apollo";
 import getCurrentEpisode from "./../queries/getCurrentEpisode";
+import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
 import getQueue from "./../queries/getQueue";
 
 class AudioPlayer extends Component {
@@ -37,6 +38,7 @@ class AudioPlayer extends Component {
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
+    this.onQueueItemClick = this.onQueueItemClick.bind(this);
   }
 
   _lastVolume = 0;
@@ -213,8 +215,12 @@ class AudioPlayer extends Component {
     this.setState({ isModalOpen: !this.state.isModalOpen });
   }
 
-  onQueueItemClick(index) {
-    setValue("queue", placeEpisodeFirst(index));
+  onQueueItemClick(episode) {
+    this.props.updateCurrentEpisode({
+      variables: {
+        episode
+      }
+    });
   }
 
   formatSeconds(seconds) {
@@ -317,7 +323,7 @@ class AudioPlayer extends Component {
                 {episode.title}
               </span>
             ) : (
-              <span>"Select episode to play"</span>
+              <span>Select episode to play</span>
             )}
           </div>
           <div className="player__author">
@@ -482,6 +488,7 @@ class AudioPlayer extends Component {
 }
 
 export default compose(
+  graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
   graphql(getCurrentEpisode, {
     props: ({ data: { currentEpisode } }) => ({
       currentEpisode

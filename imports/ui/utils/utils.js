@@ -6,6 +6,6 @@ export function setValue(key, value) {
 }
 
 export function queueSplice(queue, index) {
-  queue.unshift(...queue.splice(index, 1));
+  queue.splice(index, 1);
   return queue;
 }

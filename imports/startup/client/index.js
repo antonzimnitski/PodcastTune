@@ -49,13 +49,15 @@ const stateLink = withClientState({
             queue =
               exists === -1
                 ? [prevEpisodeState.currentEpisode, ...prevQueueState.queue]
-                : queueSplice(prevQueueState.queue, exists);
+                : [
+                    prevEpisodeState.currentEpisode,
+                    ...queueSplice(prevQueueState.queue, exists)
+                  ];
           }
           const dataQueue = {
             ...prevQueueState,
             queue
           };
-          console.log("Queue updated");
 
           cache.writeData({ query: getQueue, data: dataQueue });
         }
@@ -93,8 +95,8 @@ Tracker.autorun(() => {
 Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
   //https://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage#2010948
-  const queue = JSON.parse(localStorage.getItem("queue"));
-  Session.set("queue", queue);
-  Session.set("isPlayerOpen", !!queue ? true : false);
+  // const queue = JSON.parse(localStorage.getItem("queue"));
+  // Session.set("queue", queue);
+  Session.set("isPlayerOpen", false);
   render(<ApolloApp />, document.getElementById("app"));
 });

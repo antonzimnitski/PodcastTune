@@ -40,14 +40,16 @@ class Feed extends Component {
         {this.props.episodes.map(episode => {
           if (!episode) return;
 
-          const className =
+          {
+            /* const className =
             this.props.queue &&
             isEqual(this.props.queue[0].title, episode.title)
               ? "episode episode--active"
-              : "episode";
+              : "episode"; */
+          }
 
           return (
-            <div key={episode.id} className={className}>
+            <div key={episode.id} className="episode">
               <div
                 onClick={() => this.handleEpisodeModal(episode)}
                 className="episode__title"
@@ -127,10 +129,4 @@ class Feed extends Component {
 
 export default compose(
   graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" })
-)(
-  withTracker(() => {
-    return {
-      queue: Session.get("queue")
-    };
-  })(Feed)
-);
+)(Feed);
