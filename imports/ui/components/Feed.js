@@ -28,18 +28,6 @@ class Feed extends Component {
       }
     });
     Session.set("isPlayerOpen", true);
-    setValue("queue", this.setQueue(episode));
-  }
-
-  setQueue(episode) {
-    const queue = this.props.queue;
-
-    if (!queue) {
-      return [episode];
-    } else if (Array.isArray(queue)) {
-      const exists = queue.findIndex(el => el.title === episode.title);
-      return exists !== -1 ? placeEpisodeFirst(exists) : [episode, ...queue];
-    }
   }
 
   handleEpisodeModal(episode) {

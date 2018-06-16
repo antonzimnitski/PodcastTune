@@ -8,6 +8,8 @@ import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
 
+import { queueSplice } from "./../../ui/utils/utils";
+
 import App from "./../../ui/components/App";
 import { withClientState } from "apollo-link-state";
 
@@ -35,27 +37,37 @@ const stateLink = withClientState({
 
         if (prevEpisodeState.currentEpisode) {
           const prevQueueState = cache.readQuery({ query: getQueue });
-          const queue = !prevQueueState.queue
-            ? [prevEpisodeState.currentEpisode]
-            : [prevEpisodeState.currentEpisode, ...prevQueueState.queue];
-
-          const data = {
+          let queue;
+          if (!prevQueueState.queue) {
+            queue = [prevEpisodeState.currentEpisode];
+          } else {
+            const exists = prevQueueState.queue.findIndex(
+              el =>
+                el.title === episode.title ||
+                el.title === prevEpisodeState.currentEpisode.title
+            );
+            queue =
+              exists === -1
+                ? [prevEpisodeState.currentEpisode, ...prevQueueState.queue]
+                : queueSplice(prevQueueState.queue, exists);
+          }
+          const dataQueue = {
             ...prevQueueState,
             queue
           };
           console.log("Queue updated");
 
-          cache.writeData({ query: getQueue, data });
+          cache.writeData({ query: getQueue, data: dataQueue });
         }
 
-        const data = {
+        const dataEpisode = {
           ...prevEpisodeState,
           currentEpisode: {
             ...episode
           }
         };
 
-        cache.writeData({ query: getCurrentEpisode, data });
+        cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
         return null;
       }
     }

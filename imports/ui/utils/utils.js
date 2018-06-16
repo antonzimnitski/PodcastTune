@@ -5,8 +5,7 @@ export function setValue(key, value) {
   Session.set(key, JSON.parse(localStorage.getItem(key)));
 }
 
-export function placeEpisodeFirst(index) {
-  const queue = Session.get("queue");
+export function queueSplice(queue, index) {
   queue.unshift(...queue.splice(index, 1));
   return queue;
 }
