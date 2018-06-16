@@ -12,6 +12,7 @@ import App from "./../../ui/components/App";
 import { withClientState } from "apollo-link-state";
 
 import getCurrentEpisode from "./../../../imports/ui/queries/getCurrentEpisode";
+import getQueue from "./../../../imports/ui/queries/getQueue";
 
 const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")
@@ -30,10 +31,25 @@ const stateLink = withClientState({
   resolvers: {
     Mutation: {
       updateCurrentEpisode: (_, { episode }, { cache }) => {
-        const previousState = cache.readQuery({ query: getCurrentEpisode });
+        const prevEpisodeState = cache.readQuery({ query: getCurrentEpisode });
+
+        if (prevEpisodeState.currentEpisode) {
+          const prevQueueState = cache.readQuery({ query: getQueue });
+          const queue = !prevQueueState.queue
+            ? [prevEpisodeState.currentEpisode]
+            : [prevEpisodeState.currentEpisode, ...prevQueueState.queue];
+
+          const data = {
+            ...prevQueueState,
+            queue
+          };
+          console.log("Queue updated");
+
+          cache.writeData({ query: getQueue, data });
+        }
 
         const data = {
-          ...previousState,
+          ...prevEpisodeState,
           currentEpisode: {
             ...episode
           }

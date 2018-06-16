@@ -10,6 +10,7 @@ import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
 import { graphql, compose } from "react-apollo";
 import getCurrentEpisode from "./../queries/getCurrentEpisode";
+import getQueue from "./../queries/getQueue";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -485,11 +486,18 @@ export default compose(
     props: ({ data: { currentEpisode } }) => ({
       currentEpisode
     })
+  }),
+  graphql(getQueue, {
+    props: ({ data: { queue } }) => ({
+      queue
+    })
   })
-)(
-  withTracker(() => {
-    return {
-      queue: Session.get("queue")
-    };
-  })(AudioPlayer)
-);
+)(AudioPlayer);
+
+// (
+//   withTracker(() => {
+//     return {
+//       queue: Session.get("queue")
+//     };
+//   })(AudioPlayer)
+// );

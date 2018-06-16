@@ -2,7 +2,7 @@ import React from "react";
 import ModalItem from "./ModalItem";
 
 const UpNextPopup = ({ queue, onQueueItemClick }) => {
-  if (!queue || queue.length === 1) {
+  if (!queue || queue.length === 0) {
     return (
       <div className="up-next__empty">
         <h2 className="up-next__title">Your Up Next is Empty</h2>
@@ -15,7 +15,6 @@ const UpNextPopup = ({ queue, onQueueItemClick }) => {
       <h2 className="up-next__title">Up Next</h2>
       <div className="modal__list">
         {queue.map((episode, index) => {
-          if (index < 1) return;
           return (
             <div
               key={episode.id}
