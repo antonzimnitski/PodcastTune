@@ -3,11 +3,15 @@ import React from "react";
 import { Session } from "meteor/session";
 import { Tracker } from "meteor/tracker";
 import { render } from "react-dom";
-import ApolloClient, { HttpLink, InMemoryCache } from "apollo-boost";
+import { HttpLink, InMemoryCache, ApolloLink } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
+import ApolloClient from "apollo-client";
 
 import App from "./../../ui/components/App";
+import { withClientState } from "apollo-link-state";
+
+import getCurrentEpisode from "./../../../imports/ui/queries/getCurrentEpisode";
 
 const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")
@@ -15,8 +19,35 @@ const httpLink = new HttpLink({
 
 const cache = new InMemoryCache();
 
+const defaultState = {
+  currentEpisode: null,
+  queue: []
+};
+
+const stateLink = withClientState({
+  cache,
+  defaults: defaultState,
+  resolvers: {
+    Mutation: {
+      updateCurrentEpisode: (_, { episode }, { cache }) => {
+        const previousState = cache.readQuery({ query: getCurrentEpisode });
+
+        const data = {
+          ...previousState,
+          currentEpisode: {
+            ...episode
+          }
+        };
+
+        cache.writeData({ query: getCurrentEpisode, data });
+        return null;
+      }
+    }
+  }
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  link: ApolloLink.from([stateLink, httpLink]),
   cache
 });
 

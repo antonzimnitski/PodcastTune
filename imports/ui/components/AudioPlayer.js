@@ -8,6 +8,8 @@ import { setValue, placeEpisodeFirst } from "./../utils/utils";
 import Modal from "react-modal";
 import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
+import { graphql, compose } from "react-apollo";
+import getCurrentEpisode from "./../queries/getCurrentEpisode";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -39,10 +41,10 @@ class AudioPlayer extends Component {
   _lastVolume = 0;
 
   componentDidMount() {
-    const queue = this.props.queue;
+    const currentEpisode = this.props.currentEpisode;
     this.setState({ mounted: true });
-    if (queue && queue.length > 0) {
-      this.setState({ episode: queue[0] });
+    if (currentEpisode) {
+      this.setState({ episode: currentEpisode });
     }
 
     this.getSeconds();
@@ -70,32 +72,32 @@ class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps) {
     const { episode } = this.state;
 
-    if (!nextProps || nextProps.queue.length === 0) {
-      this.clearEpisode();
-      return;
-    }
+    // if (!nextProps || nextProps.queue.length === 0) {
+    //   this.clearEpisode();
+    //   return;
+    // }
 
-    if (!episode || episode.mediaUrl !== nextProps.queue[0].mediaUrl) {
+    if (!episode || episode.mediaUrl !== nextProps.currentEpisode.mediaUrl) {
       this.setState({
         isLoading: true,
         isPlaying: false,
-        episode: nextProps.queue[0]
+        episode: nextProps.currentEpisode
       });
     }
   }
 
-  clearEpisode() {
-    const newQueue = this.props.queue;
-    newQueue.shift();
-    setValue("queue", newQueue);
-    this.setState({
-      episode: null,
-      isReady: false,
-      isPlaying: false,
-      duration: 0,
-      playedSeconds: 0
-    });
-  }
+  // clearEpisode() {
+  //   const newQueue = this.props.queue;
+  //   newQueue.shift();
+  //   setValue("queue", newQueue);
+  //   this.setState({
+  //     episode: null,
+  //     isReady: false,
+  //     isPlaying: false,
+  //     duration: 0,
+  //     playedSeconds: 0
+  //   });
+  // }
 
   onReady() {
     this.setState({ isReady: true, isLoading: false }, () => {
@@ -478,8 +480,16 @@ class AudioPlayer extends Component {
   }
 }
 
-export default withTracker(() => {
-  return {
-    queue: Session.get("queue")
-  };
-})(AudioPlayer);
+export default compose(
+  graphql(getCurrentEpisode, {
+    props: ({ data: { currentEpisode } }) => ({
+      currentEpisode
+    })
+  })
+)(
+  withTracker(() => {
+    return {
+      queue: Session.get("queue")
+    };
+  })(AudioPlayer)
+);

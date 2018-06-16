@@ -6,6 +6,8 @@ import { withTracker } from "meteor/react-meteor-data";
 import { isEqual } from "lodash";
 import { setValue, placeEpisodeFirst } from "./../utils/utils";
 import EpisodeModal from "./helpers/EpisodeModal";
+import { graphql, compose } from "react-apollo";
+import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
 
 class Feed extends Component {
   constructor(props) {
@@ -20,6 +22,11 @@ class Feed extends Component {
   }
 
   handleClick(episode) {
+    this.props.updateCurrentEpisode({
+      variables: {
+        episode
+      }
+    });
     Session.set("isPlayerOpen", true);
     setValue("queue", this.setQueue(episode));
   }
@@ -130,8 +137,12 @@ class Feed extends Component {
   }
 }
 
-export default withTracker(() => {
-  return {
-    queue: Session.get("queue")
-  };
-})(Feed);
+export default compose(
+  graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" })
+)(
+  withTracker(() => {
+    return {
+      queue: Session.get("queue")
+    };
+  })(Feed)
+);
