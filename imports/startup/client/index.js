@@ -71,6 +71,29 @@ const stateLink = withClientState({
 
         cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
         return null;
+      },
+      clearCurrentEpisode: (_, __, { cache }) => {
+        const prevEpisodeState = cache.readQuery({ query: getCurrentEpisode });
+        const prevQueueState = cache.readQuery({ query: getQueue });
+
+        let currentEpisode = null;
+        if (prevQueueState.queue) {
+          currentEpisode = prevQueueState.queue.splice(0, 1)[0];
+        }
+
+        const dataQueue = {
+          ...prevQueueState,
+          queue: prevQueueState.queue
+        };
+        const dataEpisode = {
+          ...prevEpisodeState,
+          currentEpisode
+        };
+        console.log("currentEpisode", currentEpisode);
+        console.log("queue", prevQueueState.queue);
+        cache.writeData({ query: getQueue, data: dataQueue });
+        cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
+        return null;
       }
     }
   }

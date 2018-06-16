@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import { Session } from "meteor/session";
-import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import { setValue, placeEpisodeFirst } from "./../utils/utils";
 import Modal from "react-modal";
 import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
 import { graphql, compose } from "react-apollo";
 import getCurrentEpisode from "./../queries/getCurrentEpisode";
+import clearCurrentEpisode from "./../queries/clearCurrentEpisode";
 import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
 import getQueue from "./../queries/getQueue";
 
@@ -89,18 +87,16 @@ class AudioPlayer extends Component {
     }
   }
 
-  // clearEpisode() {
-  //   const newQueue = this.props.queue;
-  //   newQueue.shift();
-  //   setValue("queue", newQueue);
-  //   this.setState({
-  //     episode: null,
-  //     isReady: false,
-  //     isPlaying: false,
-  //     duration: 0,
-  //     playedSeconds: 0
-  //   });
-  // }
+  clearEpisode() {
+    this.setState({
+      episode: null,
+      isReady: false,
+      isPlaying: false,
+      duration: 0,
+      playedSeconds: 0
+    });
+    this.props.clearCurrentEpisode();
+  }
 
   onReady() {
     this.setState({ isReady: true, isLoading: false }, () => {
@@ -488,6 +484,7 @@ class AudioPlayer extends Component {
 }
 
 export default compose(
+  graphql(clearCurrentEpisode, { name: "clearCurrentEpisode" }),
   graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
   graphql(getCurrentEpisode, {
     props: ({ data: { currentEpisode } }) => ({
