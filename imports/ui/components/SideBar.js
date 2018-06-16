@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
+import Auth from "./Auth";
 
 const SideBar = () => {
   return (
@@ -27,6 +28,7 @@ const SideBar = () => {
         <Link className="sidebar__link" to="/">
           Starred
         </Link>
+        <Auth />
       </div>
     </nav>
   );
