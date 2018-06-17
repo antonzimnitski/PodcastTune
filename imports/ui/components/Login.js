@@ -17,12 +17,6 @@ export class Login extends Component {
     this.email.current.focus();
   }
 
-  // componentWillMount() {
-  //   if (Meteor.userId()) {
-  //     this.props.history.replace("/dashboard");
-  //   }
-  // }
-
   onSubmit(event) {
     event.preventDefault();
 

@@ -5,6 +5,7 @@ import momentDurationFormatSetup from "moment-duration-format";
 import EpisodeModal from "./helpers/EpisodeModal";
 import { graphql, compose } from "react-apollo";
 import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
+import getCurrentEpisode from "./../queries/getCurrentEpisode";
 
 class Feed extends Component {
   constructor(props) {
@@ -20,6 +21,11 @@ class Feed extends Component {
   }
 
   handleClick(episode) {
+    if (
+      this.props.currentEpisode &&
+      this.props.currentEpisode.title === episode.title
+    )
+      return console.log("it's current");
     this.props.updateCurrentEpisode({
       variables: {
         episode
@@ -30,6 +36,20 @@ class Feed extends Component {
 
   handleEpisodeModal(episode) {
     this.setState({ isModalOpen: !this.state.isModalOpen, episode });
+  }
+
+  formatDate(date) {
+    if (moment(date).isValid()) {
+      const format =
+        moment(date).year() === moment().year() ? "MMM D" : "MMM D, YYYY";
+      return moment(date).format(format);
+    }
+    return "";
+  }
+
+  formatDuration(seconds) {
+    if (!seconds) return "";
+    return moment.duration(seconds, "seconds").format();
   }
 
   renderFeed() {
@@ -53,10 +73,10 @@ class Feed extends Component {
             <p>{episode.title}</p>
           </div>
           <div className="episode__pub-date">
-            <p>{moment(episode.pubDate).format("MMMM DD")}</p>
+            <p>{this.formatDate(episode.pubDate)}</p>
           </div>
           <div className="episode__duration">
-            <p>{moment.duration(episode.duration, "seconds").format()}</p>
+            <p>{this.formatDuration(episode.duration)}</p>
           </div>
           <div className="episode__controls">
             <svg
@@ -139,5 +159,10 @@ class Feed extends Component {
 }
 
 export default compose(
+  graphql(getCurrentEpisode, {
+    props: ({ data: { currentEpisode } }) => ({
+      currentEpisode
+    })
+  }),
   graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" })
 )(Feed);
