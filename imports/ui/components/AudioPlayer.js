@@ -73,6 +73,11 @@ class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps) {
     const { episode } = this.state;
 
+    if (!nextProps.currentEpisode) {
+      this.clearEpisode();
+      return;
+    }
+
     if (!episode || episode.mediaUrl !== nextProps.currentEpisode.mediaUrl) {
       this.setState({
         isLoading: true,

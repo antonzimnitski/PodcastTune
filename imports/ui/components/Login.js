@@ -14,6 +14,10 @@ export class Login extends Component {
     this.password = React.createRef();
   }
 
+  componentDidMount() {
+    this.email.current.focus();
+  }
+
   // componentWillMount() {
   //   if (Meteor.userId()) {
   //     this.props.history.replace("/dashboard");

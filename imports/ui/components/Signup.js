@@ -20,6 +20,10 @@ export class Signup extends Component {
   //   }
   // }
 
+  componentDidMount() {
+    this.email.current.focus();
+  }
+
   onSubmit(event) {
     event.preventDefault();
 

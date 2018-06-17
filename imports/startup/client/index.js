@@ -24,6 +24,16 @@ const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")
 });
 
+const authLink = new ApolloLink((operation, forward) => {
+  const token = Accounts._storedLoginToken();
+  operation.setContext(() => ({
+    headers: {
+      "meteor-login-token": token
+    }
+  }));
+  return forward(operation);
+});
+
 const cache = new InMemoryCache();
 
 const defaultState = {
@@ -31,13 +41,20 @@ const defaultState = {
   queue: getStorageValue("queue") || []
 };
 
+// const defaultState = {
+//   currentEpisode: null,
+//   queue: null
+// };
+
 const stateLink = withClientState({
   cache,
   defaults: defaultState,
   resolvers: {
     Mutation: {
       updateCurrentEpisode: (_, { episode }, { cache }) => {
-        const prevEpisodeState = cache.readQuery({ query: getCurrentEpisode });
+        const prevEpisodeState = cache.readQuery({
+          query: getCurrentEpisode
+        });
         if (prevEpisodeState.currentEpisode) {
           const prevQueueState = cache.readQuery({ query: getQueue });
           let queue;
@@ -74,7 +91,10 @@ const stateLink = withClientState({
         };
 
         setStorageValue("currentEpisode", episode);
-        cache.writeData({ query: getCurrentEpisode, data: dataEpisode });
+        cache.writeData({
+          query: getCurrentEpisode,
+          data: dataEpisode
+        });
         return null;
       },
       clearCurrentEpisode: (_, __, { cache }) => {
@@ -107,7 +127,8 @@ const stateLink = withClientState({
 });
 
 const client = new ApolloClient({
-  link: ApolloLink.from([stateLink, httpLink]),
+  // ORDER MATTER!!
+  link: ApolloLink.from([authLink, stateLink, httpLink]),
   cache
 });
 
