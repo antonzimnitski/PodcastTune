@@ -12,7 +12,9 @@
   position: fixed;
   z-index: 301;
   width: $width;
-  height: $height;
+  @if $height {
+    height: $height;
+  }
   border-radius: 0.5rem;
   outline: none;
   background: $background;

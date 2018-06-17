@@ -4,6 +4,7 @@ $light-blue: #77d0ff;
 $dark-gray: #626262;
 $white: #fafafa;
 $black: #333;
+$red: #d0021b;
 
 //Body
 $body-background-color: $white;
@@ -100,3 +101,8 @@ $search-modal-height: 35rem;
 $search-modal-width: 45rem;
 $search-modal-background: $white;
 $search-modal-overlay-background: rgba($black, 0.1);
+
+// AuthModal
+$auth-modal-width: 35rem;
+$auth-modal-background: $white;
+$auth-modal-overlay-background: rgba($black, 0.3);

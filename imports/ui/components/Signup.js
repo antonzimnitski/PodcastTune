@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
-import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
 
 export class Signup extends Component {
@@ -12,7 +10,8 @@ export class Signup extends Component {
       error: ""
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.email = React.createRef();
+    this.password = React.createRef();
   }
 
   // componentWillMount() {
@@ -24,8 +23,8 @@ export class Signup extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    let email = this.refs.email.value.trim();
-    let password = this.refs.password.value.trim();
+    let email = this.email.current.value.trim();
+    let password = this.password.current.value.trim();
 
     if (password.length < 9) {
       return this.setState({
@@ -33,7 +32,7 @@ export class Signup extends Component {
       });
     }
 
-    this.props.createUser({ email, password }, err => {
+    Accounts.createUser({ email, password }, err => {
       if (err) {
         this.setState({ error: err.reason });
       } else {
@@ -44,27 +43,46 @@ export class Signup extends Component {
 
   render() {
     return (
-      <div className="boxed-view">
-        <div className="boxed-view__box">
-          <h1>Join</h1>
-          {this.state.error ? <p>{this.state.error}</p> : undefined}
-          <form
-            className="boxed-view__form"
-            onSubmit={this.onSubmit}
-            noValidate
-          >
-            <input type="email" ref="email" name="email" placeholder="Email" />
-            <input
-              type="password"
-              ref="password"
-              name="password"
-              placeholder="Password"
-            />
-            <button className="button">Create Account</button>
-          </form>
-          <button onClick={() => this.props.onSwap()}>Have an account?</button>
-        </div>
-      </div>
+      <React.Fragment>
+        <h1 className="auth-modal__title">Join</h1>
+        {this.state.error ? (
+          <p className="auth-modal__error">{this.state.error}</p>
+        ) : (
+          undefined
+        )}
+        <form onSubmit={e => this.onSubmit(e)} noValidate>
+          <label className="auth-modal__label" htmlFor="email">
+            Email: *
+          </label>
+          <input
+            type="email"
+            ref={this.email}
+            id="email"
+            name="email"
+            placeholder="Email"
+            className="auth-modal__input"
+          />
+
+          <label className="auth-modal__label" htmlFor="password">
+            Password: *
+          </label>
+          <input
+            type="password"
+            ref={this.password}
+            id="password"
+            name="password"
+            placeholder="Password"
+            className="auth-modal__input"
+          />
+          <button className="auth-modal__button">Create Account</button>
+        </form>
+        <button
+          className="auth-modal__text-btn"
+          onClick={() => this.props.onSwap()}
+        >
+          Have an account?
+        </button>
+      </React.Fragment>
     );
   }
 }

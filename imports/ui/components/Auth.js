@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Meteor } from "meteor/meteor";
 import AuthModal from "./helpers/AuthModal";
 import Modal from "react-modal";
 
@@ -47,13 +48,20 @@ class Auth extends Component {
           Sing Up
         </div>
 
-        <div className="sidebar__link">Logout</div>
+        <div
+          className="sidebar__link"
+          onClick={() => Meteor.logout(() => console.log("Logged out"))}
+        >
+          Logout
+        </div>
 
         {this.state.isModalOpen ? (
           <Modal
             isOpen={this.state.isModalOpen}
             onRequestClose={() => this.closeAuthModal()}
             ariaHideApp={false}
+            className="auth-modal"
+            overlayClassName="auth-modal__overlay"
           >
             <AuthModal
               isLoginOpen={this.state.isLoginOpen}

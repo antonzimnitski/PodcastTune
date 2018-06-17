@@ -25,10 +25,10 @@ class AuthModal extends Component {
   render() {
     const { isSignupOpen, isLoginOpen } = this.state;
     return (
-      <div>
+      <React.Fragment>
         {isSignupOpen ? <Signup onSwap={this.swapForms} /> : null}
         {isLoginOpen ? <Login onSwap={this.swapForms} /> : null}
-      </div>
+      </React.Fragment>
     );
   }
 }
