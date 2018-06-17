@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import PropTypes from "prop-types";
 
 export class Login extends Component {
   constructor(props) {
@@ -33,6 +32,10 @@ export class Login extends Component {
     Meteor.loginWithPassword({ email }, password, err => {
       const reason = err ? "Unable to login. Check email and password." : "";
       this.setState({ error: reason });
+
+      if (!err) {
+        this.props.onClose();
+      }
     });
   }
 

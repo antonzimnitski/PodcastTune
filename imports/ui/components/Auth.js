@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import AuthModal from "./helpers/AuthModal";
 import Modal from "react-modal";
+import Login from "./Login";
+import Signup from "./Signup";
 
 class Auth extends Component {
   constructor(props) {
@@ -10,21 +11,26 @@ class Auth extends Component {
     this.state = {
       isModalOpen: false,
       isSignupOpen: false,
-      isLoginOpen: false
+      isLoginOpen: false,
+      isLoggedIn: !!Meteor.userId()
     };
+
+    this.closeAuthModal = this.closeAuthModal.bind(this);
+    this.swapForms = this.swapForms.bind(this);
   }
 
   closeAuthModal() {
     this.setState({
       isModalOpen: false,
       isLoginOpen: false,
-      isSignupOpen: false
+      isSignupOpen: false,
+      isLoggedIn: true
     });
   }
 
-  render() {
+  loginContent() {
     return (
-      <div className="auth">
+      <React.Fragment>
         <div
           className="sidebar__link"
           onClick={() =>
@@ -47,14 +53,42 @@ class Auth extends Component {
         >
           Sing Up
         </div>
+      </React.Fragment>
+    );
+  }
 
-        <div
-          className="sidebar__link"
-          onClick={() => Meteor.logout(() => console.log("Logged out"))}
-        >
-          Logout
-        </div>
+  logoutContent() {
+    return (
+      <div
+        className="sidebar__link"
+        onClick={() => {
+          Meteor.logout();
+          this.setState({ isLoggedIn: false });
+        }}
+      >
+        Logout
+      </div>
+    );
+  }
 
+  modalContent() {
+    if (this.state.isSignupOpen)
+      return <Signup onClose={this.closeAuthModal} onSwap={this.swapForms} />;
+    if (this.state.isLoginOpen)
+      return <Login onClose={this.closeAuthModal} onSwap={this.swapForms} />;
+  }
+
+  swapForms() {
+    this.setState({
+      isSignupOpen: !this.state.isSignupOpen,
+      isLoginOpen: !this.state.isLoginOpen
+    });
+  }
+
+  render() {
+    return (
+      <div className="auth">
+        {this.state.isLoggedIn ? this.logoutContent() : this.loginContent()}
         {this.state.isModalOpen ? (
           <Modal
             isOpen={this.state.isModalOpen}
@@ -63,10 +97,7 @@ class Auth extends Component {
             className="auth-modal"
             overlayClassName="auth-modal__overlay"
           >
-            <AuthModal
-              isLoginOpen={this.state.isLoginOpen}
-              isSignupOpen={this.state.isSignupOpen}
-            />
+            {this.modalContent()}
           </Modal>
         ) : null}
       </div>
