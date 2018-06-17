@@ -3,6 +3,8 @@ import { Meteor } from "meteor/meteor";
 import Modal from "react-modal";
 import Login from "./Login";
 import Signup from "./Signup";
+import { Query, withApollo } from "react-apollo";
+import getLoggedUser from "./../queries/getLoggedUser";
 
 class Auth extends Component {
   constructor(props) {
@@ -59,15 +61,30 @@ class Auth extends Component {
 
   logoutContent() {
     return (
-      <div
-        className="sidebar__link"
-        onClick={() => {
-          Meteor.logout();
-          this.setState({ isLoggedIn: false });
+      <Query query={getLoggedUser} skip={!this.state.isLoggedIn}>
+        {({ loading, error, data }) => {
+          if (loading) return null;
+          if (error) throw error;
+          console.log(data);
+
+          return (
+            <React.Fragment>
+              <div className="sidebar__link">{data.user.email}</div>
+              <div
+                className="sidebar__link"
+                onClick={() => {
+                  Meteor.logout();
+                  this.setState({ isLoggedIn: false }, () => {
+                    this.props.client.resetStore();
+                  });
+                }}
+              >
+                Logout
+              </div>
+            </React.Fragment>
+          );
         }}
-      >
-        Logout
-      </div>
+      </Query>
     );
   }
 
@@ -88,6 +105,7 @@ class Auth extends Component {
   render() {
     return (
       <div className="auth">
+        {console.log(this.props)}
         {this.state.isLoggedIn ? this.logoutContent() : this.loginContent()}
         {this.state.isModalOpen ? (
           <Modal
@@ -105,4 +123,4 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+export default withApollo(Auth);

@@ -36,15 +36,15 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const cache = new InMemoryCache();
 
-const defaultState = {
-  currentEpisode: getStorageValue("currentEpisode") || null,
-  queue: getStorageValue("queue") || []
-};
-
 // const defaultState = {
-//   currentEpisode: null,
-//   queue: null
+//   currentEpisode: getStorageValue("currentEpisode") || null,
+//   queue: getStorageValue("queue") || []
 // };
+
+const defaultState = {
+  currentEpisode: null,
+  queue: null
+};
 
 const stateLink = withClientState({
   cache,
