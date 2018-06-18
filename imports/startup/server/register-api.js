@@ -22,8 +22,8 @@ import SearchPreviewsSchema from "./../../api/searchPreviews/SearchPreview.graph
 import SearchPreviewsResolvers from "./../../api/searchPreviews/resolvers";
 
 const typeDefs = [
-  UsersSchema,
   GenresSchema,
+  UsersSchema,
   PodcastsPreviewsSchema,
   PodcastSchema,
   EpisodeSchema,
