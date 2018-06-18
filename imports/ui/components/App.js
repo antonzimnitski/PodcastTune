@@ -3,6 +3,7 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
+import Header from "./Header";
 import SideBar from "./SideBar";
 import Podcasts from "./Podcasts";
 import PodcastPage from "./PodcastPage";
@@ -15,6 +16,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="page-content">
+          <Header />
           <div className="page-content__sidebar">
             <SideBar />
           </div>
@@ -38,6 +40,10 @@ class App extends Component {
             </div>
           </div>
           {this.props.isPlayerOpen ? <AudioPlayer /> : null}
+          <div
+            onClick={() => this.props.handleNavToggle()}
+            className="top-header__overlay"
+          />
         </div>
       </BrowserRouter>
     );
@@ -46,6 +52,7 @@ class App extends Component {
 
 export default withTracker(() => {
   return {
-    isPlayerOpen: Session.get("isPlayerOpen")
+    isPlayerOpen: Session.get("isPlayerOpen"),
+    handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen"))
   };
 })(App);

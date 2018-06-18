@@ -8,6 +8,10 @@
   height: $track-height;
   transition: all 0.2s ease;
   width: $track-width;
+
+  @include desktop {
+    height: $track-height-desktop;
+  }
 }
 
 @mixin thumb {
@@ -18,4 +22,9 @@
   cursor: pointer;
   height: $thumb-height;
   width: $thumb-width;
+
+  @include desktop {
+    height: $thumb-height-desktop;
+    width: $thumb-width-desktop;
+  }
 }

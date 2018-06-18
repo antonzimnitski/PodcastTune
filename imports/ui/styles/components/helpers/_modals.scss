@@ -135,11 +135,14 @@
     $search-modal-width,
     $search-modal-background
   );
-  top: $space;
-  right: calc(
-    (#{$site-width} - #{$page-content-sidebar-width} - #{$main-width}) / 2
-  );
   padding: $small-space;
+  right: $large-space;
+  top: calc(#{$header-height} + #{$space});
+  @include laptop {
+    top: $space; // right: calc(
+    // (#{$site-width} - #{$page-content-sidebar-width} - #{$main-width}) / 2
+    // );
+  }
 }
 .search-modal__overlay {
   @include overlay($search-modal-overlay-background);

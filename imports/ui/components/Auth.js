@@ -19,15 +19,19 @@ class Auth extends Component {
 
     this.closeAuthModal = this.closeAuthModal.bind(this);
     this.swapForms = this.swapForms.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
   }
 
   closeAuthModal() {
     this.setState({
       isModalOpen: false,
       isLoginOpen: false,
-      isSignupOpen: false,
-      isLoggedIn: true
+      isSignupOpen: false
     });
+  }
+
+  onSuccess() {
+    this.setState({ isLoggedIn: true }, () => this.closeAuthModal());
   }
 
   loginContent() {
@@ -90,9 +94,21 @@ class Auth extends Component {
 
   modalContent() {
     if (this.state.isSignupOpen)
-      return <Signup onClose={this.closeAuthModal} onSwap={this.swapForms} />;
+      return (
+        <Signup
+          onClose={this.closeAuthModal}
+          onSuccess={this.onSuccess}
+          onSwap={this.swapForms}
+        />
+      );
     if (this.state.isLoginOpen)
-      return <Login onClose={this.closeAuthModal} onSwap={this.swapForms} />;
+      return (
+        <Login
+          onClose={this.closeAuthModal}
+          onSuccess={this.onSuccess}
+          onSwap={this.swapForms}
+        />
+      );
   }
 
   swapForms() {

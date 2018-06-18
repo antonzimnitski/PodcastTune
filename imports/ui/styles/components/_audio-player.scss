@@ -8,6 +8,10 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 0.5rem $black;
+
+  @include desktop {
+    height: $player-height-desktop;
+  }
 }
 
 .player-is-open .player {
@@ -15,10 +19,15 @@
 }
 
 .player__skip,
-.player__play {
+.player__play,
+.player__skip-text {
   width: $player-controls-icons-size;
   height: $player-controls-icons-size;
   cursor: pointer;
+  @include desktop {
+    width: $player-controls-icons-size-desktop;
+    height: $player-controls-icons-size-desktop;
+  }
 }
 
 .player__play {
@@ -33,6 +42,9 @@
 
 .player__link-to-podcast {
   margin-left: $space;
+  @include desktop {
+    margin-left: $large-space;
+  }
 }
 
 .player__podcast-atrwork {
@@ -40,6 +52,10 @@
   width: 7rem;
   transition: all 0.3s ease;
   border: 0.1rem solid $black;
+  @include desktop {
+    height: 9rem;
+    width: 9rem;
+  }
 }
 
 .player__podcast-atrwork:hover {
@@ -52,6 +68,10 @@
 
 .player__play {
   margin: 0 $small-space;
+
+  @include desktop {
+    margin: 0 $space;
+  }
 }
 
 .player__skip-forward {
@@ -64,13 +84,16 @@
 }
 
 .player__skip-text {
-  width: $player-controls-icons-size;
-  height: $player-controls-icons-size;
   text-align: center;
   line-height: $player-controls-icons-size;
   display: block;
   font-weight: 600;
   color: $black;
+
+  @include desktop {
+    font-size: 2rem;
+    line-height: $player-controls-icons-size-desktop;
+  }
 }
 
 .player__play-circle,
@@ -99,33 +122,51 @@
 
 .player__controls-center {
   min-width: 0;
+  max-width: 80rem;
   flex: 1 1 auto;
   align-self: center;
   text-align: center;
   margin: 0 $space;
+
+  @include desktop {
+    max-width: 100rem;
+  }
 }
 
 .player__title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin-bottom: $small-space / 2;
   font-size: $player-title-font-size;
+
+  @include desktop {
+    margin-bottom: $small-space / 2;
+    font-size: $player-title-font-size * 1.3;
+  }
 }
 
 .player__title-link:hover,
-.player__author:hover a {
+.player__author a:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
 .player__author {
   font-style: italic;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .player__seek-bar {
   width: 100%;
   position: relative;
+  margin-top: -0.5rem;
+
+  @include desktop {
+    margin-top: 0;
+  }
 }
 
 .seek-bar__range {
@@ -135,6 +176,10 @@
   display: flex;
   justify-content: space-between;
   margin-top: -1rem;
+
+  @include desktop {
+    margin-top: -0.5rem;
+  }
 }
 
 .seek-bar__text {
@@ -148,6 +193,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @include desktop {
+    margin-right: $large-space;
+  }
 }
 
 .playback-rate__control {
@@ -155,6 +204,11 @@
   width: 2.5rem;
   height: 2.5rem;
   transition: all 0.3s ease;
+
+  @include desktop {
+    width: 3rem;
+    height: 3rem;
+  }
 }
 
 .player__playback-rate:hover .playback-rate__control {
@@ -187,6 +241,11 @@
   justify-content: center;
   align-items: center;
   height: 3rem;
+
+  @include desktop {
+    margin-right: $large-space;
+    height: 4rem;
+  }
 }
 
 .volume__icon {
@@ -205,13 +264,24 @@
 
 .volume__range {
   width: 6rem;
+
+  @include desktop {
+    width: 8rem;
+  }
 }
 
 .player__up-next {
   margin-right: $space;
+  @include desktop {
+    margin-right: $large-space;
+  }
 }
 
 .up-next__icon {
   height: 2rem;
   fill: $black;
+
+  @include desktop {
+    height: 3.5rem;
+  }
 }

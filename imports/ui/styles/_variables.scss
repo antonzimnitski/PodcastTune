@@ -11,6 +11,11 @@ $body-background-color: $white;
 $body-default-color: $black;
 $body-default-font-family: Helvetica, Arial, sans-serif;
 
+//Media breakpoints
+// $breakpoint-tablet: 768px;
+$breakpoint-laptop: 1024px;
+$breakpoint-desktop: 1440px;
+
 //Spacing
 $small-space: 1rem;
 $space: 2rem;
@@ -22,86 +27,85 @@ $base-font-size: 1.4rem;
 
 //Page Content
 $page-content-sidebar-width: 24rem;
+$page-content-sidebar-width-desktop: 32rem;
 $page-content-main-width: calc(#{$site-width} - #{$page-content-sidebar-width});
+$page-content-main-width-desktop: calc(
+  #{$site-width} - #{$page-content-sidebar-width-desktop}
+);
 $main-width: 120rem;
-
-//Button
+// Header
+$header-height: 5rem;
+$header-nav-toogle: 3rem;
+// Button
 $button-bg: $light-blue;
 $button-color: $white;
 $button-shadow-color: rgba($black, 0.2);
 $button-spacing: $small-space;
-
 // Sidebar
 $sidebar-bg: $dark-blue;
 $sidebar-color: $white;
 $sidebar-color-active: $light-blue;
 $sidebar-font-size: 2rem;
-
-//Preview
+// Preview
 $preview-title-font-size: 2.5rem;
 $preview-desc-font-size: 1.6rem;
-
-//Inner header
+// Inner header
 $title-font-size: 3.5rem;
 $ih-arrow-size: 2.5rem;
 $ih-arrow-wiggle: 1rem;
-
-//Genre
+// Genre
 $genre-spacing: 0.5rem;
 $genre-nav-height: 70rem;
 $genre-title-font-size: 1.6rem;
-
-//Podcast
+// Podcast
 $podcast-image-size: 22rem;
 $podcast-title: 3.5rem;
-
-//Player
-$player-height: 8em;
-$player-title-font-size: 1.8rem;
+// Player
+$player-height: 9rem;
+$player-height-desktop: 12rem;
+$player-title-font-size: 1.6rem;
 $player-controls-icons-size: 4rem;
-
-//Input range
+$player-controls-icons-size-desktop: 7rem;
+// Input range
 $track-color: #fff;
 $thumb-color: $white;
-
 $thumb-radius: 2rem;
+
 $thumb-height: 2rem;
 $thumb-width: 1rem;
+$thumb-height-desktop: 3rem;
+$thumb-width-desktop: 1.5rem;
 $thumb-shadow-size: 0.5rem;
 $thumb-shadow-blur: 0.5rem;
 $thumb-shadow-color: rgba(0, 0, 0, 0.2);
 $thumb-border-width: 0.2rem;
 $thumb-border-color: $dark-gray;
-
 $track-width: 100%;
 $track-height: 0.5rem;
+$track-height-desktop: 1rem;
 $track-shadow-size: 0.1rem;
 $track-shadow-blur: 0.1rem;
 $track-shadow-color: rgba(0, 0, 0, 0.2);
 $track-border-width: 0.1rem;
 $track-border-color: $dark-gray;
-
 $track-radius: 0.5rem;
 $contrast: 5%;
-
 // UpNextPopup
+
 $upnext-height: 40rem;
 $upnext-width: 50rem;
 $upnext-modal-background: $white;
 $upnext-overlay-background: transparent;
-
 // EpisodeModal
 $episode-modal-height: 50rem;
 $episode-modal-width: 60rem;
 $episode-modal-background: $white;
 $episode-modal-overlay-background: rgba($black, 0.3);
-
 // SearchModal
 $search-modal-height: 35rem;
 $search-modal-width: 45rem;
 $search-modal-background: $white;
 $search-modal-overlay-background: rgba($black, 0.1);
-
 // AuthModal
 $auth-modal-width: 35rem;
 $auth-modal-background: $white;

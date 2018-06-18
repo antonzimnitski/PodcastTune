@@ -159,12 +159,18 @@ const ApolloApp = () => (
 );
 
 Tracker.autorun(() => {
+  const isNavOpen = Session.get("isNavOpen");
+  document.body.classList.toggle("nav-is-open", isNavOpen);
+});
+
+Tracker.autorun(() => {
   const isPlayerOpen = Session.get("isPlayerOpen");
   document.body.classList.toggle("player-is-open", isPlayerOpen);
 });
 
 Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
+  Session.set("isNavOpen", false);
   Session.set("isPlayerOpen", !!getStorageValue("currentEpisode"));
   render(<ApolloApp />, document.getElementById("app"));
 });

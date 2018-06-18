@@ -28,7 +28,7 @@ export class Login extends Component {
       this.setState({ error: reason });
 
       if (!err) {
-        this.props.onClose();
+        this.props.onSuccess();
       }
     });
   }

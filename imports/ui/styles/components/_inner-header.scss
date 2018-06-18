@@ -19,6 +19,10 @@
   cursor: pointer;
   font-weight: 500;
   color: $light-blue;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .inner-header__back-btn {

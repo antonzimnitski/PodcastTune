@@ -1,6 +1,10 @@
 .sidebar__logo {
   display: block;
   margin: $space;
+
+  @include desktop {
+    margin: $large-space;
+  }
 }
 
 .sidebar__link {
@@ -12,6 +16,11 @@
   line-height: $sidebar-font-size;
   padding: $small-space 0 $small-space $large-space;
   text-align: left;
+
+  @include desktop {
+    font-size: $sidebar-font-size * 1.2;
+    line-height: $sidebar-font-size * 1.2;
+  }
 }
 
 .sidebar__link--selected,

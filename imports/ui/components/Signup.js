@@ -41,7 +41,7 @@ export class Signup extends Component {
         this.setState({ error: err.reason });
       } else {
         this.setState({ error: "" });
-        this.props.onClose();
+        this.props.onSuccess();
       }
     });
   }
