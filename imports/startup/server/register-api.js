@@ -44,4 +44,8 @@ const schema = makeExecutableSchema({
   resolvers
 });
 
-createApolloServer({ schema });
+createApolloServer({
+  schema,
+  tracing: true,
+  cacheControl: true
+});

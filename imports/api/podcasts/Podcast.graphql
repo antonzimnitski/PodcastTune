@@ -1,4 +1,4 @@
-type Podcast {
+type Podcast @cacheControl(maxAge: 86400) {
   podcastId: Int!
   feedUrl: String
   title: String
@@ -7,7 +7,7 @@ type Podcast {
   description: String
   summary: String
   artworkUrl: String
-  episodes: [Episode]
+  episodes: [Episode] @cacheControl(maxAge: 3600)
 }
 
 extend type Query {
