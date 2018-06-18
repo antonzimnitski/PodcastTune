@@ -51,7 +51,7 @@
 }
 
 .player__play {
-  margin: 0 $space;
+  margin: 0 $small-space;
 }
 
 .player__skip-forward {
@@ -113,7 +113,8 @@
   font-size: $player-title-font-size;
 }
 
-.player__title-link:hover {
+.player__title-link:hover,
+.player__author:hover a {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -130,29 +131,19 @@
 .seek-bar__range {
   width: 100%;
 }
+.seek-bar__time {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -1rem;
+}
 
 .seek-bar__text {
   font-weight: 500;
 }
 
-.seek-bar__text--left,
-.seek-bar__text--right {
-  position: absolute;
-  top: 3.5rem;
-}
-.seek-bar__text--left {
-  left: 0;
-}
-
-.seek-bar__text--right {
-  position: absolute;
-  right: 0;
-}
-
 .player__playback-rate {
   width: 3rem;
-  // height: 8rem;
-  margin-right: $large-space;
+  margin-right: $space;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -161,8 +152,8 @@
 
 .playback-rate__control {
   opacity: 0;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   transition: all 0.3s ease;
 }
 
@@ -191,7 +182,7 @@
 }
 
 .player__volume {
-  margin-right: $large-space;
+  margin-right: $space;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -217,7 +208,7 @@
 }
 
 .player__up-next {
-  margin-right: $large-space;
+  margin-right: $space;
 }
 
 .up-next__icon {

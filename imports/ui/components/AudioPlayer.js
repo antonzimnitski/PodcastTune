@@ -386,16 +386,18 @@ class AudioPlayer extends Component {
               max={this.state.duration}
               step="1"
             />
-            <span className="seek-bar__text seek-bar__text--left">
-              {this.state.isReady && !this.state.isLoading
-                ? this.formatSeconds(episode.playedSeconds)
-                : "--/--"}
-            </span>
-            <span className="seek-bar__text seek-bar__text--right">
-              {this.state.isReady && !this.state.isLoading
-                ? this.formatSeconds(this.state.duration)
-                : "--/--"}
-            </span>
+            <div className="seek-bar__time">
+              <span className="seek-bar__text seek-bar__text--left">
+                {this.state.isReady && !this.state.isLoading
+                  ? this.formatSeconds(episode.playedSeconds)
+                  : "--/--"}
+              </span>
+              <span className="seek-bar__text seek-bar__text--right">
+                {this.state.isReady && !this.state.isLoading
+                  ? this.formatSeconds(this.state.duration)
+                  : "--/--"}
+              </span>
+            </div>
           </div>
         </div>
         <div className="player__controls-right">
