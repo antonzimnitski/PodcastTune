@@ -105,7 +105,6 @@ class Auth extends Component {
   render() {
     return (
       <div className="auth">
-        {console.log(this.props)}
         {this.state.isLoggedIn ? this.logoutContent() : this.loginContent()}
         {this.state.isModalOpen ? (
           <Modal

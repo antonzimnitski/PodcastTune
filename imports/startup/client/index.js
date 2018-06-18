@@ -36,21 +36,41 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const cache = new InMemoryCache();
 
-// const defaultState = {
-//   currentEpisode: getStorageValue("currentEpisode") || null,
-//   queue: getStorageValue("queue") || []
-// };
-
 const defaultState = {
-  currentEpisode: null,
-  queue: null
+  currentEpisode: getStorageValue("currentEpisode") || null,
+  queue: getStorageValue("queue") || []
 };
+
+// const defaultState = {
+//   currentEpisode: null,
+//   queue: null
+// };
 
 const stateLink = withClientState({
   cache,
   defaults: defaultState,
   resolvers: {
     Mutation: {
+      updatePlayerSeconds: (_, { playedSeconds }, { cache }) => {
+        //https://github.com/apollographql/apollo-link-state/blob/master/examples/todo/src/resolvers.js
+        const previous = cache.readQuery({ query: getCurrentEpisode });
+
+        const data = {
+          currentEpisode: {
+            ...previous.currentEpisode,
+            playedSeconds: playedSeconds
+          }
+        };
+
+        setStorageValue("currentEpisode", data.currentEpisode);
+        cache.writeData({
+          query: getCurrentEpisode,
+          data
+        });
+
+        return null;
+      },
+
       updateCurrentEpisode: (_, { episode }, { cache }) => {
         const prevEpisodeState = cache.readQuery({
           query: getCurrentEpisode

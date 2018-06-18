@@ -10,6 +10,8 @@ import getCurrentEpisode from "./../queries/getCurrentEpisode";
 import clearCurrentEpisode from "./../queries/clearCurrentEpisode";
 import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
 import getQueue from "./../queries/getQueue";
+import update from "immutability-helper";
+import gql from "graphql-tag";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -26,7 +28,6 @@ class AudioPlayer extends Component {
       isMuted: false,
       volume: 1,
       duration: 0,
-      playedSeconds: 0,
       playbackRate: 1,
       minPlaybackRate: 0.5,
       maxPlaybackRate: 4,
@@ -45,14 +46,20 @@ class AudioPlayer extends Component {
     const currentEpisode = this.props.currentEpisode;
     this.setState({ mounted: true });
     if (currentEpisode) {
-      this.setState({ episode: currentEpisode });
+      this.setState(
+        { episode: currentEpisode },
+        () =>
+          (this.player.current.currentTime = this.state.episode.playedSeconds)
+      );
     }
 
+    this.updatePlayedSeconds();
     this.getSeconds();
   }
 
   componentWillUnmount() {
     clearTimeout(this.getSecondsTimeout);
+    clearTimeout(this.updatePlayedSecondsTimeout);
   }
 
   getSeconds = () => {
@@ -64,10 +71,34 @@ class AudioPlayer extends Component {
       this.state.isPlaying
     ) {
       this.setState({
-        playedSeconds: Math.floor(this.player.current.currentTime)
+        episode: update(this.state.episode, {
+          playedSeconds: { $set: +this.player.current.currentTime.toFixed(2) }
+        })
       });
     }
-    this.getSecondsTimeout = setTimeout(this.getSeconds, 1000);
+    this.getSecondsTimeout = setTimeout(this.getSeconds, 500);
+  };
+
+  updatePlayedSeconds = () => {
+    const { episode } = this.state;
+    if (
+      episode &&
+      this.player.current &&
+      this.state.isReady &&
+      this.state.isPlaying
+    ) {
+      this.props.updatePlayerSeconds({
+        variables: {
+          id: episode.id,
+          playedSeconds: episode.playedSeconds
+        }
+      });
+    }
+
+    this.updatePlayedSecondsTimeout = setTimeout(
+      this.updatePlayedSeconds,
+      5000
+    );
   };
 
   componentWillReceiveProps(nextProps) {
@@ -79,11 +110,17 @@ class AudioPlayer extends Component {
     }
 
     if (!episode || episode.mediaUrl !== nextProps.currentEpisode.mediaUrl) {
-      this.setState({
-        isLoading: true,
-        isPlaying: false,
-        episode: nextProps.currentEpisode
-      });
+      this.setState(
+        {
+          isLoading: true,
+          isPlaying: false,
+          episode: nextProps.currentEpisode
+        },
+        () => {
+          this.player.current.currentTime =
+            nextProps.currentEpisode.playedSeconds;
+        }
+      );
     }
   }
 
@@ -92,8 +129,7 @@ class AudioPlayer extends Component {
       episode: null,
       isReady: false,
       isPlaying: false,
-      duration: 0,
-      playedSeconds: 0
+      duration: 0
     });
     this.props.clearCurrentEpisode();
   }
@@ -153,9 +189,16 @@ class AudioPlayer extends Component {
   }
 
   setTime(value) {
-    this.setState({ playedSeconds: Math.floor(value) }, () => {
-      this.player.current.currentTime = this.state.playedSeconds;
-    });
+    this.setState(
+      {
+        episode: update(this.state.episode, {
+          playedSeconds: { $set: +value.toFixed(2) }
+        })
+      },
+      () => {
+        this.player.current.currentTime = this.state.episode.playedSeconds;
+      }
+    );
   }
 
   setVolume(volume) {
@@ -185,10 +228,9 @@ class AudioPlayer extends Component {
   }
 
   skipTime(amount) {
-    const { episode } = this.state;
-    const { duration, playedSeconds } = this.state;
-    const newTime = +(playedSeconds + amount).toFixed(10);
+    const { episode, duration } = this.state;
     if (episode && this.player.current && this.state.isReady) {
+      const newTime = +(episode.playedSeconds + amount).toFixed(2);
       if (newTime <= 0) {
         this.setTime(0);
       } else if (newTime >= duration) {
@@ -338,7 +380,7 @@ class AudioPlayer extends Component {
             <input
               className="seek-bar__range"
               onChange={e => this.setTime(Number(e.target.value))}
-              value={this.state.playedSeconds}
+              value={episode ? episode.playedSeconds : 0}
               type="range"
               min="0"
               max={this.state.duration}
@@ -346,7 +388,7 @@ class AudioPlayer extends Component {
             />
             <span className="seek-bar__text seek-bar__text--left">
               {this.state.isReady && !this.state.isLoading
-                ? this.formatSeconds(this.state.playedSeconds)
+                ? this.formatSeconds(episode.playedSeconds)
                 : "--/--"}
             </span>
             <span className="seek-bar__text seek-bar__text--right">
@@ -483,7 +525,14 @@ class AudioPlayer extends Component {
   }
 }
 
+const UPDATE_PLAYED_SECONDS = gql`
+  mutation updatePlayerSeconds($id: String!, $playedSeconds: Float!) {
+    updatePlayerSeconds(id: $id, playedSeconds: $playedSeconds) @client
+  }
+`;
+
 export default compose(
+  graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayerSeconds" }),
   graphql(clearCurrentEpisode, { name: "clearCurrentEpisode" }),
   graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
   graphql(getCurrentEpisode, {
