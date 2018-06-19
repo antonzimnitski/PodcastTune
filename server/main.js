@@ -9,9 +9,15 @@ const engine = new ApolloEngine({
   apiKey: process.env.ENGINE_API_KEY
 });
 
-WebApp.rawConnectHandlers.use("/graphql", function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  return next();
+Meteor.startup(() => {
+  WebApp.rawConnectHandlers.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    return next();
+  });
 });
 
 engine.meteorListen(WebApp);
