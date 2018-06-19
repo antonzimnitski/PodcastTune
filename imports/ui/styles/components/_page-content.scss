@@ -97,8 +97,17 @@
   height: calc(#{100vh} - #{$player-height} - #{$header-height});
 }
 
+.player-is-open .page-content__sidebar {
+  @include laptop {
+    height: calc(#{100vh} - #{$player-height} - #{$header-height});
+  }
+}
+
 .player-is-open .page-content__sidebar,
 .player-is-open .page-content__main {
+  @include laptop {
+    height: calc(#{100vh} - #{$player-height});
+  }
   @include desktop {
     height: calc(#{100vh} - #{$player-height-desktop});
   }
