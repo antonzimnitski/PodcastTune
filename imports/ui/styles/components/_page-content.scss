@@ -13,11 +13,12 @@
   position: fixed;
   top: $header-height;
   left: -$page-content-sidebar-width;
-  bottom: $player-height;
+  bottom: 0;
   z-index: 301;
   flex-shrink: 0;
   background: $sidebar-bg;
   color: $sidebar-color;
+  overflow-y: auto;
 
   @include laptop {
     position: relative;
@@ -92,12 +93,12 @@
   margin: 0 auto;
 }
 
-.player-is-open .page-content__sidebar,
 .player-is-open .page-content__main {
   height: calc(#{100vh} - #{$player-height} - #{$header-height});
-  @include laptop {
-    height: calc(#{100vh} - #{$player-height});
-  }
+}
+
+.player-is-open .page-content__sidebar,
+.player-is-open .page-content__main {
   @include desktop {
     height: calc(#{100vh} - #{$player-height-desktop});
   }
