@@ -10,6 +10,9 @@ import PodcastPage from "./PodcastPage";
 import Discover from "./Discover";
 import DiscoverByGenre from "./DiscoverByGenre";
 import AudioPlayer from "./AudioPlayer";
+import InProgress from "./InProgress";
+import Starred from "./Starred";
+import NewReleases from "./NewReleases";
 
 class App extends Component {
   render() {
@@ -27,6 +30,21 @@ class App extends Component {
                   path="/"
                   exact
                   component={() => <Podcasts title="Podcasts" />}
+                />
+                <Route
+                  path="/in-progress"
+                  exact
+                  component={() => <InProgress title="In Progress" />}
+                />
+                <Route
+                  path="/starred"
+                  exact
+                  component={() => <Starred title="Starred episodes" />}
+                />
+                <Route
+                  path="/new-releases"
+                  exact
+                  component={() => <NewReleases title="New Releases" />}
                 />
                 <Route path="/podcasts/:podcastId" component={PodcastPage} />
                 <Route

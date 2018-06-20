@@ -153,7 +153,9 @@
 
 .player__author {
   font-style: italic;
-
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   @include desktop {
     font-size: 1.6rem;
   }
@@ -201,8 +203,8 @@
 
 .playback-rate__control {
   opacity: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   transition: all 0.3s ease;
 
   @include desktop {

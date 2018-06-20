@@ -17,15 +17,15 @@ const SideBar = () => {
           Discover
         </Link>
 
-        <Link className="sidebar__link" to="/">
+        <Link className="sidebar__link" to="/new-releases">
           New Releases
         </Link>
 
-        <Link className="sidebar__link" to="/">
+        <Link className="sidebar__link" to="/in-progress">
           In progress
         </Link>
 
-        <Link className="sidebar__link" to="/">
+        <Link className="sidebar__link" to="/starred">
           Starred
         </Link>
         <Auth />

@@ -1,4 +1,4 @@
-type PodcastPreview @cacheControl(maxAge: 86400) {
+type PodcastPreview @cacheControl(maxAge: 3600) {
   id: Int!
   title: String!
   artwork: String!

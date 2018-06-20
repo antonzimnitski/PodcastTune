@@ -119,3 +119,21 @@
 .nav-is-open .top-header__overlay {
   display: block;
 }
+
+.new-releases__content,
+.in-progress__content,
+.starred__content,
+.podcasts__content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 10rem;
+
+  h2 {
+    margin-bottom: $small-space;
+  }
+
+  a {
+    color: $light-blue;
+  }
+}

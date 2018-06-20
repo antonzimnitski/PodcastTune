@@ -1,4 +1,4 @@
-type Genre @cacheControl(maxAge: 86400) {
+type Genre @cacheControl(maxAge: 3600) {
   id: String!
   name: String!
   subgenres: [Genre]

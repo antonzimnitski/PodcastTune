@@ -1,4 +1,4 @@
-type SearchPreview @cacheControl(maxAge: 86400) {
+type SearchPreview @cacheControl(maxAge: 3600) {
   podcastId: Int!
   title: String!
   author: String!
