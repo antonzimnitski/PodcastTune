@@ -6,9 +6,13 @@
   display: flex;
   border-bottom: 0.1rem solid $dark-gray;
   width: 100%;
-  height: 7rem;
+  height: 5rem;
   transition: all 0.2s ease;
   align-items: center;
+
+  @include tablet {
+    height: 7rem;
+  }
 }
 
 .episode:hover {
@@ -16,23 +20,39 @@
 }
 
 .episode__title {
-  width: 70%;
+  width: 90%;
   padding-right: $space;
   cursor: pointer;
+
+  @include tablet {
+    width: 70%;
+  }
 }
 
 .episode__title p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
+
+  @include tablet {
+    font-size: 1.6rem;
+  }
 }
 
-.episode__controls,
+.episode__controls {
+  display: block;
+  width: 10%;
+}
+
 .episode__pub-date,
 .episode__duration {
-  width: 10%;
+  display: none;
+  @include tablet {
+    display: block;
+    width: 10%;
+  }
 }
 
 .episode__controls {

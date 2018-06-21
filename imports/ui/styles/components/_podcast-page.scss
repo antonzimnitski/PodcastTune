@@ -7,12 +7,27 @@
 
 .podcast__header {
   display: flex;
+  justify-content: center;
+  @include tablet {
+    justify-content: initial;
+  }
 }
 
 .podcast__image {
   width: $podcast-image-size;
   height: $podcast-image-size;
-  margin-right: $space;
+
+  @include tablet {
+    margin-right: $space;
+  }
+}
+
+.podcast__info {
+  display: none;
+
+  @include tablet {
+    display: block;
+  }
 }
 
 .podcast__title {

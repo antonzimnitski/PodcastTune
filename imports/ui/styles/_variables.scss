@@ -12,7 +12,7 @@ $body-default-color: $black;
 $body-default-font-family: Helvetica, Arial, sans-serif;
 
 //Media breakpoints
-// $breakpoint-tablet: 768px;
+$breakpoint-tablet: 768px;
 $breakpoint-laptop: 1024px;
 $breakpoint-desktop: 1440px;
 
@@ -62,6 +62,7 @@ $podcast-image-size: 22rem;
 $podcast-title: 3.5rem;
 // Player
 $player-height: 9rem;
+$player-height-small: 6rem;
 $player-height-desktop: 12rem;
 $player-title-font-size: 1.6rem;
 $player-controls-icons-size: 4rem;
@@ -70,7 +71,6 @@ $player-controls-icons-size-desktop: 7rem;
 $track-color: #fff;
 $thumb-color: $white;
 $thumb-radius: 2rem;
-
 $thumb-height: 2rem;
 $thumb-width: 1rem;
 $thumb-height-desktop: 3rem;
@@ -91,7 +91,6 @@ $track-border-color: $dark-gray;
 $track-radius: 0.5rem;
 $contrast: 5%;
 // UpNextPopup
-
 $upnext-height: 40rem;
 $upnext-width: 50rem;
 $upnext-modal-background: $white;

@@ -263,7 +263,7 @@ class AudioPlayer extends Component {
 
   formatSeconds(seconds) {
     //TODO fix 0 seconds text
-    return moment.duration(seconds, "seconds").format();
+    return moment.duration(seconds > 1 ? seconds : 1, "seconds").format();
   }
 
   render() {

@@ -3,9 +3,14 @@
 }
 
 .inner-header__title {
+  text-align: center;
   font-size: $title-font-size;
   font-weight: 700;
   margin-bottom: $small-space;
+
+  @include tablet {
+    text-align: left;
+  }
 }
 
 .inner-header__content {

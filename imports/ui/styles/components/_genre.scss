@@ -2,12 +2,20 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  height: $genre-nav-height;
+
+  @include tablet {
+    height: $genre-nav-height;
+  }
 }
 
 .genre-nav__group {
-  width: calc(100% / 3);
+  // width: 100%;
   margin-bottom: $space;
+  text-align: center;
+  @include tablet {
+    width: calc(100% / 3);
+    text-align: left;
+  }
 }
 
 .genre-nav__group-title {
@@ -16,13 +24,19 @@
   font-weight: bold;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 30rem;
+
   display: block;
   margin-bottom: $genre-spacing;
+
+  @include tablet {
+    max-width: 30rem;
+  }
 }
 
 .genre-nav__subgenre-group {
-  margin-left: $space;
+  @include tablet {
+    margin-left: $space;
+  }
 }
 
 .genre-nav__subgenre-item {

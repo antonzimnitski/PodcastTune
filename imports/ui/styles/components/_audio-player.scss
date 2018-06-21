@@ -3,11 +3,15 @@
   z-index: 100;
   bottom: 0;
   width: 100%;
-  height: $player-height;
+  height: $player-height-small;
   position: fixed;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 0.5rem $black;
+
+  @include tablet {
+    height: $player-height;
+  }
 
   @include desktop {
     height: $player-height-desktop;
@@ -21,9 +25,15 @@
 .player__skip,
 .player__play,
 .player__skip-text {
-  width: $player-controls-icons-size;
-  height: $player-controls-icons-size;
+  display: none;
   cursor: pointer;
+
+  @include tablet {
+    display: block;
+    width: $player-controls-icons-size;
+    height: $player-controls-icons-size;
+  }
+
   @include desktop {
     width: $player-controls-icons-size-desktop;
     height: $player-controls-icons-size-desktop;
@@ -31,7 +41,10 @@
 }
 
 .player__play {
+  display: block;
   fill: $black;
+  width: $player-controls-icons-size;
+  height: $player-controls-icons-size;
 }
 
 .player__controls-left,
@@ -41,7 +54,13 @@
 }
 
 .player__link-to-podcast {
-  margin-left: $space;
+  display: none;
+
+  @include tablet {
+    margin-left: $space;
+    display: block;
+  }
+
   @include desktop {
     margin-left: $large-space;
   }
@@ -126,7 +145,9 @@
   flex: 1 1 auto;
   align-self: center;
   text-align: center;
-  margin: 0 $space;
+  @include tablet {
+    margin: 0 $space;
+  }
 
   @include desktop {
     max-width: 100rem;
@@ -162,10 +183,13 @@
 }
 
 .player__seek-bar {
-  width: 100%;
-  position: relative;
-  margin-top: -0.5rem;
-
+  display: none;
+  @include tablet {
+    display: block;
+    width: 100%;
+    position: relative;
+    margin-top: -0.5rem;
+  }
   @include desktop {
     margin-top: 0;
   }
@@ -189,13 +213,15 @@
 }
 
 .player__playback-rate {
-  width: 3rem;
-  margin-right: $space;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+  display: none;
+  @include tablet {
+    width: 3rem;
+    margin-right: $space;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   @include desktop {
     margin-right: $large-space;
   }
@@ -238,12 +264,14 @@
 }
 
 .player__volume {
-  margin-right: $space;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 3rem;
-
+  display: none;
+  @include tablet {
+    margin-right: $space;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
+  }
   @include desktop {
     margin-right: $large-space;
     height: 4rem;
@@ -273,7 +301,12 @@
 }
 
 .player__up-next {
-  margin-right: $space;
+  margin: 0 $small-space;
+  @include tablet {
+    margin-left: 0;
+    margin-right: $space;
+  }
+
   @include desktop {
     margin-right: $large-space;
   }

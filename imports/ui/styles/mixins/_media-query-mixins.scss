@@ -1,3 +1,9 @@
+@mixin tablet() {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
 @mixin laptop() {
   @media (min-width: $breakpoint-laptop) {
     @content;

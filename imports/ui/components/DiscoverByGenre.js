@@ -45,7 +45,7 @@ class DiscoverByGenre extends Component {
       <Loader />
     ) : (
       <React.Fragment>
-        <div>{this.renderPodcasts()}</div>
+        <div className="preview-list">{this.renderPodcasts()}</div>
         {this.state.limit <= this.props.data.podcastsPreviews.length - 1 ? (
           <button
             className="button button--load"

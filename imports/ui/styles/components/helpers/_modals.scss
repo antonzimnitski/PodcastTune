@@ -60,10 +60,15 @@
 // UpNext popup
 .up-next__popup {
   @include modal($upnext-height, $upnext-width, $upnext-modal-background);
-  right: $large-space;
-  bottom: calc(#{$player-height} - #{$large-space});
+  bottom: calc(#{$player-height-small} - #{$small-space});
+
   border: 0.1rem solid $black;
   box-shadow: 0 0 0.1rem 0 rgba($black, 0.3), 0 1rem 1.5rem rgba($black, 0.2);
+
+  @include tablet {
+    right: $large-space;
+    bottom: calc(#{$player-height} - #{$large-space});
+  }
 }
 
 .up-next__title {
@@ -136,12 +141,17 @@
     $search-modal-background
   );
   padding: $small-space;
-  right: $large-space;
   top: calc(#{$header-height} + #{$space});
+  @include tablet {
+    right: $large-space;
+  }
   @include laptop {
-    top: $space; // right: calc(
-    // (#{$site-width} - #{$page-content-sidebar-width} - #{$main-width}) / 2
-    // );
+    top: $space;
+  }
+  @include desktop {
+    right: calc(
+      (#{$site-width} - #{$page-content-sidebar-width} - #{$main-width}) / 2
+    );
   }
 }
 .search-modal__overlay {

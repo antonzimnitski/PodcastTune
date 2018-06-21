@@ -1,10 +1,34 @@
-.preview {
-  border: 0.2rem solid transparent;
+.preview-list {
   display: flex;
-  height: 17rem;
-  width: 100%;
-  margin-bottom: $space;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @include tablet {
+    justify-content: flex-start;
+  }
+}
+
+.preview {
+  display: flex;
+  height: 13rem;
+  width: 13rem;
+
+  margin-bottom: $small-space;
   transition: all 0.3s ease;
+
+  @include tablet {
+    border: 0.2rem solid transparent;
+    margin-bottom: $space;
+    width: 100%;
+    height: 17rem;
+  }
+}
+
+.preview-list > a:nth-child(odd) {
+  margin-right: $small-space;
+  @include tablet {
+    margin-right: 0;
+  }
 }
 
 .preview:hover {
@@ -17,9 +41,14 @@
 }
 
 .preview__info {
-  margin: $small-space $space;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  display: none;
+
+  @include tablet {
+    display: block;
+    margin: $small-space $space;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 .preview__title {

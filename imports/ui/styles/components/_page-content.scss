@@ -53,7 +53,11 @@
 }
 
 .top-header__logo {
-  width: 20rem;
+  width: 15rem;
+
+  @include tablet {
+    width: 20rem;
+  }
 }
 
 .top-header__nav-toogle {
@@ -62,11 +66,11 @@
   width: $header-nav-toogle;
   position: absolute;
   top: $small-space;
-  left: $large-space;
+  left: $space;
 }
 
 .page-content__main {
-  position: fixed;
+  position: relative;
   top: $header-height;
   padding: $space;
   overflow-y: scroll;
@@ -74,7 +78,6 @@
 
   @include laptop {
     top: 0;
-    position: relative;
     width: $page-content-main-width;
   }
 
@@ -93,21 +96,18 @@
   margin: 0 auto;
 }
 
-.player-is-open .page-content__main {
-  height: calc(#{100vh} - #{$player-height} - #{$header-height});
-}
-
-.player-is-open .page-content__sidebar {
-  @include laptop {
-    height: calc(#{100vh} - #{$player-height} - #{$header-height});
-  }
-}
-
 .player-is-open .page-content__sidebar,
 .player-is-open .page-content__main {
+  height: calc(#{100vh} - #{$player-height-small} - #{$header-height});
+
+  @include tablet {
+    height: calc(#{100vh} - #{$player-height} - #{$header-height});
+  }
+
   @include laptop {
     height: calc(#{100vh} - #{$player-height});
   }
+
   @include desktop {
     height: calc(#{100vh} - #{$player-height-desktop});
   }
@@ -127,7 +127,12 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding-top: 10rem;
+  padding-top: 3rem;
+  text-align: center;
+
+  @include tablet {
+    padding-top: 10rem;
+  }
 
   h2 {
     margin-bottom: $small-space;
