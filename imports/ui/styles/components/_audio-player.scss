@@ -45,6 +45,11 @@
   fill: $black;
   width: $player-controls-icons-size;
   height: $player-controls-icons-size;
+
+  @include desktop {
+    width: $player-controls-icons-size-desktop;
+    height: $player-controls-icons-size-desktop;
+  }
 }
 
 .player__controls-left,
