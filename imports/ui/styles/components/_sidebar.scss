@@ -1,6 +1,10 @@
 .sidebar__logo {
-  display: block;
-  margin: $space;
+  display: none;
+
+  @include tablet {
+    display: block;
+    margin: $space;
+  }
 
   @include desktop {
     margin: $large-space;
