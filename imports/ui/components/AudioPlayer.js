@@ -299,44 +299,26 @@ class AudioPlayer extends Component {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 250 250"
           >
-            <g onClick={() => this.handlePlayPause()} id="icon">
-              <g id="circle">
-                <circle
-                  className="player__play-circle"
-                  cx="125"
-                  cy="125"
-                  r="115"
-                  fill="#fff"
-                />
-                <path d="M125,20A105,105,0,1,1,20,125,105.12,105.12,0,0,1,125,20m0-20A125,125,0,1,0,250,125,125,125,0,0,0,125,0Z" />
-              </g>
-              <g className="play__inner" id="inner">
-                <g className="player__play-bars" id="bars">
-                  <g id="left">
-                    <rect
-                      x="92.5"
-                      y="87.5"
-                      width="15"
-                      height="75"
-                      fill="#fff"
-                    />
-                    <polygon points="117.5 77.5 82.5 77.5 82.5 172.5 117.5 172.5 117.5 77.5 117.5 77.5" />
-                  </g>
-                  <g id="right">
-                    <rect
-                      x="142.5"
-                      y="87.5"
-                      width="15"
-                      height="75"
-                      fill="#fff"
-                    />
-                    <polygon points="167.5 77.5 132.5 77.5 132.5 172.5 167.5 172.5 167.5 77.5 167.5 77.5" />
-                  </g>
+            <g onClick={() => this.handlePlayPause()}>
+              <circle
+                className="player__play-circle"
+                cx="125"
+                cy="125"
+                r="115"
+                fill="#fff"
+              />
+              <path d="M125 20A105 105 0 1 1 20 125 105.1 105.1 0 0 1 125 20m0-20A125 125 0 1 0 250 125 125 125 0 0 0 125 0Z" />
+
+              <g className="play__inner">
+                <g className="player__play-bars">
+                  <rect x="92.5" y="87.5" width="15" height="75" fill="#fff" />
+                  <polygon points="117.5 77.5 82.5 77.5 82.5 172.5 117.5 172.5 117.5 77.5 117.5 77.5" />
+                  <rect x="142.5" y="87.5" width="15" height="75" fill="#fff" />
+                  <polygon points="167.5 77.5 132.5 77.5 132.5 172.5 167.5 172.5 167.5 77.5 167.5 77.5" />
                 </g>
                 <path
                   className="player__play-triangle"
-                  id="triangle"
-                  d="M183.25,125,95.87,175.45V74.55Z"
+                  d="M183.3 125 95.9 175.5V74.6Z"
                 />
               </g>
             </g>
@@ -407,12 +389,12 @@ class AudioPlayer extends Component {
               onClick={() => this.increasePlaybackRate()}
             >
               <svg
-                className="playback-rate__button"
                 xmlns="http://www.w3.org/2000/svg"
+                className="playback-rate__button"
                 viewBox="0 0 250 250"
               >
-                <g id="Layer_1-2" data-name="Layer 1">
-                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,138H137.5v62.5h-25V138H50V113h62.5V50.5h25V113H200Z" />
+                <g data-name="Layer 1">
+                  <path d="M125 0A125 125 0 1 0 250 125 125 125 0 0 0 125 0Zm75 138H137.5v62.5h-25V138H50V113h62.5V50.5h25V113H200Z" />
                 </g>
               </svg>
             </div>
@@ -424,12 +406,12 @@ class AudioPlayer extends Component {
               onClick={() => this.decreasePlaybackRate()}
             >
               <svg
-                className="playback-rate__button"
                 xmlns="http://www.w3.org/2000/svg"
+                className="playback-rate__button"
                 viewBox="0 0 250 250"
               >
-                <g id="Layer_1-2" data-name="Layer 1">
-                  <path d="M125,0A125,125,0,1,0,250,125,125,125,0,0,0,125,0Zm75,137H50V112H200Z" />
+                <g data-name="Layer 1">
+                  <path d="M125 0A125 125 0 1 0 250 125 125 125 0 0 0 125 0Zm75 137H50V112H200Z" />
                 </g>
               </svg>
             </div>
@@ -474,14 +456,12 @@ class AudioPlayer extends Component {
             onClick={() => this.handleUpNextPopup()}
           >
             <svg
-              className="up-next__icon"
               xmlns="http://www.w3.org/2000/svg"
+              className="up-next__icon"
               viewBox="0 0 251.5 192"
             >
-              <g id="Layer_1-2" data-name="Layer 1">
-                <g id="up-next">
-                  <path d="M225,121H25A25.07,25.07,0,0,1,0,96H0A25.07,25.07,0,0,1,25,71H225a25.07,25.07,0,0,1,25,25h0A25.07,25.07,0,0,1,225,121Zm25.5,46h0a25.07,25.07,0,0,0-25-25H25.5a25.07,25.07,0,0,0-25,25h0a25.07,25.07,0,0,0,25,25h200A25.07,25.07,0,0,0,250.5,167Zm1-142h0a25.07,25.07,0,0,0-25-25H26.5a25.07,25.07,0,0,0-25,25h0a25.07,25.07,0,0,0,25,25h200A25.07,25.07,0,0,0,251.5,25Z" />
-                </g>
+              <g data-name="Layer 1">
+                <path d="M225 121H25A25.1 25.1 0 0 1 0 96H0A25.1 25.1 0 0 1 25 71H225a25.1 25.1 0 0 1 25 25h0A25.1 25.1 0 0 1 225 121Zm25.5 46h0a25.1 25.1 0 0 0-25-25H25.5a25.1 25.1 0 0 0-25 25h0a25.1 25.1 0 0 0 25 25h200A25.1 25.1 0 0 0 250.5 167Zm1-142h0a25.1 25.1 0 0 0-25-25H26.5a25.1 25.1 0 0 0-25 25h0a25.1 25.1 0 0 0 25 25h200A25.1 25.1 0 0 0 251.5 25Z" />
               </g>
             </svg>
           </div>
