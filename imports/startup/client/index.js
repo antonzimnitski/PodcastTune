@@ -37,11 +37,11 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const cache = new InMemoryCache();
 
-persistCache({
-  cache,
-  storage: window.localStorage,
-  maxSize: 4194304 //4mb
-});
+// persistCache({
+//   cache,
+//   storage: window.localStorage,
+//   maxSize: 4194304 //4mb
+// });
 
 const defaultState = {
   currentEpisode: getStorageValue("currentEpisode") || null,

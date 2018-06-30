@@ -42,7 +42,7 @@ class PodcastPage extends Component {
           </div>
         </div>
 
-        <Feed episodes={podcast.episodes} />
+        <Feed podcastId={podcast.podcastId} />
       </div>
     );
   }

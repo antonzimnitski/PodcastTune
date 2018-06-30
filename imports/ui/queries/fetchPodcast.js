@@ -11,19 +11,30 @@ export default gql`
       description
       summary
       artworkUrl
-      episodes {
-        id
-        podcastId
-        podcastArtworkUrl
-        title
-        description
-        author
-        mediaUrl
-        playedSeconds
-        duration
-        pubDate
-        linkToEpisode
-      }
     }
   }
 `;
+
+// import gql from "graphql-tag";
+
+// export default gql`
+//   query Podcast($podcastId: Int!, $offset: Int!, $limit: Int!) {
+//     podcast(podcastId: $podcastId) {
+//       podcastId
+//       feedUrl
+//       title
+//       author
+//       website
+//       description
+//       summary
+//       artworkUrl
+//     }
+
+//     feed(podcastId: $podcastId, offset: $offset, limit: $limit) {
+//       id
+//       title
+//       pubDate
+//       duration
+//     }
+//   }
+// `;

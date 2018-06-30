@@ -1,4 +1,14 @@
+import Podcasts from "./../podcasts/podcasts";
+
 export default {
+  Query: {
+    feed(_, { podcastId, offset, limit }) {
+      const podcast = Podcasts.findOne({ podcastId });
+      if (podcast.episodes) {
+        return podcast.episodes.slice(offset, limit);
+      }
+    }
+  },
   Episode: {
     id: data => data.id,
     podcastId: data => data.podcastId,

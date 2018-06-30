@@ -11,3 +11,7 @@ type Episode {
   pubDate: String
   linkToEpisode: String
 }
+
+extend type Query {
+  feed(podcastId: Int!, offset: Int!, limit: Int!): [Episode]
+}
