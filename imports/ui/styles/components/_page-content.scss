@@ -72,9 +72,13 @@
 .page-content__main {
   position: relative;
   top: $header-height;
-  padding: $space;
+
   overflow-y: scroll;
   width: 100%;
+
+  @include tablet {
+    padding: $space;
+  }
 
   @include laptop {
     top: 0;

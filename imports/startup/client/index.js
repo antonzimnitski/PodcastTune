@@ -39,7 +39,8 @@ const cache = new InMemoryCache();
 
 persistCache({
   cache,
-  storage: window.localStorage
+  storage: window.localStorage,
+  maxSize: 4194304 //4mb
 });
 
 const defaultState = {

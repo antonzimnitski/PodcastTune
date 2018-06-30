@@ -4,7 +4,7 @@
   justify-content: center;
 
   @include tablet {
-    justify-content: flex-start;
+    display: block;
   }
 }
 

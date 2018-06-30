@@ -8,7 +8,10 @@ import fetchPodcast from "./../queries/fetchPodcast";
 
 class PodcastPage extends Component {
   renderPodcast() {
-    const { podcast } = this.props.data;
+    const { podcast, error } = this.props.data;
+    if (!podcast || error) {
+      return <div>Sorry! There was an error loading your podcast.</div>;
+    }
     return (
       <div className="podcast">
         <div className="podcast__header">

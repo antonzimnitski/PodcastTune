@@ -1,5 +1,10 @@
 .inner-header {
   margin-bottom: $space;
+  padding: 0 $small-space;
+
+  @include tablet {
+    padding: 0;
+  }
 }
 
 .inner-header__title {
