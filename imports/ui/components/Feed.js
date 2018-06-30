@@ -26,13 +26,14 @@ class Feed extends Component {
 
     this.state = {
       isModalOpen: false,
-      episode: null,
-      offset: 0,
-      limit: 100
+      episode: null
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
   }
+
+  _offset = 0;
+  _limit = 100;
 
   handleClick(episode) {
     if (
@@ -78,83 +79,110 @@ class Feed extends Component {
         query={GET_FEED}
         variables={{
           podcastId: this.props.podcastId,
-          offset: this.state.offset,
-          limit: this.state.limit
+          offset: this._offset,
+          limit: this._limit
         }}
       >
-        {({ loading, error, data }) => {
+        {({ loading, error, data, fetchMore }) => {
           if (loading) return <Loader />;
           if (error) throw error;
           if (data.feed.length === 0) return <div>There is no episodes.</div>;
 
-          return data.feed.map((episode, index) => {
-            if (!episode) return;
-            return (
-              <div key={episode.id} className="episode">
-                <div
-                  onClick={() => this.handleEpisodeModal(episode)}
-                  className="episode__title"
-                >
-                  <p>{episode.title}</p>
-                </div>
-                <div className="episode__pub-date">
-                  <p>{this.formatDate(episode.pubDate)}</p>
-                </div>
-                <div className="episode__duration">
-                  <p>{this.formatDuration(episode.duration)}</p>
-                </div>
-                <div className="episode__controls">
-                  <svg
-                    className="controls__play"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 250 250"
-                  >
-                    <g onClick={() => this.handleClick(episode)} id="icon">
-                      <g id="circle">
-                        <circle
-                          className="play__circle"
-                          cx="125"
-                          cy="125"
-                          r="115"
-                          fill="#fff"
-                        />
-                        <path d="M125,20A105,105,0,1,1,20,125,105.12,105.12,0,0,1,125,20m0-20A125,125,0,1,0,250,125,125,125,0,0,0,125,0Z" />
-                      </g>
-                      <g className="play__inner" id="inner">
-                        <g className="play__bars" id="bars">
-                          <g id="left">
-                            <rect
-                              x="92.5"
-                              y="87.5"
-                              width="15"
-                              height="75"
+          return (
+            <div className="feed">
+              {data.feed.map(episode => {
+                if (!episode) return;
+                return (
+                  <div key={episode.id} className="episode">
+                    <div
+                      onClick={() => this.handleEpisodeModal(episode)}
+                      className="episode__title"
+                    >
+                      <p>{episode.title}</p>
+                    </div>
+                    <div className="episode__pub-date">
+                      <p>{this.formatDate(episode.pubDate)}</p>
+                    </div>
+                    <div className="episode__duration">
+                      <p>{this.formatDuration(episode.duration)}</p>
+                    </div>
+                    <div className="episode__controls">
+                      <svg
+                        className="controls__play"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 250 250"
+                      >
+                        <g onClick={() => this.handleClick(episode)} id="icon">
+                          <g id="circle">
+                            <circle
+                              className="play__circle"
+                              cx="125"
+                              cy="125"
+                              r="115"
                               fill="#fff"
                             />
-                            <polygon points="117.5 77.5 82.5 77.5 82.5 172.5 117.5 172.5 117.5 77.5 117.5 77.5" />
+                            <path d="M125,20A105,105,0,1,1,20,125,105.12,105.12,0,0,1,125,20m0-20A125,125,0,1,0,250,125,125,125,0,0,0,125,0Z" />
                           </g>
-                          <g id="right">
-                            <rect
-                              x="142.5"
-                              y="87.5"
-                              width="15"
-                              height="75"
-                              fill="#fff"
+                          <g className="play__inner" id="inner">
+                            <g className="play__bars" id="bars">
+                              <g id="left">
+                                <rect
+                                  x="92.5"
+                                  y="87.5"
+                                  width="15"
+                                  height="75"
+                                  fill="#fff"
+                                />
+                                <polygon points="117.5 77.5 82.5 77.5 82.5 172.5 117.5 172.5 117.5 77.5 117.5 77.5" />
+                              </g>
+                              <g id="right">
+                                <rect
+                                  x="142.5"
+                                  y="87.5"
+                                  width="15"
+                                  height="75"
+                                  fill="#fff"
+                                />
+                                <polygon points="167.5 77.5 132.5 77.5 132.5 172.5 167.5 172.5 167.5 77.5 167.5 77.5" />
+                              </g>
+                            </g>
+                            <path
+                              className="play__triangle"
+                              id="triangle"
+                              d="M183.25,125,95.87,175.45V74.55Z"
                             />
-                            <polygon points="167.5 77.5 132.5 77.5 132.5 172.5 167.5 172.5 167.5 77.5 167.5 77.5" />
                           </g>
                         </g>
-                        <path
-                          className="play__triangle"
-                          id="triangle"
-                          d="M183.25,125,95.87,175.45V74.55Z"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-            );
-          });
+                      </svg>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {data.feed.length >= this._offset + this._limit ? (
+                <button
+                  className="button button--load"
+                  onClick={() => {
+                    this._offset = data.feed.length;
+                    //https://www.apollographql.com/docs/react/features/pagination.html#numbered-pages
+                    fetchMore({
+                      variables: {
+                        offset: this._offset
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        if (!fetchMoreResult) return prev;
+                        return Object.assign({}, prev, {
+                          feed: [...prev.feed, ...fetchMoreResult.feed]
+                        });
+                      }
+                    });
+                  }}
+                >
+                  load more
+                </button>
+              ) : null}
+            </div>
+          );
         }}
       </Query>
     );
@@ -163,7 +191,7 @@ class Feed extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="feed">{this.renderFeed()} </div>
+        {this.renderFeed()}
 
         {/* {this.state.limit <= this.props.episodes.length - 1 ? (
           <button

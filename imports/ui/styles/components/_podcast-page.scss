@@ -3,6 +3,10 @@
   flex-direction: column;
   width: 100%;
   padding: $small-space;
+
+  @include tablet {
+    padding: $small-space;
+  }
 }
 
 .podcast__header {

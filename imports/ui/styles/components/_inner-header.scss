@@ -1,9 +1,9 @@
 .inner-header {
-  margin-bottom: $space;
-  padding: 0 $small-space;
+  padding: $small-space;
 
   @include tablet {
     padding: 0;
+    margin-bottom: $space;
   }
 }
 

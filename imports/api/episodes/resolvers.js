@@ -5,7 +5,7 @@ export default {
     feed(_, { podcastId, offset, limit }) {
       const podcast = Podcasts.findOne({ podcastId });
       if (podcast.episodes) {
-        return podcast.episodes.slice(offset, limit);
+        return podcast.episodes.slice(offset, offset + limit);
       }
     }
   },

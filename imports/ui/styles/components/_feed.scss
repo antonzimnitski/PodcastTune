@@ -1,5 +1,5 @@
 .feed {
-  margin: $space 0;
+  margin-top: $small-space;
 }
 
 .episode {
@@ -12,6 +12,14 @@
 
   @include tablet {
     height: 7rem;
+  }
+}
+
+.episode:last-of-type + button {
+  margin-top: $small-space;
+
+  @include tablet {
+    margin-top: $space;
   }
 }
 
