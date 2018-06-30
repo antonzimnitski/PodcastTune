@@ -4,6 +4,7 @@ import { Session } from "meteor/session";
 import { Tracker } from "meteor/tracker";
 import { render } from "react-dom";
 import { HttpLink, InMemoryCache, ApolloLink } from "apollo-boost";
+import { persistCache } from "apollo-cache-persist";
 import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
@@ -35,6 +36,11 @@ const authLink = new ApolloLink((operation, forward) => {
 });
 
 const cache = new InMemoryCache();
+
+persistCache({
+  cache,
+  storage: window.localStorage
+});
 
 const defaultState = {
   currentEpisode: getStorageValue("currentEpisode") || null,

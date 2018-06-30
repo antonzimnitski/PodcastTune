@@ -8,6 +8,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.42",
     "apollo-boost": "^0.1.5",
+    "apollo-cache-persist": "^0.1.1",
     "apollo-engine": "^1.1.2",
     "axios": "^0.18.0",
     "babel-plugin-inline-import": "^3.0.0",
