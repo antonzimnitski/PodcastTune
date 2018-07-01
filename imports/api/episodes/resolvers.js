@@ -7,6 +7,12 @@ export default {
       if (podcast.episodes) {
         return podcast.episodes.slice(offset, offset + limit);
       }
+    },
+    episode(_, { podcastId, id }) {
+      const podcast = Podcasts.findOne({ podcastId });
+      if (podcast.episodes) {
+        return podcast.episodes.find(el => el.id === id);
+      }
     }
   },
   Episode: {

@@ -21,13 +21,11 @@ class DiscoverByGenre extends Component {
       return (
         <Link to={`/podcasts/${podcast.id}`} key={podcast.id}>
           <div className="preview">
-            <div>
-              <img
-                className="preview__image"
-                src={podcast.artwork}
-                alt={`${podcast.title} - logo`}
-              />
-            </div>
+            <img
+              className="preview__image"
+              src={podcast.artwork}
+              alt={`${podcast.title} - logo`}
+            />
             <div className="preview__info">
               <div className="preview__title">{podcast.title}</div>
               {podcast.summary ? (

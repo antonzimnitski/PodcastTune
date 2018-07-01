@@ -26,7 +26,7 @@ class Feed extends Component {
 
     this.state = {
       isModalOpen: false,
-      episode: null
+      id: null
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
@@ -49,8 +49,8 @@ class Feed extends Component {
     Session.set("isPlayerOpen", true);
   }
 
-  handleEpisodeModal(episode) {
-    this.setState({ isModalOpen: !this.state.isModalOpen, episode });
+  handleEpisodeModal(id) {
+    this.setState({ isModalOpen: !this.state.isModalOpen, id });
   }
 
   formatDate(date) {
@@ -95,7 +95,7 @@ class Feed extends Component {
                 return (
                   <div key={episode.id} className="episode">
                     <div
-                      onClick={() => this.handleEpisodeModal(episode)}
+                      onClick={() => this.handleEpisodeModal(episode.id)}
                       className="episode__title"
                     >
                       <p>{episode.title}</p>
@@ -193,20 +193,12 @@ class Feed extends Component {
       <React.Fragment>
         {this.renderFeed()}
 
-        {/* {this.state.limit <= this.props.episodes.length - 1 ? (
-          <button
-            className="button button--load"
-            onClick={() => this.setState({ limit: this.state.limit + 100 })}
-          >
-            load more
-          </button>
-        ) : null} */}
-
         {this.state.isModalOpen ? (
           <EpisodeModal
             isModalOpen={this.state.isModalOpen}
             handleEpisodeModal={this.handleEpisodeModal}
-            episode={this.state.episode}
+            podcastId={this.props.podcastId}
+            id={this.state.id}
           />
         ) : null}
       </React.Fragment>
