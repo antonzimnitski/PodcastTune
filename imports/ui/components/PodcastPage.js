@@ -65,6 +65,7 @@ class PodcastPage extends Component {
                   />
                 </div>
               </div>
+              <button className="podcast__subscribe">Subscribe</button>
 
               <Feed podcastId={podcast.podcastId} />
             </div>

@@ -1,5 +1,6 @@
 .podcast {
   display: flex;
+  position: relative;
   flex-direction: column;
   width: 100%;
   padding: $small-space;
@@ -38,6 +39,19 @@
   font-size: $podcast-title;
   line-height: 1.2;
   letter-spacing: -0.1rem;
+  padding-right: 12rem;
+}
+
+.podcast__subscribe {
+  @extend .button;
+  margin: $small-space auto;
+  width: 12rem;
+
+  @include tablet {
+    position: absolute;
+    top: $space;
+    right: $small-space;
+  }
 }
 
 .podcast__link {
