@@ -5,6 +5,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import { Query, withApollo } from "react-apollo";
 import getLoggedUser from "./../queries/getLoggedUser";
+import { withTracker } from "meteor/react-meteor-data";
 
 class Auth extends Component {
   constructor(props) {
@@ -13,8 +14,7 @@ class Auth extends Component {
     this.state = {
       isModalOpen: false,
       isSignupOpen: false,
-      isLoginOpen: false,
-      isLoggedIn: !!Meteor.userId()
+      isLoginOpen: false
     };
 
     this.closeAuthModal = this.closeAuthModal.bind(this);
@@ -31,7 +31,7 @@ class Auth extends Component {
   }
 
   onSuccess() {
-    this.setState({ isLoggedIn: true }, () => this.closeAuthModal());
+    this.closeAuthModal();
   }
 
   loginContent() {
@@ -65,11 +65,10 @@ class Auth extends Component {
 
   logoutContent() {
     return (
-      <Query query={getLoggedUser} skip={!this.state.isLoggedIn}>
+      <Query query={getLoggedUser}>
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) throw error;
-          console.log(data);
 
           return (
             <React.Fragment>
@@ -77,10 +76,7 @@ class Auth extends Component {
               <div
                 className="sidebar__link"
                 onClick={() => {
-                  Meteor.logout();
-                  this.setState({ isLoggedIn: false }, () => {
-                    this.props.client.resetStore();
-                  });
+                  Meteor.logout(() => this.props.client.resetStore());
                 }}
               >
                 Logout
@@ -121,7 +117,7 @@ class Auth extends Component {
   render() {
     return (
       <div className="auth">
-        {this.state.isLoggedIn ? this.logoutContent() : this.loginContent()}
+        {this.props.isLoggedIn ? this.logoutContent() : this.loginContent()}
         {this.state.isModalOpen ? (
           <Modal
             isOpen={this.state.isModalOpen}
@@ -138,4 +134,8 @@ class Auth extends Component {
   }
 }
 
-export default withApollo(Auth);
+export default withApollo(
+  withTracker(() => {
+    return { isLoggedIn: !!Meteor.userId() };
+  })(Auth)
+);

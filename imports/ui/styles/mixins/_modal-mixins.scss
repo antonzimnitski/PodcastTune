@@ -15,6 +15,7 @@
   height: 70vh;
   @include tablet {
     width: $width;
+    height: auto;
     @if $height {
       height: $height;
     }

@@ -1,0 +1,12 @@
+type UserData {
+  _id: String!
+  podcasts: [Int]
+}
+
+extend type Query {
+  podcasts(_id: String!): [Podcast]
+}
+
+type Mutation {
+  subscribe(_id: String!, podcastId: Int!): UserData
+}

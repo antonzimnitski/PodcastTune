@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Query } from "react-apollo";
+import { Meteor } from "meteor/meteor";
+import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import InnerHeader from "./InnerHeader";
@@ -21,7 +22,27 @@ const GET_PODCAST = gql`
   }
 `;
 
+const GET_USER = gql`
+  query {
+    user {
+      _id
+    }
+  }
+`;
+
+const SUBSCRIBE = gql`
+  mutation subscribe($_id: String!, $podcastId: Int!) {
+    subscribe(_id: $_id, podcastId: $podcastId) {
+      podcasts
+    }
+  }
+`;
+
 class PodcastPage extends Component {
+  handleSubscribe(id) {
+    console.log(id);
+  }
+
   renderPodcast() {
     return (
       <Query
@@ -65,7 +86,34 @@ class PodcastPage extends Component {
                   />
                 </div>
               </div>
-              <button className="podcast__subscribe">Subscribe</button>
+
+              <Query query={GET_USER}>
+                {({ loading, error, data }) => {
+                  if (loading) return null;
+                  if (error) throw error;
+                  console.log(data);
+
+                  return data.user._id ? (
+                    <Mutation mutation={SUBSCRIBE}>
+                      {subscribe => (
+                        <button
+                          onClick={() =>
+                            subscribe({
+                              variables: {
+                                _id: data.user._id,
+                                podcastId: podcast.podcastId
+                              }
+                            })
+                          }
+                          className="podcast__subscribe"
+                        >
+                          Subscribe
+                        </button>
+                      )}
+                    </Mutation>
+                  ) : null;
+                }}
+              </Query>
 
               <Feed podcastId={podcast.podcastId} />
             </div>
