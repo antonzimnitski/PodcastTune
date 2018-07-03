@@ -8,6 +8,7 @@
   padding: $small-space;
   text-transform: uppercase;
   border-radius: 10rem;
+  transition: all 0.3s ease;
 }
 
 .button--load {
@@ -23,4 +24,33 @@
 .button:active {
   transform: translateY(-0.1rem);
   box-shadow: 0 (0.5 * $button-spacing) $button-spacing $button-shadow-color;
+}
+
+.subscribe-btn {
+  @extend .button;
+  width: 12rem;
+  border: 0.2rem solid $button-bg;
+
+  &::after {
+    content: "Subscribe";
+  }
+}
+
+.subscribe-btn--subscribed {
+  background: $button-color;
+  color: $button-bg;
+
+  &::after {
+    content: "Subscribed";
+  }
+
+  &:hover {
+    background: $light-red;
+    color: $white;
+    border-color: $light-red;
+
+    &::after {
+      content: "UNSUBSCRIBE";
+    }
+  }
 }

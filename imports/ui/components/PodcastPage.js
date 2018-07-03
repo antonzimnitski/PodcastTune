@@ -6,6 +6,7 @@ import gql from "graphql-tag";
 import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
 import Loader from "./helpers/Loader";
+import SubscribeButton from "./helpers/SubscribeButton";
 
 const GET_PODCAST = gql`
   query Podcast($podcastId: Int!) {
@@ -94,23 +95,10 @@ class PodcastPage extends Component {
                   console.log(data);
 
                   return data.user._id ? (
-                    <Mutation mutation={SUBSCRIBE}>
-                      {subscribe => (
-                        <button
-                          onClick={() =>
-                            subscribe({
-                              variables: {
-                                _id: data.user._id,
-                                podcastId: podcast.podcastId
-                              }
-                            })
-                          }
-                          className="podcast__subscribe"
-                        >
-                          Subscribe
-                        </button>
-                      )}
-                    </Mutation>
+                    <SubscribeButton
+                      _id={data.user._id}
+                      podcastId={podcast.podcastId}
+                    />
                   ) : null;
                 }}
               </Query>

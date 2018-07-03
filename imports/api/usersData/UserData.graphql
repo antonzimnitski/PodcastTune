@@ -8,5 +8,6 @@ extend type Query {
 }
 
 type Mutation {
-  subscribe(_id: String!, podcastId: Int!): UserData
+  subscribe(_id: String!, podcastId: Int!): String
+  unsubscribe(_id: String!, podcastId: Int!): String
 }

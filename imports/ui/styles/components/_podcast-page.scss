@@ -43,9 +43,7 @@
 }
 
 .podcast__subscribe {
-  @extend .button;
   margin: $small-space auto;
-  width: 12rem;
 
   @include tablet {
     position: absolute;

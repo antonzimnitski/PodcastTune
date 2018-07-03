@@ -2,7 +2,7 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-//da342ccczcxzdsazddsxczxеdsaееdasa
+//da342ccczccxz1das789jghddsvxcxczxе987czxhlidadsaееdasa
 import UsersSchema from "./../../api/users/User.graphql";
 import UsersResolvers from "./../../api/users/resolvers";
 
@@ -53,6 +53,7 @@ createApolloServer({
   schema,
   tracing: true,
   cacheControl: {
-    defaultMaxAge: 1800
+    // defaultMaxAge: 1800
+    defaultMaxAge: 1
   }
 });

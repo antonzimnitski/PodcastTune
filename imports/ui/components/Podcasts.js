@@ -30,14 +30,13 @@ function renderPodcasts() {
           <Query
             query={GET_SUBSCRIBED_PODCASTS}
             variables={{ _id: data.user._id }}
-            fetchPolicy="network-only"
-            pollInterval={2000}
+            pollInterval={5000}
           >
             {({ loading, error, data }) => {
               if (loading) return null;
               if (error) throw error;
-              console.log(data);
-              if (!data || !data.podcasts) {
+
+              if (!data || !data.podcasts || data.podcasts.length === 0) {
                 return (
                   <div className="podcasts__content">
                     <h2>Oh no! It's empty!</h2>
