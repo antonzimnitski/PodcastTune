@@ -1,40 +1,41 @@
 import React from "react";
+import { withTracker } from "meteor/react-meteor-data";
 import gql from "graphql-tag";
 import { compose, graphql } from "react-apollo";
 import { find } from "lodash";
 
 const SUBSCRIBE = gql`
-  mutation subscribe($_id: String!, $podcastId: Int!) {
-    subscribe(_id: $_id, podcastId: $podcastId)
+  mutation subscribe($podcastId: Int!) {
+    subscribe(podcastId: $podcastId)
   }
 `;
 
 const UNSUBSCRIBE = gql`
-  mutation unsubscribe($_id: String!, $podcastId: Int!) {
-    unsubscribe(_id: $_id, podcastId: $podcastId)
+  mutation unsubscribe($podcastId: Int!) {
+    unsubscribe(podcastId: $podcastId)
   }
 `;
 
 const GET_SUBSCRIBED_PODCASTS = gql`
-  query Podcasts($_id: String!) {
-    podcasts(_id: $_id) {
+  query Podcasts {
+    podcasts {
       podcastId
     }
   }
 `;
 
 const SubscribeButton = ({
-  _id,
   podcastId,
   subscribe,
   unsubscribe,
   loading,
   error,
   podcasts,
-  refetch
+  isLoggedIn
 }) => {
   if (loading) return null;
   if (error) return console.log(error);
+  if (!isLoggedIn) return null;
 
   return (
     <div className="podcast__subscribe">
@@ -43,12 +44,9 @@ const SubscribeButton = ({
           onClick={() => {
             subscribe({
               variables: {
-                _id,
                 podcastId
               },
-              refetchQueries: [
-                { query: GET_SUBSCRIBED_PODCASTS, variables: { _id } }
-              ]
+              refetchQueries: [{ query: GET_SUBSCRIBED_PODCASTS }]
             }).then(() => console.log("subscribe"));
           }}
           className="subscribe-btn "
@@ -58,12 +56,9 @@ const SubscribeButton = ({
           onClick={() => {
             unsubscribe({
               variables: {
-                _id,
                 podcastId
               },
-              refetchQueries: [
-                { query: GET_SUBSCRIBED_PODCASTS, variables: { _id } }
-              ]
+              refetchQueries: [{ query: GET_SUBSCRIBED_PODCASTS }]
             }).then(() => console.log("unsubscribe"));
           }}
           className="subscribe-btn subscribe-btn--subscribed"
@@ -73,16 +68,20 @@ const SubscribeButton = ({
   );
 };
 
-export default compose(
-  graphql(SUBSCRIBE, { name: "subscribe" }),
-  graphql(UNSUBSCRIBE, { name: "unsubscribe" }),
-  graphql(GET_SUBSCRIBED_PODCASTS, {
-    options: { pollInterval: 5000 },
-    props: ({ data: { loading, error, podcasts, refetch } }) => ({
-      loading,
-      error,
-      podcasts,
-      refetch
+export default withTracker(() => {
+  return { isLoggedIn: !!Meteor.userId() };
+})(
+  compose(
+    graphql(SUBSCRIBE, { name: "subscribe" }),
+    graphql(UNSUBSCRIBE, { name: "unsubscribe" }),
+    graphql(GET_SUBSCRIBED_PODCASTS, {
+      skip: props => !props.isLoggedIn,
+      options: { pollInterval: 5000 },
+      props: ({ data: { loading, error, podcasts } }) => ({
+        loading,
+        error,
+        podcasts
+      })
     })
-  })
-)(SubscribeButton);
+  )(SubscribeButton)
+);

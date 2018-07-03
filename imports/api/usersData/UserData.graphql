@@ -1,13 +1,14 @@
 type UserData {
   _id: String!
-  podcasts: [Int]
+  podcasts: [Podcast]
+  currentEpisode: Episode
 }
 
 extend type Query {
-  podcasts(_id: String!): [Podcast]
+  podcasts: [Podcast]
 }
 
 type Mutation {
-  subscribe(_id: String!, podcastId: Int!): String
-  unsubscribe(_id: String!, podcastId: Int!): String
+  subscribe(podcastId: Int!): String
+  unsubscribe(podcastId: Int!): String
 }

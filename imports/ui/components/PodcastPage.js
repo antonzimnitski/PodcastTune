@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Meteor } from "meteor/meteor";
-import { Query, Mutation } from "react-apollo";
+import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
 import InnerHeader from "./InnerHeader";
@@ -31,19 +30,7 @@ const GET_USER = gql`
   }
 `;
 
-const SUBSCRIBE = gql`
-  mutation subscribe($_id: String!, $podcastId: Int!) {
-    subscribe(_id: $_id, podcastId: $podcastId) {
-      podcasts
-    }
-  }
-`;
-
 class PodcastPage extends Component {
-  handleSubscribe(id) {
-    console.log(id);
-  }
-
   renderPodcast() {
     return (
       <Query
@@ -92,13 +79,9 @@ class PodcastPage extends Component {
                 {({ loading, error, data }) => {
                   if (loading) return null;
                   if (error) throw error;
-                  console.log(data);
 
                   return data.user._id ? (
-                    <SubscribeButton
-                      _id={data.user._id}
-                      podcastId={podcast.podcastId}
-                    />
+                    <SubscribeButton podcastId={podcast.podcastId} />
                   ) : null;
                 }}
               </Query>

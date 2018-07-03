@@ -27,11 +27,7 @@ function renderPodcasts() {
         if (error) throw error;
 
         return (
-          <Query
-            query={GET_SUBSCRIBED_PODCASTS}
-            variables={{ _id: data.user._id }}
-            pollInterval={5000}
-          >
+          <Query query={GET_SUBSCRIBED_PODCASTS} pollInterval={5000}>
             {({ loading, error, data }) => {
               if (loading) return null;
               if (error) throw error;
@@ -68,8 +64,8 @@ function renderPodcasts() {
 }
 
 const GET_SUBSCRIBED_PODCASTS = gql`
-  query Podcasts($_id: String!) {
-    podcasts(_id: $_id) {
+  query Podcasts {
+    podcasts {
       podcastId
       artworkUrl
     }
