@@ -8,6 +8,7 @@ import { persistCache } from "apollo-cache-persist";
 import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
+import UsersData from "./../../api/usersData/usersData";
 
 import {
   queueSplice,
@@ -178,6 +179,15 @@ Tracker.autorun(() => {
 Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
   Session.set("isNavOpen", false);
-  Session.set("isPlayerOpen", !!getStorageValue("currentEpisode"));
+  Session.set("isPlayerOpen", isPlayerOpen());
   render(<ApolloApp />, document.getElementById("app"));
 });
+
+function isPlayerOpen() {
+  if (Meteor.userId())
+    return Meteor.subscribe("usersData", () => {
+      return !!UsersData.findOne().playingEpisode;
+    });
+
+  return !!getStorageValue("currentEpisode");
+}

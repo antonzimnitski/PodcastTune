@@ -11,6 +11,13 @@ export default {
       return userData.podcasts.map(podcastId => {
         return Podcasts.findOne({ podcastId });
       });
+    },
+    playingEpisode(_, __, { user }, { cacheControl }) {
+      const { _id } = user;
+      cacheControl.setCacheHint({ maxAge: 0 });
+      const userData = UsersData.findOne({ _id });
+      if (!userData || !userData.playingEpisode) return null;
+      return userData.playingEpisode;
     }
   },
   Mutation: {
@@ -27,6 +34,15 @@ export default {
       const { _id } = user;
       UsersData.update({ _id }, { $pull: { podcasts: podcastId } });
       return podcastId;
+    },
+    setPlayingEpisode(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+      UsersData.update(
+        { _id },
+        { $set: { playingEpisode: { id, podcastId } } },
+        { upsert: true }
+      );
+      return { id, podcastId };
     }
   }
 };

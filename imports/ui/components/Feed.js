@@ -8,6 +8,7 @@ import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
 import getCurrentEpisode from "./../queries/getCurrentEpisode";
 import gql from "graphql-tag";
 import Loader from "./helpers/Loader";
+import { withTracker } from "meteor/react-meteor-data";
 
 const GET_FEED = gql`
   query Feed($podcastId: Int!, $offset: Int!, $limit: Int!) {
@@ -16,6 +17,15 @@ const GET_FEED = gql`
       title
       pubDate
       duration
+    }
+  }
+`;
+
+const SET_PLAYING_EPISODE = gql`
+  mutation SetPlayingEpisode($id: String!, $podcastId: Int!) {
+    setPlayingEpisode(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
     }
   }
 `;
@@ -35,17 +45,28 @@ class Feed extends Component {
   _offset = 0;
   _limit = 100;
 
-  handleClick(episode) {
-    if (
-      this.props.currentEpisode &&
-      this.props.currentEpisode.title === episode.title
-    )
-      return console.log("it's current");
-    this.props.updateCurrentEpisode({
-      variables: {
-        episode
-      }
-    });
+  handleClick(id, podcastId) {
+    const { isLoggedIn, setPlayingEpisode } = this.props;
+    isLoggedIn
+      ? setPlayingEpisode({
+          variables: {
+            id,
+            podcastId
+          }
+        })
+          .then(res => console.log("success", res.data))
+          .catch(err => console.log(err))
+      : console.log(id, podcastId);
+    // if (
+    //   this.props.currentEpisode &&
+    //   this.props.currentEpisode.title === episode.title
+    // )
+    //   return console.log("it's current");
+    // this.props.updateCurrentEpisode({
+    //   variables: {
+    //     episode
+    //   }
+    // });
     Session.set("isPlayerOpen", true);
   }
 
@@ -112,7 +133,12 @@ class Feed extends Component {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 250 250"
                       >
-                        <g onClick={() => this.handleClick(episode)} id="icon">
+                        <g
+                          onClick={() =>
+                            this.handleClick(episode.id, this.props.podcastId)
+                          }
+                          id="icon"
+                        >
                           <g id="circle">
                             <circle
                               className="play__circle"
@@ -212,5 +238,10 @@ export default compose(
       currentEpisode
     })
   }),
-  graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" })
-)(Feed);
+  graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
+  graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" })
+)(
+  withTracker(() => {
+    return { isLoggedIn: !!Meteor.userId() };
+  })(Feed)
+);
