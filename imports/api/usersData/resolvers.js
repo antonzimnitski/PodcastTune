@@ -17,7 +17,11 @@ export default {
       cacheControl.setCacheHint({ maxAge: 0 });
       const userData = UsersData.findOne({ _id });
       if (!userData || !userData.playingEpisode) return null;
-      return userData.playingEpisode;
+      const { id, podcastId } = userData.playingEpisode;
+      const podcast = Podcasts.findOne({ podcastId });
+      if (podcast.episodes) {
+        return podcast.episodes.find(el => el.id === id);
+      }
     }
   },
   Mutation: {
@@ -43,6 +47,16 @@ export default {
         { upsert: true }
       );
       return { id, podcastId };
+    },
+    updatePlayedSeconds(_, { id, playedSeconds }, { user }) {
+      const { _id } = user;
+      //https://stackoverflow.com/questions/37427610/mongodb-update-or-insert-object-in-array#37428056
+      UsersData.update({ _id }, { $pull: { inProgress: { id } } });
+      UsersData.update(
+        { _id },
+        { $push: { inProgress: { id, playedSeconds } } }
+      );
+      return playedSeconds;
     }
   }
 };

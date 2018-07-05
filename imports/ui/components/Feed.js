@@ -30,6 +30,21 @@ const SET_PLAYING_EPISODE = gql`
   }
 `;
 
+const GET_PLAYING_EPISODE = gql`
+  query PlayingEpisode {
+    playingEpisode {
+      id
+      podcastId
+      podcastArtworkUrl
+      title
+      mediaUrl
+      pubDate
+      playedSeconds
+      author
+    }
+  }
+`;
+
 class Feed extends Component {
   constructor(props) {
     super(props);
@@ -52,11 +67,12 @@ class Feed extends Component {
           variables: {
             id,
             podcastId
-          }
+          },
+          refetchQueries: [{ query: GET_PLAYING_EPISODE }]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
-      : console.log(id, podcastId);
+      : console.log("todo it later", id, podcastId);
     // if (
     //   this.props.currentEpisode &&
     //   this.props.currentEpisode.title === episode.title
@@ -232,16 +248,16 @@ class Feed extends Component {
   }
 }
 
-export default compose(
-  graphql(getCurrentEpisode, {
-    props: ({ data: { currentEpisode } }) => ({
-      currentEpisode
-    })
-  }),
-  graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
-  graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" })
-)(
-  withTracker(() => {
-    return { isLoggedIn: !!Meteor.userId() };
-  })(Feed)
+export default withTracker(() => {
+  return { isLoggedIn: !!Meteor.userId() };
+})(
+  compose(
+    graphql(getCurrentEpisode, {
+      props: ({ data: { currentEpisode } }) => ({
+        currentEpisode
+      })
+    }),
+    graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
+    graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" })
+  )(Feed)
 );

@@ -2,6 +2,7 @@ type UserData {
   _id: String!
   podcasts: [Podcast]
   playingEpisode: Episode
+  inProgress: [Episode]
 }
 
 extend type Query {
@@ -18,4 +19,5 @@ type Mutation {
   subscribe(podcastId: Int!): String
   unsubscribe(podcastId: Int!): String
   setPlayingEpisode(podcastId: Int!, id: String!): EpisodeIds
+  updatePlayedSeconds(id: String!, playedSeconds: Float!): Float
 }
