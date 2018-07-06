@@ -22,6 +22,21 @@ export default {
       if (podcast.episodes) {
         return podcast.episodes.find(el => el.id === id);
       }
+    },
+    queue(_, __, { user }, { cacheControl }) {
+      const { _id } = user;
+      cacheControl.setCacheHint({ maxAge: 0 });
+      const userData = UsersData.findOne({ _id });
+      if (!userData || !userData.queue) return null;
+      const { queue } = userData;
+      return !queue.length
+        ? null
+        : queue.map(({ podcastId, id }) => {
+            const podcast = Podcasts.findOne({ podcastId });
+            if (podcast.episodes) {
+              return podcast.episodes.find(el => el.id === id);
+            }
+          });
     }
   },
   Mutation: {
@@ -41,6 +56,17 @@ export default {
     },
     setPlayingEpisode(_, { id, podcastId }, { user }) {
       const { _id } = user;
+      const userData = UsersData.findOne({ _id });
+
+      if (userData && userData.playingEpisode) {
+        console.log("inserted in queue", userData.playingEpisode);
+        UsersData.update({ _id }, { $pull: { queue: { id } } });
+        UsersData.update(
+          { _id },
+          { $push: { queue: userData.playingEpisode } }
+        );
+      }
+
       UsersData.update(
         { _id },
         { $set: { playingEpisode: { id, podcastId } } },

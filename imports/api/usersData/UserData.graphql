@@ -3,11 +3,13 @@ type UserData {
   podcasts: [Podcast]
   playingEpisode: Episode
   inProgress: [Episode]
+  queue: [Episode]
 }
 
 extend type Query {
   podcasts: [Podcast]
   playingEpisode: Episode
+  queue: [Episode]
 }
 
 type EpisodeIds {
