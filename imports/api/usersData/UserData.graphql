@@ -9,7 +9,7 @@ type UserData {
 extend type Query {
   podcasts: [Podcast]
   playingEpisode: Episode
-  queue: [Episode]
+  upnext: [Episode]
 }
 
 type EpisodeIds {

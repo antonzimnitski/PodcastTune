@@ -476,10 +476,7 @@ class AudioPlayer extends Component {
           className="up-next__popup"
           overlayClassName="up-next__popup-overlay"
         >
-          <UpNextPopup
-            queue={this.props.queue}
-            onQueueItemClick={this.onQueueItemClick}
-          />
+          <UpNextPopup onQueueItemClick={this.onQueueItemClick} />
         </Modal>
 
         {this.state.isModalOpen ? (

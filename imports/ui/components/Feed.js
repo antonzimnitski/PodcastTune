@@ -21,6 +21,18 @@ const GET_FEED = gql`
   }
 `;
 
+const GET_UPNEXT = gql`
+  query Upnext {
+    upnext {
+      id
+      podcastId
+      podcastArtworkUrl
+      title
+      author
+    }
+  }
+`;
+
 const SET_PLAYING_EPISODE = gql`
   mutation SetPlayingEpisode($id: String!, $podcastId: Int!) {
     setPlayingEpisode(podcastId: $podcastId, id: $id) {
@@ -68,7 +80,10 @@ class Feed extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_PLAYING_EPISODE }]
+          refetchQueries: [
+            { query: GET_PLAYING_EPISODE },
+            { query: GET_UPNEXT }
+          ]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))

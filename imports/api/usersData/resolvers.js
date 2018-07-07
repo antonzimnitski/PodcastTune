@@ -23,15 +23,16 @@ export default {
         return podcast.episodes.find(el => el.id === id);
       }
     },
-    queue(_, __, { user }, { cacheControl }) {
+    upnext(_, __, { user }, { cacheControl }) {
       const { _id } = user;
+      if (!_id) return null;
       cacheControl.setCacheHint({ maxAge: 0 });
       const userData = UsersData.findOne({ _id });
-      if (!userData || !userData.queue) return null;
-      const { queue } = userData;
-      return !queue.length
+      if (!userData || !userData.upnext) return null;
+      const { upnext } = userData;
+      return !upnext.length
         ? null
-        : queue.map(({ podcastId, id }) => {
+        : upnext.map(({ podcastId, id }) => {
             const podcast = Podcasts.findOne({ podcastId });
             if (podcast.episodes) {
               return podcast.episodes.find(el => el.id === id);
@@ -59,11 +60,14 @@ export default {
       const userData = UsersData.findOne({ _id });
 
       if (userData && userData.playingEpisode) {
-        console.log("inserted in queue", userData.playingEpisode);
-        UsersData.update({ _id }, { $pull: { queue: { id } } });
+        UsersData.update({ _id }, { $pull: { upnext: { id } } });
         UsersData.update(
           { _id },
-          { $push: { queue: userData.playingEpisode } }
+          {
+            $push: {
+              upnext: { $each: [userData.playingEpisode], $position: 0 }
+            }
+          }
         );
       }
 

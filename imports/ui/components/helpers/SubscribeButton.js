@@ -34,7 +34,7 @@ const SubscribeButton = ({
   isLoggedIn
 }) => {
   if (loading) return null;
-  if (error) return console.log(error);
+  if (error) return null;
   if (!isLoggedIn) return null;
 
   return (

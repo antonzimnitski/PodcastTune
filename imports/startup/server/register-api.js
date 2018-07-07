@@ -2,7 +2,7 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-//da342ccczccxz1das789jghddsvxcxczxе987czxhlidadsaееdasa
+//da97y09;-=l[p;cxd0-sdasdasdas dfsddasdasdafasda3412 hsa
 import UsersSchema from "./../../api/users/User.graphql";
 import UsersResolvers from "./../../api/users/resolvers";
 
