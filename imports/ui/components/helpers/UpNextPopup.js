@@ -5,12 +5,7 @@ import { compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
-const UpNextPopup = ({
-  upnext,
-  onQueueItemClick,
-  isLoggedIn,
-  setPlayingEpisode
-}) => {
+const UpNextPopup = ({ upnext, isLoggedIn, setPlayingEpisode }) => {
   const handleClick = (id, podcastId) => {
     isLoggedIn
       ? setPlayingEpisode({
@@ -41,6 +36,7 @@ const UpNextPopup = ({
       <h2 className="up-next__title">Up Next</h2>
       <div className="modal__list">
         {upnext.map(episode => {
+          if (!episode) return;
           return (
             <div
               key={episode.id}

@@ -43,7 +43,7 @@ const SideBar = () => {
           className="sidebar__link"
           to="/starred"
         >
-          Starred
+          Favorites
         </Link>
         <Auth />
       </div>

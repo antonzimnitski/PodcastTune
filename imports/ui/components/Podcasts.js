@@ -21,43 +21,31 @@ const Podcasts = ({ title, isLoggedIn }) => {
 
 function renderPodcasts() {
   return (
-    <Query query={GET_USER}>
+    <Query query={GET_SUBSCRIBED_PODCASTS} pollInterval={5000}>
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) throw error;
 
-        return (
-          <Query query={GET_SUBSCRIBED_PODCASTS} pollInterval={5000}>
-            {({ loading, error, data }) => {
-              if (loading) return null;
-              if (error) throw error;
+        if (!data || !data.podcasts || data.podcasts.length === 0) {
+          return (
+            <div className="podcasts__content">
+              <h2>Oh no! It's empty!</h2>
+              <div>
+                Head to <Link to="/discover">Discover section</Link>, to find
+                something you interested in.
+              </div>
+            </div>
+          );
+        }
 
-              if (!data || !data.podcasts || data.podcasts.length === 0) {
-                return (
-                  <div className="podcasts__content">
-                    <h2>Oh no! It's empty!</h2>
-                    <div>
-                      Head to <Link to="/discover">Discover section</Link>, to
-                      find something you interested in.
-                    </div>
-                  </div>
-                );
-              }
-
-              return data.podcasts.map(podcast => {
-                if (!podcast) return;
-                return (
-                  <Link
-                    to={`/podcasts/${podcast.podcastId}`}
-                    key={podcast.podcastId}
-                  >
-                    <img src={podcast.artworkUrl} alt="" />
-                  </Link>
-                );
-              });
-            }}
-          </Query>
-        );
+        return data.podcasts.map(podcast => {
+          if (!podcast) return;
+          return (
+            <Link to={`/podcasts/${podcast.podcastId}`} key={podcast.podcastId}>
+              <img src={podcast.artworkUrl} alt="" />
+            </Link>
+          );
+        });
       }}
     </Query>
   );
@@ -68,14 +56,6 @@ const GET_SUBSCRIBED_PODCASTS = gql`
     podcasts {
       podcastId
       artworkUrl
-    }
-  }
-`;
-
-const GET_USER = gql`
-  query {
-    user {
-      _id
     }
   }
 `;

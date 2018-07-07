@@ -5,11 +5,22 @@ import momentDurationFormatSetup from "moment-duration-format";
 const Episode = ({ episode, handleEpisodeModal, handleClick }) => {
   return (
     <div className="episode">
+      {episode.podcastArtworkUrl ? (
+        <div
+          className="episode__artwork"
+          style={{
+            backgroundImage: `url("${episode.podcastArtworkUrl}")`
+          }}
+        />
+      ) : null}
       <div
-        onClick={() => handleEpisodeModal(episode.id)}
-        className="episode__title"
+        className="episode__info"
+        onClick={() => handleEpisodeModal(episode.id, episode.podcastId)}
       >
-        <p>{episode.title}</p>
+        <p className="episode__title">{episode.title}</p>
+        {episode.author ? (
+          <p className="episode__author">{episode.author}</p>
+        ) : null}
       </div>
       <div className="episode__pub-date">
         <p>{formatDate(episode.pubDate)}</p>

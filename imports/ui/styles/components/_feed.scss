@@ -27,7 +27,24 @@
   color: $light-blue;
 }
 
-.episode__title {
+.episode__artwork {
+  display: none;
+
+  @include tablet {
+    display: block;
+    margin-right: $small-space;
+    flex-shrink: 0;
+    height: 6rem;
+    width: 6rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.episode__info {
   width: 90%;
   padding-right: $space;
   cursor: pointer;
@@ -37,16 +54,25 @@
   }
 }
 
-.episode__title p {
+.episode__title,
+.episode__author {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  display: block;
+}
+
+.episode__title {
   font-size: 1.3rem;
   font-weight: 500;
 
   @include tablet {
     font-size: 1.6rem;
   }
+}
+
+.episode__author {
+  font-style: italic;
 }
 
 .episode__controls {

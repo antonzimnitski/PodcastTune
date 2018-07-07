@@ -38,6 +38,22 @@ export default {
               return podcast.episodes.find(el => el.id === id);
             }
           });
+    },
+    inProgress(_, __, { user }, { cacheControl }) {
+      const { _id } = user;
+      if (!_id) return null;
+      cacheControl.setCacheHint({ maxAge: 0 });
+      const userData = UsersData.findOne({ _id });
+      if (!userData || !userData.inProgress) return null;
+      const { inProgress } = userData;
+      return !inProgress.length
+        ? null
+        : inProgress.map(({ podcastId, id }) => {
+            const podcast = Podcasts.findOne({ podcastId });
+            if (podcast.episodes) {
+              return podcast.episodes.find(el => el.id === id);
+            }
+          });
     }
   },
   Mutation: {
@@ -78,13 +94,13 @@ export default {
       );
       return { id, podcastId };
     },
-    updatePlayedSeconds(_, { id, playedSeconds }, { user }) {
+    updatePlayedSeconds(_, { id, podcastId, playedSeconds }, { user }) {
       const { _id } = user;
       //https://stackoverflow.com/questions/37427610/mongodb-update-or-insert-object-in-array#37428056
       UsersData.update({ _id }, { $pull: { inProgress: { id } } });
       UsersData.update(
         { _id },
-        { $push: { inProgress: { id, playedSeconds } } }
+        { $push: { inProgress: { id, podcastId, playedSeconds } } }
       );
       return playedSeconds;
     }

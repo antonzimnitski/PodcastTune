@@ -30,7 +30,22 @@ const GET_USER = gql`
   }
 `;
 
+const GET_FEED = gql`
+  query Feed($podcastId: Int!, $offset: Int!, $limit: Int!) {
+    feed(podcastId: $podcastId, offset: $offset, limit: $limit) {
+      id
+      podcastId
+      title
+      pubDate
+      duration
+    }
+  }
+`;
+
 class PodcastPage extends Component {
+  _offset = 0;
+  _limit = 100;
+
   renderPodcast() {
     return (
       <Query
@@ -86,7 +101,50 @@ class PodcastPage extends Component {
                 }}
               </Query>
 
-              <Feed podcastId={podcast.podcastId} />
+              <Query
+                query={GET_FEED}
+                variables={{
+                  podcastId: podcast.podcastId,
+                  offset: this._offset,
+                  limit: this._limit
+                }}
+              >
+                {({ loading, error, data, fetchMore }) => {
+                  if (loading) return <Loader />;
+                  if (error) throw error;
+                  if (data.feed.length === 0)
+                    return <div>There is no episodes.</div>;
+
+                  return (
+                    <>
+                      <Feed feed={data.feed} />
+
+                      {data.feed.length >= this._offset + this._limit ? (
+                        <button
+                          className="button button--load"
+                          onClick={() => {
+                            this._offset = data.feed.length;
+                            //https://www.apollographql.com/docs/react/features/pagination.html#numbered-pages
+                            fetchMore({
+                              variables: {
+                                offset: this._offset
+                              },
+                              updateQuery: (prev, { fetchMoreResult }) => {
+                                if (!fetchMoreResult) return prev;
+                                return Object.assign({}, prev, {
+                                  feed: [...prev.feed, ...fetchMoreResult.feed]
+                                });
+                              }
+                            });
+                          }}
+                        >
+                          load more
+                        </button>
+                      ) : null}
+                    </>
+                  );
+                }}
+              </Query>
             </div>
           );
         }}

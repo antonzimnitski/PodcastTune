@@ -7,20 +7,7 @@ import getCurrentEpisode from "./../queries/getCurrentEpisode";
 import gql from "graphql-tag";
 import { withTracker } from "meteor/react-meteor-data";
 
-import Loader from "./helpers/Loader";
 import Episode from "./helpers/Episode";
-
-const GET_FEED = gql`
-  query Feed($podcastId: Int!, $offset: Int!, $limit: Int!) {
-    feed(podcastId: $podcastId, offset: $offset, limit: $limit) {
-      id
-      podcastId
-      title
-      pubDate
-      duration
-    }
-  }
-`;
 
 const GET_UPNEXT = gql`
   query Upnext {
@@ -64,15 +51,13 @@ class Feed extends Component {
 
     this.state = {
       isModalOpen: false,
-      id: null
+      id: null,
+      podcastId: null
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
-
-  _offset = 0;
-  _limit = 100;
 
   handleClick(id, podcastId) {
     const { isLoggedIn, setPlayingEpisode } = this.props;
@@ -103,8 +88,8 @@ class Feed extends Component {
     Session.set("isPlayerOpen", true);
   }
 
-  handleEpisodeModal(id) {
-    this.setState({ isModalOpen: !this.state.isModalOpen, id });
+  handleEpisodeModal(id, podcastId) {
+    this.setState({ isModalOpen: !this.state.isModalOpen, id, podcastId });
   }
 
   /* const className =
@@ -114,60 +99,21 @@ class Feed extends Component {
           : "episode"; */
 
   renderFeed() {
+    if (this.props.feed.length === 0) return <div>There is no episodes.</div>;
     return (
-      <Query
-        query={GET_FEED}
-        variables={{
-          podcastId: this.props.podcastId,
-          offset: this._offset,
-          limit: this._limit
-        }}
-      >
-        {({ loading, error, data, fetchMore }) => {
-          if (loading) return <Loader />;
-          if (error) throw error;
-          if (data.feed.length === 0) return <div>There is no episodes.</div>;
-
+      <div className="feed">
+        {this.props.feed.map(episode => {
+          if (!episode) return;
           return (
-            <div className="feed">
-              {data.feed.map(episode => {
-                if (!episode) return;
-                return (
-                  <Episode
-                    key={episode.id}
-                    episode={episode}
-                    handleEpisodeModal={this.handleEpisodeModal}
-                    handleClick={this.handleClick}
-                  />
-                );
-              })}
-
-              {data.feed.length >= this._offset + this._limit ? (
-                <button
-                  className="button button--load"
-                  onClick={() => {
-                    this._offset = data.feed.length;
-                    //https://www.apollographql.com/docs/react/features/pagination.html#numbered-pages
-                    fetchMore({
-                      variables: {
-                        offset: this._offset
-                      },
-                      updateQuery: (prev, { fetchMoreResult }) => {
-                        if (!fetchMoreResult) return prev;
-                        return Object.assign({}, prev, {
-                          feed: [...prev.feed, ...fetchMoreResult.feed]
-                        });
-                      }
-                    });
-                  }}
-                >
-                  load more
-                </button>
-              ) : null}
-            </div>
+            <Episode
+              key={episode.id}
+              episode={episode}
+              handleEpisodeModal={this.handleEpisodeModal}
+              handleClick={this.handleClick}
+            />
           );
-        }}
-      </Query>
+        })}
+      </div>
     );
   }
 
@@ -180,7 +126,7 @@ class Feed extends Component {
           <EpisodeModal
             isModalOpen={this.state.isModalOpen}
             handleEpisodeModal={this.handleEpisodeModal}
-            podcastId={this.props.podcastId}
+            podcastId={this.state.podcastId}
             id={this.state.id}
           />
         ) : null}
