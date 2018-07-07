@@ -13,7 +13,9 @@ const Podcasts = ({ title, isLoggedIn }) => {
       {isLoggedIn ? (
         renderPodcasts()
       ) : (
-        <h2>To see your subscribed podcasts Login or Signup.</h2>
+        <div className="podcasts__content">
+          <h2>To see your subscribed podcasts Login or Signup.</h2>
+        </div>
       )}
     </div>
   );

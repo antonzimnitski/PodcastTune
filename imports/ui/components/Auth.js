@@ -40,10 +40,15 @@ class Auth extends Component {
         <div
           className="sidebar__link"
           onClick={() =>
-            this.setState({
-              isModalOpen: true,
-              isLoginOpen: true
-            })
+            this.setState(
+              {
+                isModalOpen: true,
+                isLoginOpen: true
+              },
+              () => {
+                this.props.closeSidebar();
+              }
+            )
           }
         >
           Sign In
@@ -51,10 +56,15 @@ class Auth extends Component {
         <div
           className="sidebar__link"
           onClick={() =>
-            this.setState({
-              isModalOpen: true,
-              isSignupOpen: true
-            })
+            this.setState(
+              {
+                isModalOpen: true,
+                isSignupOpen: true
+              },
+              () => {
+                this.props.closeSidebar();
+              }
+            )
           }
         >
           Sing Up

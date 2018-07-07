@@ -45,7 +45,7 @@ const SideBar = () => {
         >
           Favorites
         </Link>
-        <Auth />
+        <Auth closeSidebar={closeSidebar} />
       </div>
     </nav>
   );

@@ -14,7 +14,9 @@ const InProgress = ({ title, isLoggedIn }) => {
       {isLoggedIn ? (
         renderInProgress()
       ) : (
-        <h2>To see your subscribed podcasts Login or Signup.</h2>
+        <div className="in-progress__content">
+          <h2>To see your in progress episodes Login or Signup.</h2>
+        </div>
       )}
     </div>
   );

@@ -1,12 +1,13 @@
 .sidebar__logo {
   display: none;
 
-  @include tablet {
+  @include laptop {
     display: block;
     margin: $space;
   }
 
   @include desktop {
+    display: block;
     margin: $large-space;
   }
 }

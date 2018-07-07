@@ -45,7 +45,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-around;
-  z-index: 301;
+  z-index: 200;
 
   @include laptop {
     display: none;
@@ -131,6 +131,10 @@
 }
 .nav-is-open .top-header__overlay {
   display: block;
+
+  @include laptop {
+    display: none;
+  }
 }
 
 .new-releases__content,
