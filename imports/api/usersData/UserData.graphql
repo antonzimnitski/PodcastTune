@@ -3,7 +3,7 @@ type UserData {
   podcasts: [Podcast]
   playingEpisode: Episode
   inProgress: [Episode]
-  queue: [Episode]
+  upnext: [Episode]
 }
 
 extend type Query {
@@ -22,6 +22,7 @@ type Mutation {
   subscribe(podcastId: Int!): String
   unsubscribe(podcastId: Int!): String
   setPlayingEpisode(podcastId: Int!, id: String!): EpisodeIds
+  removeFromUpnext(podcastId: Int!, id: String!): EpisodeIds
   updatePlayedSeconds(
     id: String!
     podcastId: Int!

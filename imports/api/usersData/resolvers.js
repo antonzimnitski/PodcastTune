@@ -103,6 +103,15 @@ export default {
         { $push: { inProgress: { id, podcastId, playedSeconds } } }
       );
       return playedSeconds;
+    },
+    removeFromUpnext(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+      const userData = UsersData.findOne({ _id });
+
+      if (userData && userData.playingEpisode) {
+        UsersData.update({ _id }, { $pull: { upnext: { id } } });
+      }
+      return { id, podcastId };
     }
   }
 };
