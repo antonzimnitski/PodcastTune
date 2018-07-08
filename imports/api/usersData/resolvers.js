@@ -104,11 +104,22 @@ export default {
       );
       return playedSeconds;
     },
+
+    addToUpnext(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+
+      UsersData.update(
+        { _id },
+        { $addToSet: { upnext: { id, podcastId } } },
+        { upsert: true }
+      );
+      return { id, podcastId };
+    },
     removeFromUpnext(_, { id, podcastId }, { user }) {
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
 
-      if (userData && userData.playingEpisode) {
+      if (userData) {
         UsersData.update({ _id }, { $pull: { upnext: { id } } });
       }
       return { id, podcastId };

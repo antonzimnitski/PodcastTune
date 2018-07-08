@@ -22,6 +22,7 @@ type Mutation {
   subscribe(podcastId: Int!): String
   unsubscribe(podcastId: Int!): String
   setPlayingEpisode(podcastId: Int!, id: String!): EpisodeIds
+  addToUpnext(podcastId: Int!, id: String!): EpisodeIds
   removeFromUpnext(podcastId: Int!, id: String!): EpisodeIds
   updatePlayedSeconds(
     id: String!

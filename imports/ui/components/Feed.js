@@ -45,6 +45,24 @@ const GET_PLAYING_EPISODE = gql`
   }
 `;
 
+const REMOVE_FROM_UPNEXT = gql`
+  mutation RemoveFromUpnext($id: String!, $podcastId: Int!) {
+    removeFromUpnext(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
+const ADD_TO_UPNEXT = gql`
+  mutation AddToUpnext($id: String!, $podcastId: Int!) {
+    addToUpnext(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
 class Feed extends Component {
   constructor(props) {
     super(props);
@@ -98,6 +116,13 @@ class Feed extends Component {
           ? "episode episode--active"
           : "episode"; */
 
+  isPlayingEpisode(id) {
+    const { playingEpisode } = this.props;
+    if (!playingEpisode) return false;
+
+    return playingEpisode.id === id;
+  }
+
   renderFeed() {
     if (this.props.feed.length === 0) return <div>There is no episodes.</div>;
     return (
@@ -110,6 +135,8 @@ class Feed extends Component {
               episode={episode}
               handleEpisodeModal={this.handleEpisodeModal}
               handleClick={this.handleClick}
+              isPlayingEpisode={this.isPlayingEpisode(episode.id)}
+              upnext={this.props.upnext}
             />
           );
         })}
@@ -145,6 +172,20 @@ export default withTracker(() => {
       })
     }),
     graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
-    graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" })
+    graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" }),
+    graphql(GET_PLAYING_EPISODE, {
+      skip: props => !props.isLoggedIn,
+      props: ({ data: { playingEpisode } }) => ({
+        playingEpisode
+      })
+    }),
+    graphql(GET_UPNEXT, {
+      skip: props => !props.isLoggedIn,
+      props: ({ data: { upnext } }) => ({
+        upnext
+      })
+    }),
+    graphql(ADD_TO_UPNEXT, { name: "addToUpnext" }),
+    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" })
   )(Feed)
 );

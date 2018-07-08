@@ -27,6 +27,12 @@
   color: $light-blue;
 }
 
+.episode:hover .controls__up-next {
+  @include laptop {
+    opacity: 1;
+  }
+}
+
 .episode__artwork {
   display: none;
 
@@ -90,12 +96,29 @@
 }
 
 .episode__controls {
-  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 .controls__play {
   fill: $light-blue;
   width: 3rem;
+}
+
+.controls__up-next {
+  fill: $dark-gray;
+  width: 2.5rem;
+  margin-right: $space;
+  display: none;
+
+  @include tablet {
+    display: block;
+    opacity: 1;
+  }
+
+  @include laptop {
+    opacity: 0;
+  }
 }
 
 .controls__play:hover {
@@ -115,10 +138,26 @@
   opacity: 0;
 }
 
-.episode--active .play__bars {
+.episode--playing .play__bars {
   opacity: 1;
 }
 
-.episode--active .play__triangle {
+.episode--playing .play__triangle {
   opacity: 0;
+}
+
+.up-next__add {
+  opacity: 1;
+}
+
+.up-next__remove {
+  opacity: 0;
+}
+
+.episode--in-upnext .up-next__add {
+  opacity: 0;
+}
+
+.episode--in-upnext .up-next__remove {
+  opacity: 1;
 }
