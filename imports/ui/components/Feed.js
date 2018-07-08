@@ -13,10 +13,6 @@ const GET_UPNEXT = gql`
   query Upnext {
     upnext {
       id
-      podcastId
-      podcastArtworkUrl
-      title
-      author
     }
   }
 `;
@@ -34,31 +30,14 @@ const GET_PLAYING_EPISODE = gql`
   query PlayingEpisode {
     playingEpisode {
       id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      playedSeconds
-      author
     }
   }
 `;
 
-const REMOVE_FROM_UPNEXT = gql`
-  mutation RemoveFromUpnext($id: String!, $podcastId: Int!) {
-    removeFromUpnext(podcastId: $podcastId, id: $id) {
+const GET_FAVORITES = gql`
+  query Favorites {
+    favorites {
       id
-      podcastId
-    }
-  }
-`;
-
-const ADD_TO_UPNEXT = gql`
-  mutation AddToUpnext($id: String!, $podcastId: Int!) {
-    addToUpnext(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
     }
   }
 `;
@@ -137,6 +116,7 @@ class Feed extends Component {
               handleClick={this.handleClick}
               isPlayingEpisode={this.isPlayingEpisode(episode.id)}
               upnext={this.props.upnext}
+              favorites={this.props.favorites}
             />
           );
         })}
@@ -185,7 +165,11 @@ export default withTracker(() => {
         upnext
       })
     }),
-    graphql(ADD_TO_UPNEXT, { name: "addToUpnext" }),
-    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" })
+    graphql(GET_FAVORITES, {
+      skip: props => !props.isLoggedIn,
+      props: ({ data: { favorites } }) => ({
+        favorites
+      })
+    })
   )(Feed)
 );

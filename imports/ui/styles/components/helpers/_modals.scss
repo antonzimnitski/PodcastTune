@@ -19,6 +19,10 @@
   opacity: 1;
 }
 
+.modal__item:hover .modal-item__info {
+  margin-right: $space;
+}
+
 .modal-item__artwork {
   flex-shrink: 0;
   width: 6rem;

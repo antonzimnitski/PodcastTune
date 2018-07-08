@@ -10,10 +10,6 @@ const GET_UPNEXT = gql`
   query Upnext {
     upnext {
       id
-      podcastId
-      podcastArtworkUrl
-      title
-      author
     }
   }
 `;
@@ -30,6 +26,32 @@ const REMOVE_FROM_UPNEXT = gql`
 const ADD_TO_UPNEXT = gql`
   mutation AddToUpnext($id: String!, $podcastId: Int!) {
     addToUpnext(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
+const GET_FAVORITES = gql`
+  query Favorites {
+    favorites {
+      id
+    }
+  }
+`;
+
+const REMOVE_FROM_FAVORITES = gql`
+  mutation RemoveFromFavorites($id: String!, $podcastId: Int!) {
+    removeFromFavorites(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
+const ADD_TO_FAVORITES = gql`
+  mutation AddToFavorites($id: String!, $podcastId: Int!) {
+    addToFavorites(podcastId: $podcastId, id: $id) {
       id
       podcastId
     }
@@ -60,6 +82,15 @@ class Episode extends Component {
     });
   }
 
+  isInFavorites(id) {
+    const { favorites } = this.props;
+    if (!favorites || !favorites.length) return false;
+
+    return !!favorites.find(el => {
+      if (el) return el.id === id;
+    });
+  }
+
   handleUpnext(id, podcastId, isInUpNext) {
     const { removeFromUpnext, addToUpnext } = this.props;
     isInUpNext
@@ -83,6 +114,29 @@ class Episode extends Component {
           .catch(err => console.log(err));
   }
 
+  handleFavorites(id, podcastId, isInFavorites) {
+    const { removeFromFavorites, addToFavorites } = this.props;
+    isInFavorites
+      ? removeFromFavorites({
+          variables: {
+            id,
+            podcastId
+          },
+          refetchQueries: [{ query: GET_FAVORITES }]
+        })
+          .then(res => console.log("Episode removed from Favorites", res.data))
+          .catch(err => console.log(err))
+      : addToFavorites({
+          variables: {
+            id,
+            podcastId
+          },
+          refetchQueries: [{ query: GET_FAVORITES }]
+        })
+          .then(res => console.log("Episode added Favorites", res.data))
+          .catch(err => console.log(err));
+  }
+
   render() {
     const {
       episode,
@@ -93,7 +147,9 @@ class Episode extends Component {
     } = this.props;
     const episodeClassName = `episode${
       isPlayingEpisode ? " episode--playing" : ""
-    }${this.isInUpNext(episode.id) ? " episode--in-upnext" : ""}`;
+    }${this.isInUpNext(episode.id) ? " episode--in-upnext" : ""}${
+      this.isInFavorites(episode.id) ? " episode--in-favorites" : ""
+    }`;
 
     return (
       <div className={episodeClassName}>
@@ -105,11 +161,36 @@ class Episode extends Component {
             }}
           />
         ) : null}
-        <div
-          className="episode__info"
-          onClick={() => handleEpisodeModal(episode.id, episode.podcastId)}
-        >
-          <p className="episode__title">{episode.title}</p>
+        <div className="episode__info">
+          <div className="episode__primary">
+            <div className="episode__title">
+              <p
+                className="title__text"
+                onClick={() =>
+                  handleEpisodeModal(episode.id, episode.podcastId)
+                }
+              >
+                {episode.title}
+              </p>
+              <svg
+                className="star__icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 168.8 160.5"
+                onClick={() =>
+                  isLoggedIn
+                    ? this.handleFavorites(
+                        episode.id,
+                        episode.podcastId,
+                        this.isInFavorites(episode.id)
+                      )
+                    : console.log("loggin on signup")
+                }
+              >
+                <path d="M168.8 61.3l-58.3-8.5L84.4 0 58.3 52.8 0 61.3l42.2 41.1-10 58.1 52.2-27.4 52.2 27.4-10-58.1 42.2-41.1z" />
+              </svg>
+            </div>
+          </div>
+
           {episode.author ? (
             <p className="episode__author">{episode.author}</p>
           ) : null}
@@ -211,6 +292,8 @@ export default withTracker(() => {
 })(
   compose(
     graphql(ADD_TO_UPNEXT, { name: "addToUpnext" }),
-    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" })
+    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" }),
+    graphql(ADD_TO_FAVORITES, { name: "addToFavorites" }),
+    graphql(REMOVE_FROM_FAVORITES, { name: "removeFromFavorites" })
   )(Episode)
 );

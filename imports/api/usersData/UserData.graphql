@@ -4,6 +4,7 @@ type UserData {
   playingEpisode: Episode
   inProgress: [Episode]
   upnext: [Episode]
+  favorites: [Episode]
 }
 
 extend type Query {
@@ -11,6 +12,7 @@ extend type Query {
   playingEpisode: Episode
   upnext: [Episode]
   inProgress: [Episode]
+  favorites: [Episode]
 }
 
 type EpisodeIds {
@@ -21,9 +23,15 @@ type EpisodeIds {
 type Mutation {
   subscribe(podcastId: Int!): String
   unsubscribe(podcastId: Int!): String
+
   setPlayingEpisode(podcastId: Int!, id: String!): EpisodeIds
+
   addToUpnext(podcastId: Int!, id: String!): EpisodeIds
   removeFromUpnext(podcastId: Int!, id: String!): EpisodeIds
+
+  addToFavorites(podcastId: Int!, id: String!): EpisodeIds
+  removeFromFavorites(podcastId: Int!, id: String!): EpisodeIds
+
   updatePlayedSeconds(
     id: String!
     podcastId: Int!

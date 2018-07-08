@@ -23,13 +23,14 @@
   }
 }
 
-.episode:hover {
+.episode:hover .title__text {
   color: $light-blue;
 }
 
-.episode:hover .controls__up-next {
+.episode:hover .controls__up-next,
+.episode:hover .star__icon {
   @include laptop {
-    opacity: 1;
+    display: block;
   }
 }
 
@@ -54,21 +55,30 @@
   width: 90%;
   padding-right: $space;
   cursor: pointer;
+  position: relative;
 
   @include tablet {
     width: 70%;
   }
 }
 
-.episode__title,
-.episode__author {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: block;
+.episode__primary {
+  display: flex;
 }
 
 .episode__title {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.title__text {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1;
   font-size: 1.3rem;
   font-weight: 500;
 
@@ -78,7 +88,18 @@
 }
 
 .episode__author {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
   font-style: italic;
+}
+
+.star__icon {
+  fill: $dark-gray;
+  width: 1.5rem;
+  flex: 0 0 auto;
+  margin: 0 0 0.2rem 0.5rem;
 }
 
 .episode__controls {
@@ -103,21 +124,30 @@
 .controls__play {
   fill: $light-blue;
   width: 3rem;
+  margin-left: auto;
 }
 
 .controls__up-next {
   fill: $dark-gray;
   width: 2.5rem;
   margin-right: $space;
+}
+
+.star__icon,
+.controls__up-next {
   display: none;
 
   @include tablet {
     display: block;
-    opacity: 1;
   }
 
   @include laptop {
-    opacity: 0;
+    display: none;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -160,4 +190,10 @@
 
 .episode--in-upnext .up-next__remove {
   opacity: 1;
+}
+
+.episode--in-favorites .star__icon {
+  display: block;
+  opacity: 1;
+  fill: $yellow;
 }

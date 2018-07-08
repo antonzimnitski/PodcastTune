@@ -11,7 +11,7 @@ import Discover from "./Discover";
 import DiscoverByGenre from "./DiscoverByGenre";
 import AudioPlayer from "./AudioPlayer";
 import InProgress from "./InProgress";
-import Starred from "./Starred";
+import Favorites from "./Favorites";
 import NewReleases from "./NewReleases";
 
 class App extends Component {
@@ -37,9 +37,9 @@ class App extends Component {
                   component={() => <InProgress title="In Progress" />}
                 />
                 <Route
-                  path="/starred"
+                  path="/favorites"
                   exact
-                  component={() => <Starred title="Starred episodes" />}
+                  component={() => <Favorites title="Favorites episodes" />}
                 />
                 <Route
                   path="/new-releases"

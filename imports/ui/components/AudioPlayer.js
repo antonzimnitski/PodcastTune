@@ -92,6 +92,7 @@ class AudioPlayer extends Component {
       this.props.updatePlayedSeconds({
         variables: {
           id: episode.id,
+          podcastId: episode.podcastId,
           playedSeconds: episode.playedSeconds
         }
       });
@@ -512,8 +513,16 @@ const UPDATE_PLAYER_SECONDS = gql`
   }
 `;
 const UPDATE_PLAYED_SECONDS = gql`
-  mutation UpdatePlayedSeconds($id: String!, $playedSeconds: Float!) {
-    updatePlayedSeconds(id: $id, playedSeconds: $playedSeconds)
+  mutation UpdatePlayedSeconds(
+    $id: String!
+    $podcastId: Int!
+    $playedSeconds: Float!
+  ) {
+    updatePlayedSeconds(
+      id: $id
+      podcastId: $podcastId
+      playedSeconds: $playedSeconds
+    )
   }
 `;
 

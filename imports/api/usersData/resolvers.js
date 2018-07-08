@@ -54,6 +54,22 @@ export default {
               return podcast.episodes.find(el => el.id === id);
             }
           });
+    },
+    favorites(_, __, { user }, { cacheControl }) {
+      const { _id } = user;
+      if (!_id) return null;
+      cacheControl.setCacheHint({ maxAge: 0 });
+      const userData = UsersData.findOne({ _id });
+      if (!userData || !userData.favorites) return null;
+      const { favorites } = userData;
+      return !favorites.length
+        ? null
+        : favorites.map(({ podcastId, id }) => {
+            const podcast = Podcasts.findOne({ podcastId });
+            if (podcast.episodes) {
+              return podcast.episodes.find(el => el.id === id);
+            }
+          });
     }
   },
   Mutation: {
@@ -104,7 +120,6 @@ export default {
       );
       return playedSeconds;
     },
-
     addToUpnext(_, { id, podcastId }, { user }) {
       const { _id } = user;
 
@@ -121,6 +136,25 @@ export default {
 
       if (userData) {
         UsersData.update({ _id }, { $pull: { upnext: { id } } });
+      }
+      return { id, podcastId };
+    },
+    addToFavorites(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+
+      UsersData.update(
+        { _id },
+        { $addToSet: { favorites: { id, podcastId } } },
+        { upsert: true }
+      );
+      return { id, podcastId };
+    },
+    removeFromFavorites(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+      const userData = UsersData.findOne({ _id });
+
+      if (userData) {
+        UsersData.update({ _id }, { $pull: { favorites: { id } } });
       }
       return { id, podcastId };
     }

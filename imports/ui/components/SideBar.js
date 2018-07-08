@@ -41,7 +41,7 @@ const SideBar = () => {
         <Link
           onClick={() => closeSidebar()}
           className="sidebar__link"
-          to="/starred"
+          to="/favorites"
         >
           Favorites
         </Link>
