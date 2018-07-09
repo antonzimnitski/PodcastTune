@@ -7,13 +7,28 @@ export default {
     async podcast(obj, { podcastId }) {
       const result = Podcasts.findOne({ podcastId });
 
-      if (!result || isUpdateNeeded(result.updatedAt)) {
+      if (!result) {
         const podcast = await getData(podcastId);
 
         if (!podcast) return null;
         Podcasts.update(
           { podcastId },
           { ...podcast, updatedAt: moment().valueOf() },
+          { upsert: true }
+        );
+        return Podcasts.findOne({ podcastId });
+      }
+
+      if (isUpdateNeeded(result.updatedAt)) {
+        const podcast = await getData(podcastId);
+
+        if (!podcast) return null;
+        Podcasts.update(
+          { podcastId },
+          {
+            $set: { updatedAt: moment().valueOf() },
+            $addToSet: { episodes: { $each: podcast.episodes } }
+          },
           { upsert: true }
         );
         return Podcasts.findOne({ podcastId });
