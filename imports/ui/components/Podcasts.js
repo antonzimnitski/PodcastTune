@@ -43,9 +43,15 @@ function renderPodcasts() {
         return data.podcasts.map(podcast => {
           if (!podcast) return;
           return (
-            <Link to={`/podcasts/${podcast.podcastId}`} key={podcast.podcastId}>
-              <img src={podcast.artworkUrl} alt="" />
-            </Link>
+            <div key={podcast.podcastId} className="podcasts__card">
+              <Link to={`/podcasts/${podcast.podcastId}`}>
+                <img
+                  className="podcasts__image"
+                  src={podcast.artworkUrl}
+                  alt=""
+                />
+              </Link>
+            </div>
           );
         });
       }}

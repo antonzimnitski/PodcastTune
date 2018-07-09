@@ -159,3 +159,17 @@
     color: $light-blue;
   }
 }
+
+.podcasts__card {
+  display: inline-block;
+  margin: $small-space;
+  transition: all 0.3s ease;
+}
+
+.podcasts__image {
+  width: 20rem;
+}
+
+.podcasts__card:hover {
+  transform: scale(1.05);
+}

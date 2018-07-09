@@ -112,13 +112,14 @@
   display: none;
   @include tablet {
     display: block;
-    width: 10%;
+    flex: 1;
   }
 }
 
 .episode__controls {
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .controls__play {
