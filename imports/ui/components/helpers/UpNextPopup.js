@@ -58,7 +58,11 @@ const UpNextPopup = ({
           if (!episode) return;
           return (
             <div key={episode.id} className="modal__item">
-              <ModalItem item={episode} playIcon={true} onClick={handleClick} />
+              <ModalItem
+                item={episode}
+                playIcon={true}
+                onClick={() => handleClick(episode.id, episode.podcastId)}
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 192.33 192.33"

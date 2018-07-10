@@ -64,6 +64,29 @@ class AudioPlayer extends Component {
     clearTimeout(this.updatePlayedSecondsTimeout);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { episode } = this.state;
+
+    if (!nextProps.playingEpisode) {
+      this.clearEpisode();
+      return;
+    }
+
+    if (!episode || episode.mediaUrl !== nextProps.playingEpisode.mediaUrl) {
+      this.setState(
+        {
+          isLoading: true,
+          isPlaying: false,
+          episode: nextProps.playingEpisode
+        },
+        () => {
+          this.player.current.currentTime =
+            nextProps.playingEpisode.playedSeconds;
+        }
+      );
+    }
+  }
+
   getSeconds = () => {
     const { episode } = this.state;
     if (
@@ -104,29 +127,6 @@ class AudioPlayer extends Component {
     );
   };
 
-  componentWillReceiveProps(nextProps) {
-    const { episode } = this.state;
-
-    if (!nextProps.playingEpisode) {
-      this.clearEpisode();
-      return;
-    }
-
-    if (!episode || episode.mediaUrl !== nextProps.playingEpisode.mediaUrl) {
-      this.setState(
-        {
-          isLoading: true,
-          isPlaying: false,
-          episode: nextProps.playingEpisode
-        },
-        () => {
-          this.player.current.currentTime =
-            nextProps.playingEpisode.playedSeconds;
-        }
-      );
-    }
-  }
-
   clearEpisode() {
     this.setState({
       episode: null,
@@ -134,7 +134,7 @@ class AudioPlayer extends Component {
       isPlaying: false,
       duration: 0
     });
-    this.props.clearCurrentEpisode();
+    // this.props.clearCurrentEpisode();
   }
 
   onReady() {
@@ -581,26 +581,12 @@ export default withTracker(() => {
 })(
   compose(
     graphql(UPDATE_PLAYER_SECONDS, { name: "updatePlayerSeconds" }),
-    graphql(clearCurrentEpisode, { name: "clearCurrentEpisode" }),
-    graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
-    graphql(getCurrentEpisode, {
-      skip: props => props.isLoggedIn,
-      props: ({ data: { currentEpisode } }) => ({
-        currentEpisode
-      })
-    }),
     graphql(GET_PLAYING_EPISODE, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })
     }),
-    graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" }),
-    graphql(getQueue, {
-      skip: props => props.isLoggedIn,
-      props: ({ data: { queue } }) => ({
-        queue
-      })
-    })
+    graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" })
   )(AudioPlayer)
 );

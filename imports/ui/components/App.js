@@ -17,12 +17,9 @@ import Favorites from "./Favorites";
 import NewReleases from "./NewReleases";
 
 class App extends Component {
-  renderPlayer() {
-    if (this.props.playingEpisode) {
-      Session.set("isPlayerOpen", true);
-      return <AudioPlayer />;
-    }
-    Session.set("isPlayerOpen", false);
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.playingEpisode) Session.set("isPlayerOpen", true);
+    console.log("did update");
   }
 
   render() {
@@ -67,7 +64,7 @@ class App extends Component {
               </Switch>
             </div>
           </div>
-          {this.renderPlayer()}
+          {this.props.isPlayerOpen ? <AudioPlayer /> : null}
           <div
             onClick={() => this.props.handleNavToggle()}
             className="top-header__overlay"
@@ -96,6 +93,7 @@ const GET_PLAYING_EPISODE = gql`
 export default withTracker(() => {
   return {
     isLoggedIn: !!Meteor.userId(),
+    isPlayerOpen: Session.get("isPlayerOpen"),
     handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen"))
   };
 })(

@@ -21,6 +21,8 @@ export default {
       if (!user) return null;
       const podcasts = getUserData(user._id, "podcasts");
 
+      if (!podcasts) return null;
+
       return podcasts.map(podcastId => {
         return Podcasts.findOne({ podcastId });
       });
@@ -28,6 +30,9 @@ export default {
     playingEpisode(_, __, { user }) {
       if (!user) return null;
       const playingEpisode = getUserData(user._id, "playingEpisode");
+
+      if (!playingEpisode) return null;
+
       const { id, podcastId } = playingEpisode;
 
       return getEpisode(podcastId, id);
@@ -35,21 +40,23 @@ export default {
     upnext(_, __, { user }) {
       if (!user) return null;
       const upnext = getUserData(user._id, "upnext");
-      return !upnext.length
+
+      return !upnext || !upnext.length
         ? null
         : upnext.map(({ podcastId, id }) => getEpisode(podcastId, id));
     },
     inProgress(_, __, { user }) {
       if (!user) return null;
       const inProgress = getUserData(user._id, "inProgress");
-      return !inProgress.length
+
+      return !inProgress || !inProgress.length
         ? null
         : inProgress.map(({ podcastId, id }) => getEpisode(podcastId, id));
     },
     favorites(_, __, { user }) {
       if (!user) return null;
       const favorites = getUserData(user._id, "favorites");
-      return !favorites.length
+      return !favorites || !favorites.length
         ? null
         : favorites.map(({ podcastId, id }) => getEpisode(podcastId, id));
     }

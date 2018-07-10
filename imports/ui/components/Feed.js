@@ -30,6 +30,13 @@ const GET_PLAYING_EPISODE = gql`
   query PlayingEpisode {
     playingEpisode {
       id
+      podcastId
+      podcastArtworkUrl
+      title
+      mediaUrl
+      pubDate
+      playedSeconds
+      author
     }
   }
 `;
