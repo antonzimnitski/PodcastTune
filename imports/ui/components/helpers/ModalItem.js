@@ -1,6 +1,6 @@
 import React from "react";
 
-const ModalItem = ({ item, playIcon = false }) => {
+const ModalItem = ({ item, playIcon = false, onClick }) => {
   return (
     <React.Fragment>
       <div
@@ -8,6 +8,7 @@ const ModalItem = ({ item, playIcon = false }) => {
         style={{
           backgroundImage: `url("${item.podcastArtworkUrl || item.artworkUrl}")`
         }}
+        onClick={() => onClick(item.id, item.podcastId)}
       >
         {playIcon ? (
           <svg
@@ -20,7 +21,10 @@ const ModalItem = ({ item, playIcon = false }) => {
         ) : null}
       </div>
 
-      <div className="modal-item__info">
+      <div
+        className="modal-item__info"
+        onClick={() => onClick(item.id, item.podcastId)}
+      >
         <div className="modal-item__title">{item.title}</div>
         <div className="modal-item__author">{item.author}</div>
       </div>

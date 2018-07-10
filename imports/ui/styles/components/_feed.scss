@@ -102,11 +102,6 @@
   margin: 0 0 0.2rem 0.5rem;
 }
 
-.episode__controls {
-  display: block;
-  width: 10%;
-}
-
 .episode__pub-date,
 .episode__duration {
   display: none;
@@ -119,13 +114,13 @@
 .episode__controls {
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 1 1 5rem;
+  justify-content: flex-end;
 }
 
 .controls__play {
   fill: $light-blue;
   width: 3rem;
-  margin-left: auto;
 }
 
 .controls__up-next {

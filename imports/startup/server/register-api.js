@@ -51,9 +51,9 @@ const schema = makeExecutableSchema({
 
 createApolloServer({
   schema,
-  tracing: true,
-  cacheControl: {
-    // defaultMaxAge: 1800
-    defaultMaxAge: 1
-  }
+  tracing: true
+  // cacheControl: {
+  //   // defaultMaxAge: 1800
+  //   defaultMaxAge: 300
+  // }
 });

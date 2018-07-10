@@ -4,7 +4,9 @@ import InnerHeader from "./InnerHeader";
 import { withTracker } from "meteor/react-meteor-data";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
+
 import Feed from "./Feed";
+import Loader from "./helpers/Loader";
 
 const InProgress = ({ title, isLoggedIn }) => {
   return (
@@ -25,7 +27,7 @@ function renderInProgress() {
   return (
     <Query query={GET_IN_PROGRESS} pollInterval={5000}>
       {({ loading, error, data }) => {
-        if (loading) return null;
+        if (loading) return <Loader />;
         if (error) return null;
 
         if (!data || !data.inProgress || data.inProgress.length === 0) {

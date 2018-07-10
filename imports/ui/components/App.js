@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { graphql, compose } from "react-apollo";
+import gql from "graphql-tag";
 
 import Header from "./Header";
 import SideBar from "./SideBar";
@@ -15,6 +17,14 @@ import Favorites from "./Favorites";
 import NewReleases from "./NewReleases";
 
 class App extends Component {
+  renderPlayer() {
+    if (this.props.playingEpisode) {
+      Session.set("isPlayerOpen", true);
+      return <AudioPlayer />;
+    }
+    Session.set("isPlayerOpen", false);
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -57,7 +67,7 @@ class App extends Component {
               </Switch>
             </div>
           </div>
-          {this.props.isPlayerOpen ? <AudioPlayer /> : null}
+          {this.renderPlayer()}
           <div
             onClick={() => this.props.handleNavToggle()}
             className="top-header__overlay"
@@ -68,9 +78,33 @@ class App extends Component {
   }
 }
 
+const GET_PLAYING_EPISODE = gql`
+  query PlayingEpisode {
+    playingEpisode {
+      id
+      podcastId
+      podcastArtworkUrl
+      title
+      mediaUrl
+      pubDate
+      playedSeconds
+      author
+    }
+  }
+`;
+
 export default withTracker(() => {
   return {
-    isPlayerOpen: Session.get("isPlayerOpen"),
+    isLoggedIn: !!Meteor.userId(),
     handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen"))
   };
-})(App);
+})(
+  compose(
+    graphql(GET_PLAYING_EPISODE, {
+      skip: props => !props.isLoggedIn,
+      props: ({ data: { playingEpisode } }) => ({
+        playingEpisode
+      })
+    })
+  )(App)
+);

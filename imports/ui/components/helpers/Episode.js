@@ -237,7 +237,11 @@ class Episode extends Component {
             viewBox="0 0 250 250"
           >
             <g
-              onClick={() => handleClick(episode.id, episode.podcastId)}
+              onClick={() =>
+                !isPlayingEpisode
+                  ? handleClick(episode.id, episode.podcastId)
+                  : console.log("playing episode")
+              }
               id="icon"
             >
               <g id="circle">

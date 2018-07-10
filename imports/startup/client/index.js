@@ -45,8 +45,8 @@ const cache = new InMemoryCache();
 // });
 
 const defaultState = {
-  currentEpisode: getStorageValue("currentEpisode") || null,
-  queue: getStorageValue("queue") || []
+  currentEpisode: null,
+  queue: []
 };
 
 // const defaultState = {
@@ -179,15 +179,6 @@ Tracker.autorun(() => {
 Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
   Session.set("isNavOpen", false);
-  Session.set("isPlayerOpen", isPlayerOpen());
+  Session.set("isPlayerOpen", false);
   render(<ApolloApp />, document.getElementById("app"));
 });
-
-function isPlayerOpen() {
-  if (Meteor.userId())
-    return Meteor.subscribe("usersData", () => {
-      return !!UsersData.findOne().playingEpisode;
-    });
-
-  return !!getStorageValue("currentEpisode");
-}

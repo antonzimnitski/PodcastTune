@@ -4,6 +4,7 @@ import InnerHeader from "./InnerHeader";
 import { withTracker } from "meteor/react-meteor-data";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
+import Loader from "./helpers/Loader";
 
 const Podcasts = ({ title, isLoggedIn }) => {
   return (
@@ -25,7 +26,7 @@ function renderPodcasts() {
   return (
     <Query query={GET_SUBSCRIBED_PODCASTS} pollInterval={5000}>
       {({ loading, error, data }) => {
-        if (loading) return null;
+        if (loading) return <Loader />;
         if (error) throw error;
 
         if (!data || !data.podcasts || data.podcasts.length === 0) {
