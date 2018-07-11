@@ -128,13 +128,19 @@ class AudioPlayer extends Component {
   };
 
   clearEpisode() {
+    const { id, podcastId } = this.state.episode;
     this.setState({
       episode: null,
       isReady: false,
       isPlaying: false,
       duration: 0
     });
-    // this.props.clearCurrentEpisode();
+    this.props.markAsPlayed({
+      variables: {
+        id,
+        podcastId
+      }
+    });
   }
 
   onReady() {
@@ -543,6 +549,24 @@ const SET_CURRENT_EPISODE = gql`
   }
 `;
 
+const MARK_AS_PLAYED = gql`
+  mutation MarkAsPlayed($podcastId: Int!, $id: String!) {
+    markAsPlayed(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
+const MARK_AS_UNPLAYED = gql`
+  mutation MarkAsUnplayed($podcastId: Int!, $id: String!) {
+    markAsUnplayed(podcastId: $podcastId, id: $id) {
+      id
+      podcastId
+    }
+  }
+`;
+
 const UPDATE_CURRENT_CLIENT = gql`
   mutation updateCurrentEpisode($episode: Episode!) {
     updateCurrentEpisode(episode: $episode) @client {
@@ -587,6 +611,7 @@ export default withTracker(() => {
         playingEpisode
       })
     }),
-    graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" })
+    graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" }),
+    graphql(MARK_AS_PLAYED, { name: "markAsPlayed" })
   )(AudioPlayer)
 );

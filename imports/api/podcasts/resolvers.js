@@ -5,6 +5,7 @@ import Podcasts from "./podcasts";
 export default {
   Query: {
     async podcast(obj, { podcastId }) {
+      console.time("podcast");
       const result = Podcasts.findOne({ podcastId });
 
       if (!result) {
@@ -16,24 +17,31 @@ export default {
           { ...podcast, updatedAt: moment().valueOf() },
           { upsert: true }
         );
+        console.timeEnd("podcast");
         return Podcasts.findOne({ podcastId });
       }
 
       if (isUpdateNeeded(result.updatedAt)) {
         const podcast = await getData(podcastId);
 
-        if (!podcast) return null;
+        if (!podcast || !podcast.episodes) return null;
+        podcast.episodes.forEach(episode => {
+          if (!episode || !episode.mediaUrl) return;
+          Podcasts.update(
+            { podcastId, "episodes.mediaUrl": { $ne: episode.mediaUrl } },
+            { $push: { episodes: episode } }
+          );
+        });
         Podcasts.update(
           { podcastId },
           {
-            $set: { updatedAt: moment().valueOf() },
-            $addToSet: { episodes: { $each: podcast.episodes } }
-          },
-          { upsert: true }
+            $set: { updatedAt: moment().valueOf() }
+          }
         );
+        console.timeEnd("podcast");
         return Podcasts.findOne({ podcastId });
       }
-
+      console.timeEnd("podcast");
       return result;
     }
   }

@@ -59,6 +59,13 @@ export default {
       return !favorites || !favorites.length
         ? null
         : favorites.map(({ podcastId, id }) => getEpisode(podcastId, id));
+    },
+    played(_, __, { user }) {
+      if (!user) return null;
+      const played = getUserData(user._id, "played");
+      return !played || !played.length
+        ? null
+        : played.map(({ podcastId, id }) => getEpisode(podcastId, id));
     }
   },
   Mutation: {
@@ -75,6 +82,11 @@ export default {
       const { _id } = user;
       UsersData.update({ _id }, { $pull: { podcasts: podcastId } });
       return podcastId;
+    },
+    clearPlayingEpisode(_, __, { user }) {
+      const { _id } = user;
+      UsersData.update({ _id }, { $set: { playingEpisode: null } });
+      return null;
     },
     setPlayingEpisode(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -94,7 +106,10 @@ export default {
 
       UsersData.update(
         { _id },
-        { $set: { playingEpisode: { id, podcastId } } },
+        {
+          $set: { playingEpisode: { id, podcastId } },
+          $pull: { played: { id } }
+        },
         { upsert: true }
       );
       return { id, podcastId };
@@ -102,7 +117,12 @@ export default {
     updatePlayedSeconds(_, { id, podcastId, playedSeconds }, { user }) {
       const { _id } = user;
       //https://stackoverflow.com/questions/37427610/mongodb-update-or-insert-object-in-array#37428056
-      UsersData.update({ _id }, { $pull: { inProgress: { id } } });
+      UsersData.update(
+        { _id },
+        {
+          $pull: { inProgress: { id } }
+        }
+      );
       UsersData.update(
         { _id },
         { $push: { inProgress: { id, podcastId, playedSeconds } } }
@@ -144,6 +164,28 @@ export default {
 
       if (userData) {
         UsersData.update({ _id }, { $pull: { favorites: { id } } });
+      }
+      return { id, podcastId };
+    },
+    markAsPlayed(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+
+      UsersData.update(
+        { _id },
+        {
+          $pull: { inProgress: { id } },
+          $addToSet: { played: { id, podcastId } }
+        },
+        { upsert: true }
+      );
+      return { id, podcastId };
+    },
+    markAsUnplayed(_, { id, podcastId }, { user }) {
+      const { _id } = user;
+      const userData = UsersData.findOne({ _id });
+
+      if (userData) {
+        UsersData.update({ _id }, { $pull: { played: { id } } });
       }
       return { id, podcastId };
     }
