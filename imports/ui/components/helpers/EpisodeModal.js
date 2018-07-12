@@ -2,20 +2,8 @@ import React from "react";
 import Modal from "react-modal";
 import moment from "moment";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
-const GET_EPISODE_INFO = gql`
-  query Episode($podcastId: Int!, $id: String!) {
-    episode(podcastId: $podcastId, id: $id) {
-      title
-      description
-      author
-      duration
-      pubDate
-      linkToEpisode
-    }
-  }
-`;
+import getEpisodeInfo from "./../../queries/getEpisodeInfo";
 
 const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
   return (
@@ -27,7 +15,7 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
       overlayClassName="episode-modal__overlay"
     >
       <Query
-        query={GET_EPISODE_INFO}
+        query={getEpisodeInfo}
         variables={{
           podcastId,
           id

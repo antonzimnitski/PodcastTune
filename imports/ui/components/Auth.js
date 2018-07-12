@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import Modal from "react-modal";
+import { Query, withApollo } from "react-apollo";
+import { withTracker } from "meteor/react-meteor-data";
+
 import Login from "./Login";
 import Signup from "./Signup";
-import { Query, withApollo } from "react-apollo";
+
 import getLoggedUser from "./../queries/getLoggedUser";
-import { withTracker } from "meteor/react-meteor-data";
 
 class Auth extends Component {
   constructor(props) {

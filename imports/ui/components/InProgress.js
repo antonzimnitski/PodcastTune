@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import InnerHeader from "./InnerHeader";
 import { withTracker } from "meteor/react-meteor-data";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
+import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
 import Loader from "./helpers/Loader";
+
+import getInProgress from "./../queries/getInProgress";
 
 const InProgress = ({ title, isLoggedIn }) => {
   return (
@@ -25,7 +26,7 @@ const InProgress = ({ title, isLoggedIn }) => {
 };
 function renderInProgress() {
   return (
-    <Query query={GET_IN_PROGRESS} pollInterval={5000}>
+    <Query query={getInProgress} pollInterval={5000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) return null;
@@ -43,29 +44,10 @@ function renderInProgress() {
         }
 
         return <Feed feed={data.inProgress} />;
-        /* if (!episode) return;
-          return (
-            <Link to={`/podcasts/${podcast.podcastId}`} key={podcast.podcastId}>
-              <img src={podcast.artworkUrl} alt="" />
-            </Link>
-          ); */
       }}
     </Query>
   );
 }
-
-const GET_IN_PROGRESS = gql`
-  query InProgress {
-    inProgress {
-      id
-      podcastId
-      podcastArtworkUrl
-      duration
-      title
-      author
-    }
-  }
-`;
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

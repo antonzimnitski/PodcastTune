@@ -1,10 +1,12 @@
 import React from "react";
-import InnerHeader from "./InnerHeader";
 import { withTracker } from "meteor/react-meteor-data";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
+
+import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
 import Loader from "./helpers/Loader";
+
+import getFavorites from "./../queries/getFavorites";
 
 const Favorites = ({ title, isLoggedIn }) => {
   return (
@@ -24,7 +26,7 @@ const Favorites = ({ title, isLoggedIn }) => {
 
 function renderFavorites() {
   return (
-    <Query query={GET_FAVORITES} pollInterval={5000}>
+    <Query query={getFavorites} pollInterval={5000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) return null;
@@ -43,19 +45,6 @@ function renderFavorites() {
     </Query>
   );
 }
-
-const GET_FAVORITES = gql`
-  query Favorites {
-    favorites {
-      id
-      podcastId
-      podcastArtworkUrl
-      duration
-      title
-      author
-    }
-  }
-`;
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

@@ -1,53 +1,15 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
-import EpisodeModal from "./helpers/EpisodeModal";
-import { Query, graphql, compose } from "react-apollo";
-import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
-import getCurrentEpisode from "./../queries/getCurrentEpisode";
-import gql from "graphql-tag";
+import { graphql, compose } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 
+import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
 
-const GET_UPNEXT = gql`
-  query Upnext {
-    upnext {
-      id
-    }
-  }
-`;
-
-const SET_PLAYING_EPISODE = gql`
-  mutation SetPlayingEpisode($id: String!, $podcastId: Int!) {
-    setPlayingEpisode(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const GET_PLAYING_EPISODE = gql`
-  query PlayingEpisode {
-    playingEpisode {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      playedSeconds
-      author
-    }
-  }
-`;
-
-const GET_FAVORITES = gql`
-  query Favorites {
-    favorites {
-      id
-    }
-  }
-`;
+import getUpnextIds from "./../queries/getUpnextIds";
+import getPlayingEpisode from "./../queries/getPlayingEpisode";
+import setPlayingEpisode from "./../queries/setPlayingEpisode";
+import getFavoritesIds from "./../queries/getFavoritesIds";
 
 class Feed extends Component {
   constructor(props) {
@@ -72,35 +34,20 @@ class Feed extends Component {
             podcastId
           },
           refetchQueries: [
-            { query: GET_PLAYING_EPISODE },
-            { query: GET_UPNEXT }
+            { query: getPlayingEpisode },
+            { query: getUpnextIds }
           ]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
       : console.log("todo it later", id, podcastId);
-    // if (
-    //   this.props.currentEpisode &&
-    //   this.props.currentEpisode.title === episode.title
-    // )
-    //   return console.log("it's current");
-    // this.props.updateCurrentEpisode({
-    //   variables: {
-    //     episode
-    //   }
-    // });
+
     Session.set("isPlayerOpen", true);
   }
 
   handleEpisodeModal(id, podcastId) {
     this.setState({ isModalOpen: !this.state.isModalOpen, id, podcastId });
   }
-
-  /* const className =
-        this.props.queue &&
-        isEqual(this.props.queue[0].title, episode.title)
-          ? "episode episode--active"
-          : "episode"; */
 
   isPlayingEpisode(id) {
     const { playingEpisode } = this.props;
@@ -153,26 +100,20 @@ export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(getCurrentEpisode, {
-      props: ({ data: { currentEpisode } }) => ({
-        currentEpisode
-      })
-    }),
-    graphql(updateCurrentEpisode, { name: "updateCurrentEpisode" }),
-    graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" }),
-    graphql(GET_PLAYING_EPISODE, {
+    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
+    graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })
     }),
-    graphql(GET_UPNEXT, {
+    graphql(getUpnextIds, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { upnext } }) => ({
         upnext
       })
     }),
-    graphql(GET_FAVORITES, {
+    graphql(getFavoritesIds, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { favorites } }) => ({
         favorites

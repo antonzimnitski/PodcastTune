@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import InnerHeader from "./InnerHeader";
 import { withTracker } from "meteor/react-meteor-data";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
+
 import Loader from "./helpers/Loader";
+import InnerHeader from "./InnerHeader";
+
+import getSubscribedPodcasts from "./../queries/getSubscribedPodcasts";
 
 const Podcasts = ({ title, isLoggedIn }) => {
   return (
@@ -24,7 +26,7 @@ const Podcasts = ({ title, isLoggedIn }) => {
 
 function renderPodcasts() {
   return (
-    <Query query={GET_SUBSCRIBED_PODCASTS} pollInterval={5000}>
+    <Query query={getSubscribedPodcasts} pollInterval={5000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) throw error;
@@ -59,15 +61,6 @@ function renderPodcasts() {
     </Query>
   );
 }
-
-const GET_SUBSCRIBED_PODCASTS = gql`
-  query Podcasts {
-    podcasts {
-      podcastId
-      artworkUrl
-    }
-  }
-`;
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

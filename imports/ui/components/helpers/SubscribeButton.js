@@ -1,28 +1,11 @@
 import React from "react";
 import { withTracker } from "meteor/react-meteor-data";
-import gql from "graphql-tag";
 import { compose, graphql } from "react-apollo";
 import { find } from "lodash";
 
-const SUBSCRIBE = gql`
-  mutation subscribe($podcastId: Int!) {
-    subscribe(podcastId: $podcastId)
-  }
-`;
-
-const UNSUBSCRIBE = gql`
-  mutation unsubscribe($podcastId: Int!) {
-    unsubscribe(podcastId: $podcastId)
-  }
-`;
-
-const GET_SUBSCRIBED_PODCASTS = gql`
-  query Podcasts {
-    podcasts {
-      podcastId
-    }
-  }
-`;
+import getSubscribedPodcastsIds from "./../../queries/getSubscribedPodcastsIds";
+import subscribeToPodcast from "./../../queries/subscribeToPodcast";
+import unsubscribeFromPodcast from "./../../queries/unsubscribeFromPodcast";
 
 const SubscribeButton = ({
   podcastId,
@@ -46,7 +29,7 @@ const SubscribeButton = ({
               variables: {
                 podcastId
               },
-              refetchQueries: [{ query: GET_SUBSCRIBED_PODCASTS }]
+              refetchQueries: [{ query: getSubscribedPodcastsIds }]
             }).then(() => console.log("subscribe"));
           }}
           className="subscribe-btn "
@@ -58,7 +41,7 @@ const SubscribeButton = ({
               variables: {
                 podcastId
               },
-              refetchQueries: [{ query: GET_SUBSCRIBED_PODCASTS }]
+              refetchQueries: [{ query: getSubscribedPodcastsIds }]
             }).then(() => console.log("unsubscribe"));
           }}
           className="subscribe-btn subscribe-btn--subscribed"
@@ -72,9 +55,9 @@ export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(SUBSCRIBE, { name: "subscribe" }),
-    graphql(UNSUBSCRIBE, { name: "unsubscribe" }),
-    graphql(GET_SUBSCRIBED_PODCASTS, {
+    graphql(subscribeToPodcast, { name: "subscribe" }),
+    graphql(unsubscribeFromPodcast, { name: "unsubscribe" }),
+    graphql(getSubscribedPodcastsIds, {
       skip: props => !props.isLoggedIn,
       options: { pollInterval: 5000 },
       props: ({ data: { loading, error, podcasts } }) => ({

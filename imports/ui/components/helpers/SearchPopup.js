@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
-import SearchResults from "./SearchResults";
 import Modal from "react-modal";
+
+import SearchResults from "./SearchResults";
 
 class SearchPopup extends Component {
   constructor(props) {

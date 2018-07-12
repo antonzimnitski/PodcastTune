@@ -1,10 +1,12 @@
 import React from "react";
+import { Session } from "meteor/session";
 import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
-import doSearch from "./../../queries/doSearch";
+
 import Loader from "./Loader";
 import ModalItem from "./ModalItem";
-import { Session } from "meteor/session";
+
+import doSearch from "./../../queries/doSearch";
 
 const SearchResults = props => {
   if (props.data.loading) return <Loader />;

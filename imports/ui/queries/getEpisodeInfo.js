@@ -1,16 +1,11 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query {
-    currentEpisode @client {
-      id
-      podcastId
-      podcastArtworkUrl
+  query Episode($podcastId: Int!, $id: String!) {
+    episode(podcastId: $podcastId, id: $id) {
       title
       description
       author
-      mediaUrl
-      playedSeconds
       duration
       pubDate
       linkToEpisode

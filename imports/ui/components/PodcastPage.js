@@ -1,46 +1,14 @@
 import React, { Component } from "react";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
 import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
 import Loader from "./helpers/Loader";
 import SubscribeButton from "./helpers/SubscribeButton";
 
-const GET_PODCAST = gql`
-  query Podcast($podcastId: Int!) {
-    podcast(podcastId: $podcastId) {
-      podcastId
-      feedUrl
-      title
-      author
-      website
-      description
-      summary
-      artworkUrl
-    }
-  }
-`;
-
-const GET_USER = gql`
-  query {
-    user {
-      _id
-    }
-  }
-`;
-
-const GET_FEED = gql`
-  query Feed($podcastId: Int!, $offset: Int!, $limit: Int!) {
-    feed(podcastId: $podcastId, offset: $offset, limit: $limit) {
-      id
-      podcastId
-      title
-      pubDate
-      duration
-    }
-  }
-`;
+import getPodcast from "./../queries/getPodcast";
+import getLoggedUser from "./../queries/getLoggedUser";
+import getFeed from "./../queries/getFeed";
 
 class PodcastPage extends Component {
   _offset = 0;
@@ -49,7 +17,7 @@ class PodcastPage extends Component {
   renderPodcast() {
     return (
       <Query
-        query={GET_PODCAST}
+        query={getPodcast}
         variables={{
           podcastId: this.props.match.params.podcastId
         }}
@@ -90,7 +58,7 @@ class PodcastPage extends Component {
                 </div>
               </div>
 
-              <Query query={GET_USER}>
+              <Query query={getLoggedUser}>
                 {({ loading, error, data }) => {
                   if (loading) return null;
                   if (error) throw error;
@@ -102,7 +70,7 @@ class PodcastPage extends Component {
               </Query>
 
               <Query
-                query={GET_FEED}
+                query={getFeed}
                 variables={{
                   podcastId: podcast.podcastId,
                   offset: this._offset,

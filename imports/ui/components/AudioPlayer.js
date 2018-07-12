@@ -5,15 +5,18 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import Modal from "react-modal";
+import { graphql, compose } from "react-apollo";
+import update from "immutability-helper";
+
 import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
-import { graphql, compose } from "react-apollo";
-import getCurrentEpisode from "./../queries/getCurrentEpisode";
-import clearCurrentEpisode from "./../queries/clearCurrentEpisode";
-import updateCurrentEpisode from "./../queries/updateCurrentEpisode";
-import getQueue from "./../queries/getQueue";
-import update from "immutability-helper";
-import gql from "graphql-tag";
+
+import getUpnext from "./../queries/getUpnext";
+import getPlayingEpisode from "./../queries/getPlayingEpisode";
+
+import markAsPlayed from "./../queries/markAsPlayed";
+import updatePlayedSeconds from "./../queries/updatePlayedSeconds";
+import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -65,7 +68,6 @@ class AudioPlayer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props);
     const { episode } = this.state;
 
     if (!nextProps.playingEpisode) {
@@ -129,6 +131,7 @@ class AudioPlayer extends Component {
   };
 
   clearEpisode() {
+    if (!this.state.episode) return;
     const { id, podcastId } = this.state.episode;
     this.setState({
       episode: null,
@@ -143,7 +146,7 @@ class AudioPlayer extends Component {
       }
     });
     this.props.clearPlayingEpisode({
-      refetchQueries: [{ query: GET_PLAYING_EPISODE }, { query: GET_UPNEXT }]
+      refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
     });
   }
 
@@ -517,127 +520,18 @@ class AudioPlayer extends Component {
   }
 }
 
-const UPDATE_PLAYER_SECONDS = gql`
-  mutation updatePlayerSeconds($id: String!, $playedSeconds: Float!) {
-    updatePlayerSeconds(id: $id, playedSeconds: $playedSeconds) @client
-  }
-`;
-const UPDATE_PLAYED_SECONDS = gql`
-  mutation UpdatePlayedSeconds(
-    $id: String!
-    $podcastId: Int!
-    $playedSeconds: Float!
-  ) {
-    updatePlayedSeconds(
-      id: $id
-      podcastId: $podcastId
-      playedSeconds: $playedSeconds
-    )
-  }
-`;
-
-const SET_CURRENT_EPISODE = gql`
-  query Episode($podcastId: Int!, $id: String!) {
-    episode(podcastId: $podcastId, id: $id) {
-      podcastId
-      podcastArtworkUrl
-      id
-      title
-      description
-      author
-      duration
-      pubDate
-      linkToEpisode
-      playedSeconds
-    }
-  }
-`;
-
-const MARK_AS_PLAYED = gql`
-  mutation MarkAsPlayed($podcastId: Int!, $id: String!) {
-    markAsPlayed(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const MARK_AS_UNPLAYED = gql`
-  mutation MarkAsUnplayed($podcastId: Int!, $id: String!) {
-    markAsUnplayed(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const UPDATE_CURRENT_CLIENT = gql`
-  mutation updateCurrentEpisode($episode: Episode!) {
-    updateCurrentEpisode(episode: $episode) @client {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      description
-      author
-      mediaUrl
-      playedSeconds
-      duration
-      pubDate
-      linkToEpisode
-    }
-  }
-`;
-
-const GET_PLAYING_EPISODE = gql`
-  query PlayingEpisode {
-    playingEpisode {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      playedSeconds
-      author
-    }
-  }
-`;
-
-const CLEAR_PLAYING_EPISODE = gql`
-  mutation ClearEpisode {
-    clearPlayingEpisode {
-      podcastId
-      id
-    }
-  }
-`;
-
-const GET_UPNEXT = gql`
-  query Upnext {
-    upnext {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      author
-    }
-  }
-`;
-
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(UPDATE_PLAYER_SECONDS, { name: "updatePlayerSeconds" }),
-    graphql(GET_PLAYING_EPISODE, {
+    graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })
     }),
-    graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" }),
-    graphql(MARK_AS_PLAYED, { name: "markAsPlayed" }),
-    graphql(CLEAR_PLAYING_EPISODE, { name: "clearPlayingEpisode" })
+    graphql(updatePlayedSeconds, { name: "updatePlayedSeconds" }),
+    graphql(markAsPlayed, { name: "markAsPlayed" }),
+    graphql(clearPlayingEpisode, { name: "clearPlayingEpisode" })
   )(AudioPlayer)
 );

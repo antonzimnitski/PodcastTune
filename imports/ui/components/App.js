@@ -3,7 +3,6 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { graphql, compose } from "react-apollo";
-import gql from "graphql-tag";
 
 import Header from "./Header";
 import SideBar from "./SideBar";
@@ -15,6 +14,8 @@ import AudioPlayer from "./AudioPlayer";
 import InProgress from "./InProgress";
 import Favorites from "./Favorites";
 import NewReleases from "./NewReleases";
+
+import getPlayingEpisode from "./../queries/getPlayingEpisode";
 
 class App extends Component {
   componentDidUpdate(prevProps, prevState) {
@@ -75,21 +76,6 @@ class App extends Component {
   }
 }
 
-const GET_PLAYING_EPISODE = gql`
-  query PlayingEpisode {
-    playingEpisode {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      playedSeconds
-      author
-    }
-  }
-`;
-
 export default withTracker(() => {
   return {
     isLoggedIn: !!Meteor.userId(),
@@ -98,7 +84,7 @@ export default withTracker(() => {
   };
 })(
   compose(
-    graphql(GET_PLAYING_EPISODE, {
+    graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode

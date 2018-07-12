@@ -1,6 +1,7 @@
 import React from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
+
 import SearchPopup from "./helpers/SearchPopup";
 
 const InnerHeader = ({ title, isSearchModelOpen }) => {

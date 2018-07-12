@@ -3,60 +3,14 @@ import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { Query, graphql, compose } from "react-apollo";
-import gql from "graphql-tag";
+import { graphql, compose } from "react-apollo";
 
-const GET_UPNEXT = gql`
-  query Upnext {
-    upnext {
-      id
-    }
-  }
-`;
-
-const REMOVE_FROM_UPNEXT = gql`
-  mutation RemoveFromUpnext($id: String!, $podcastId: Int!) {
-    removeFromUpnext(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const ADD_TO_UPNEXT = gql`
-  mutation AddToUpnext($id: String!, $podcastId: Int!) {
-    addToUpnext(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const GET_FAVORITES = gql`
-  query Favorites {
-    favorites {
-      id
-    }
-  }
-`;
-
-const REMOVE_FROM_FAVORITES = gql`
-  mutation RemoveFromFavorites($id: String!, $podcastId: Int!) {
-    removeFromFavorites(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const ADD_TO_FAVORITES = gql`
-  mutation AddToFavorites($id: String!, $podcastId: Int!) {
-    addToFavorites(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
+import getFavoritesIds from "./../../queries/getFavoritesIds";
+import getUpnextIds from "./../../queries/getUpnextIds";
+import removeFromUpnext from "./../../queries/removeFromUpnext";
+import addToUpnext from "./../../queries/addToUpnext";
+import removeFromFavorites from "./../../queries/removeFromFavorites";
+import addToFavorites from "./../../queries/addToFavorites";
 
 class Episode extends Component {
   formatDate(date) {
@@ -99,7 +53,7 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_UPNEXT }]
+          refetchQueries: [{ query: getUpnextIds }]
         })
           .then(res => console.log("Episode removed from upnext", res.data))
           .catch(err => console.log(err))
@@ -108,7 +62,7 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_UPNEXT }]
+          refetchQueries: [{ query: getUpnextIds }]
         })
           .then(res => console.log("Episode added from upnext", res.data))
           .catch(err => console.log(err));
@@ -122,7 +76,7 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_FAVORITES }]
+          refetchQueries: [{ query: getFavoritesIds }]
         })
           .then(res => console.log("Episode removed from Favorites", res.data))
           .catch(err => console.log(err))
@@ -131,7 +85,7 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_FAVORITES }]
+          refetchQueries: [{ query: getFavoritesIds }]
         })
           .then(res => console.log("Episode added Favorites", res.data))
           .catch(err => console.log(err));
@@ -295,9 +249,9 @@ export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(ADD_TO_UPNEXT, { name: "addToUpnext" }),
-    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" }),
-    graphql(ADD_TO_FAVORITES, { name: "addToFavorites" }),
-    graphql(REMOVE_FROM_FAVORITES, { name: "removeFromFavorites" })
+    graphql(addToUpnext, { name: "addToUpnext" }),
+    graphql(removeFromUpnext, { name: "removeFromUpnext" }),
+    graphql(addToFavorites, { name: "addToFavorites" }),
+    graphql(removeFromFavorites, { name: "removeFromFavorites" })
   )(Episode)
 );

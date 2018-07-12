@@ -1,19 +1,14 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query {
-    queue @client {
+  query Favorites {
+    favorites {
       id
       podcastId
       podcastArtworkUrl
-      title
-      description
-      author
-      mediaUrl
-      playedSeconds
       duration
-      pubDate
-      linkToEpisode
+      title
+      author
     }
   }
 `;

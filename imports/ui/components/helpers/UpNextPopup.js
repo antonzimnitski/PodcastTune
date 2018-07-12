@@ -1,9 +1,14 @@
 import React from "react";
-import ModalItem from "./ModalItem";
-import gql from "graphql-tag";
 import { compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+
+import ModalItem from "./ModalItem";
+
+import removeFromUpnext from "./../../queries/removeFromUpnext";
+import getUpnext from "./../../queries/getUpnext";
+import getPlayingEpisode from "./../../queries/getPlayingEpisode";
+import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
 const UpNextPopup = ({
   upnext,
@@ -18,10 +23,7 @@ const UpNextPopup = ({
             id,
             podcastId
           },
-          refetchQueries: [
-            { query: GET_PLAYING_EPISODE },
-            { query: GET_UPNEXT }
-          ]
+          refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
@@ -35,7 +37,7 @@ const UpNextPopup = ({
             id,
             podcastId
           },
-          refetchQueries: [{ query: GET_UPNEXT }]
+          refetchQueries: [{ query: getUpnext }]
         })
           .then(res => console.log("Episode removed from upnext", res.data))
           .catch(err => console.log(err))
@@ -81,61 +83,16 @@ const UpNextPopup = ({
   );
 };
 
-const GET_UPNEXT = gql`
-  query Upnext {
-    upnext {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      author
-    }
-  }
-`;
-
-const SET_PLAYING_EPISODE = gql`
-  mutation SetPlayingEpisode($id: String!, $podcastId: Int!) {
-    setPlayingEpisode(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
-const GET_PLAYING_EPISODE = gql`
-  query PlayingEpisode {
-    playingEpisode {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      playedSeconds
-      author
-    }
-  }
-`;
-
-const REMOVE_FROM_UPNEXT = gql`
-  mutation RemoveFromUpnext($id: String!, $podcastId: Int!) {
-    removeFromUpnext(podcastId: $podcastId, id: $id) {
-      id
-      podcastId
-    }
-  }
-`;
-
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(GET_UPNEXT, {
+    graphql(getUpnext, {
       props: ({ data: { upnext } }) => ({
         upnext
       })
     }),
-    graphql(SET_PLAYING_EPISODE, { name: "setPlayingEpisode" }),
-    graphql(REMOVE_FROM_UPNEXT, { name: "removeFromUpnext" })
+    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
+    graphql(removeFromUpnext, { name: "removeFromUpnext" })
   )(UpNextPopup)
 );

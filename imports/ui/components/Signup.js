@@ -14,12 +14,6 @@ export class Signup extends Component {
     this.password = React.createRef();
   }
 
-  // componentWillMount() {
-  //   if (Meteor.userId()) {
-  //     this.props.history.replace("/dashboard");
-  //   }
-  // }
-
   componentDidMount() {
     this.email.current.focus();
   }

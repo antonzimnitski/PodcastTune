@@ -4,6 +4,7 @@ import { graphql } from "react-apollo";
 
 import InnerHeader from "./InnerHeader";
 import Loader from "./helpers/Loader";
+
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
 
 class DiscoverByGenre extends Component {

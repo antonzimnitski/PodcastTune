@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import InnerHeader from "./InnerHeader";
 import Loader from "./helpers/Loader";
+
 import fetchGenres from "./../queries/fetchGenres";
 
 class Discover extends Component {
