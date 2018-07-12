@@ -29,9 +29,22 @@ export default {
     },
     playingEpisode(_, __, { user }) {
       if (!user) return null;
-      const playingEpisode = getUserData(user._id, "playingEpisode");
+      const { _id } = user;
+      const playingEpisode = getUserData(_id, "playingEpisode");
 
-      if (!playingEpisode) return null;
+      if (!playingEpisode) {
+        const upnext = getUserData(_id, "upnext");
+        if (!upnext || !upnext.length) return null;
+        const { id, podcastId } = upnext[0];
+        UsersData.update(
+          { _id },
+          {
+            $set: { playingEpisode: { id, podcastId } },
+            $pull: { upnext: { id } }
+          }
+        );
+        return getEpisode(podcastId, id);
+      }
 
       const { id, podcastId } = playingEpisode;
 

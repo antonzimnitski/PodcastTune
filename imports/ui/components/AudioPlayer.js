@@ -65,6 +65,7 @@ class AudioPlayer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(this.props);
     const { episode } = this.state;
 
     if (!nextProps.playingEpisode) {
@@ -140,6 +141,9 @@ class AudioPlayer extends Component {
         id,
         podcastId
       }
+    });
+    this.props.clearPlayingEpisode({
+      refetchQueries: [{ query: GET_PLAYING_EPISODE }, { query: GET_UPNEXT }]
     });
   }
 
@@ -600,6 +604,27 @@ const GET_PLAYING_EPISODE = gql`
   }
 `;
 
+const CLEAR_PLAYING_EPISODE = gql`
+  mutation ClearEpisode {
+    clearPlayingEpisode {
+      podcastId
+      id
+    }
+  }
+`;
+
+const GET_UPNEXT = gql`
+  query Upnext {
+    upnext {
+      id
+      podcastId
+      podcastArtworkUrl
+      title
+      author
+    }
+  }
+`;
+
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
@@ -612,6 +637,7 @@ export default withTracker(() => {
       })
     }),
     graphql(UPDATE_PLAYED_SECONDS, { name: "updatePlayedSeconds" }),
-    graphql(MARK_AS_PLAYED, { name: "markAsPlayed" })
+    graphql(MARK_AS_PLAYED, { name: "markAsPlayed" }),
+    graphql(CLEAR_PLAYING_EPISODE, { name: "clearPlayingEpisode" })
   )(AudioPlayer)
 );
