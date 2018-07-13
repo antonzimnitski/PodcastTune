@@ -24,6 +24,7 @@ export default {
     author: data => data.author,
     mediaUrl: data => data.mediaUrl,
     playedSeconds: (data, _, { user }) => {
+      if (!user) return 0;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
       if (!userData || !userData.inProgress) return 0;
@@ -32,6 +33,18 @@ export default {
     },
     duration: data => data.duration,
     pubDate: data => data.pubDate,
-    linkToEpisode: data => data.linkToEpisode
+    linkToEpisode: data => data.linkToEpisode,
+    inFavorites: (data, _, { user }) => inUserData(user, data.id, "favorites"),
+    inUpnext: (data, _, { user }) => inUserData(user, data.id, "upnext"),
+    isPlayed: (data, _, { user }) => inUserData(user, data.id, "played")
   }
 };
+
+function inUserData(user, id, field) {
+  if (!user) return false;
+  const { _id } = user;
+  const userData = UsersData.findOne({ _id });
+  if (!userData || !userData[field]) return false;
+
+  return !!userData[field].find(el => el.id === id);
+}

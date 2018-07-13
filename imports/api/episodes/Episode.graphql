@@ -6,10 +6,13 @@ type Episode {
   description: String
   author: String
   mediaUrl: String
-  playedSeconds: Float
   duration: Float
   pubDate: String
   linkToEpisode: String
+  playedSeconds: Float
+  inFavorites: Boolean
+  inUpnext: Boolean
+  isPlayed: Boolean
 }
 
 extend type Query {

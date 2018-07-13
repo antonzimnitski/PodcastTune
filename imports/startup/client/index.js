@@ -3,7 +3,12 @@ import React from "react";
 import { Session } from "meteor/session";
 import { Tracker } from "meteor/tracker";
 import { render } from "react-dom";
-import { HttpLink, InMemoryCache, ApolloLink } from "apollo-boost";
+import {
+  HttpLink,
+  InMemoryCache,
+  ApolloLink,
+  defaultDataIdFromObject
+} from "apollo-boost";
 import { persistCache } from "apollo-cache-persist";
 import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
@@ -32,7 +37,21 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  dataIdFromObject: object => {
+    switch (object.__typename) {
+      case "Episode":
+        return object.id;
+      case "Podcast":
+        return object.podcastId;
+      case "UserData":
+        return object._id;
+
+      default:
+        return defaultDataIdFromObject(object);
+    }
+  }
+});
 
 // persistCache({
 //   cache,
