@@ -6,10 +6,8 @@ import { withTracker } from "meteor/react-meteor-data";
 import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
 
-import getUpnextIds from "./../queries/getUpnextIds";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../queries/setPlayingEpisode";
-import getFavoritesIds from "./../queries/getFavoritesIds";
 
 class Feed extends Component {
   constructor(props) {
@@ -33,10 +31,7 @@ class Feed extends Component {
             id,
             podcastId
           },
-          refetchQueries: [
-            { query: getPlayingEpisode },
-            { query: getUpnextIds }
-          ]
+          refetchQueries: [{ query: getPlayingEpisode }]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
@@ -67,8 +62,6 @@ class Feed extends Component {
               handleEpisodeModal={this.handleEpisodeModal}
               handleClick={this.handleClick}
               isPlayingEpisode={this.isPlayingEpisode(episode.id)}
-              upnext={this.props.upnext}
-              favorites={this.props.favorites}
             />
           );
         })}
@@ -103,18 +96,6 @@ export default withTracker(() => {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
-      })
-    }),
-    graphql(getUpnextIds, {
-      skip: props => !props.isLoggedIn,
-      props: ({ data: { upnext } }) => ({
-        upnext
-      })
-    }),
-    graphql(getFavoritesIds, {
-      skip: props => !props.isLoggedIn,
-      props: ({ data: { favorites } }) => ({
-        favorites
       })
     })
   )(Feed)

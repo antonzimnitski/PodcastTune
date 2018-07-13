@@ -4,9 +4,11 @@ import momentDurationFormatSetup from "moment-duration-format";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { graphql, compose } from "react-apollo";
+import { remove } from "lodash";
 
-import getFavoritesIds from "./../../queries/getFavoritesIds";
-import getUpnextIds from "./../../queries/getUpnextIds";
+import getUpnext from "./../../queries/getUpnext";
+import getFavorites from "./../../queries/getFavorites";
+
 import removeFromUpnext from "./../../queries/removeFromUpnext";
 import addToUpnext from "./../../queries/addToUpnext";
 import removeFromFavorites from "./../../queries/removeFromFavorites";
@@ -27,24 +29,6 @@ class Episode extends Component {
     return moment.duration(seconds, "seconds").format();
   }
 
-  isInUpNext(id) {
-    const { upnext } = this.props;
-    if (!upnext || !upnext.length) return false;
-
-    return !!upnext.find(el => {
-      if (el) return el.id === id;
-    });
-  }
-
-  isInFavorites(id) {
-    const { favorites } = this.props;
-    if (!favorites || !favorites.length) return false;
-
-    return !!favorites.find(el => {
-      if (el) return el.id === id;
-    });
-  }
-
   handleUpnext(id, podcastId, isInUpNext) {
     const { removeFromUpnext, addToUpnext } = this.props;
     isInUpNext
@@ -53,19 +37,31 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: getUpnextIds }]
-        })
-          .then(res => console.log("Episode removed from upnext", res.data))
-          .catch(err => console.log(err))
+          update: (proxy, { data: { removeFromUpnext } }) => {
+            try {
+              const data = proxy.readQuery({ query: getUpnext });
+              remove(data.upnext, n => n.id === removeFromUpnext.id);
+              proxy.writeQuery({ query: getUpnext, data });
+            } catch (e) {
+              console.log("query haven't been called", e);
+            }
+          }
+        }).catch(err => console.log(err))
       : addToUpnext({
           variables: {
             id,
             podcastId
           },
-          refetchQueries: [{ query: getUpnextIds }]
-        })
-          .then(res => console.log("Episode added from upnext", res.data))
-          .catch(err => console.log(err));
+          update: (proxy, { data: { addToUpnext } }) => {
+            try {
+              const data = proxy.readQuery({ query: getUpnext });
+              data.upnext.push(addToUpnext);
+              proxy.writeQuery({ query: getUpnext, data });
+            } catch (e) {
+              console.log("query haven't been called", e);
+            }
+          }
+        }).catch(err => console.log(err));
   }
 
   handleFavorites(id, podcastId, isInFavorites) {
@@ -76,7 +72,15 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: getFavoritesIds }]
+          update: (proxy, { data: { removeFromFavorites } }) => {
+            try {
+              const data = proxy.readQuery({ query: getFavorites });
+              remove(data.favorites, n => n.id === removeFromFavorites.id);
+              proxy.writeQuery({ query: getFavorites, data });
+            } catch (e) {
+              console.log("query haven't been called", e);
+            }
+          }
         })
           .then(res => console.log("Episode removed from Favorites", res.data))
           .catch(err => console.log(err))
@@ -85,7 +89,15 @@ class Episode extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: getFavoritesIds }]
+          update: (proxy, { data: { addToFavorites } }) => {
+            try {
+              const data = proxy.readQuery({ query: getFavorites });
+              data.favorites.push(addToFavorites);
+              proxy.writeQuery({ query: getFavorites, data });
+            } catch (e) {
+              console.log("query haven't been called", e);
+            }
+          }
         })
           .then(res => console.log("Episode added Favorites", res.data))
           .catch(err => console.log(err));
@@ -101,8 +113,8 @@ class Episode extends Component {
     } = this.props;
     const episodeClassName = `episode${
       isPlayingEpisode ? " episode--playing" : ""
-    }${this.isInUpNext(episode.id) ? " episode--in-upnext" : ""}${
-      this.isInFavorites(episode.id) ? " episode--in-favorites" : ""
+    }${episode.inUpnext ? " episode--in-upnext" : ""}${
+      episode.inFavorites ? " episode--in-favorites" : ""
     }`;
 
     return (
@@ -135,7 +147,7 @@ class Episode extends Component {
                     ? this.handleFavorites(
                         episode.id,
                         episode.podcastId,
-                        this.isInFavorites(episode.id)
+                        episode.inFavorites
                       )
                     : console.log("loggin on signup")
                 }
@@ -162,7 +174,7 @@ class Episode extends Component {
                 ? this.handleUpnext(
                     episode.id,
                     episode.podcastId,
-                    this.isInUpNext(episode.id)
+                    episode.inUpnext
                   )
                 : console.log("loggin on signup")
             }

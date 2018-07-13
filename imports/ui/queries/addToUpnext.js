@@ -5,6 +5,10 @@ export default gql`
     addToUpnext(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      podcastArtworkUrl
+      title
+      author
+      inUpnext
     }
   }
 `;

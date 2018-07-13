@@ -26,7 +26,7 @@ const Favorites = ({ title, isLoggedIn }) => {
 
 function renderFavorites() {
   return (
-    <Query query={getFavorites} pollInterval={5000}>
+    <Query query={getFavorites} pollInterval={10000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) return null;

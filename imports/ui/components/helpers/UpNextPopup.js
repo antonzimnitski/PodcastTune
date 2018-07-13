@@ -2,6 +2,7 @@ import React from "react";
 import { compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+import { remove } from "lodash";
 
 import ModalItem from "./ModalItem";
 
@@ -38,10 +39,16 @@ const UpNextPopup = ({
             id,
             podcastId
           },
-          refetchQueries: [{ query: getUpnext }]
-        })
-          .then(res => console.log("Episode removed from upnext", res.data))
-          .catch(err => console.log(err))
+          update: (proxy, { data: { removeFromUpnext } }) => {
+            try {
+              const data = proxy.readQuery({ query: getUpnext });
+              remove(data.upnext, n => n.id === removeFromUpnext.id);
+              proxy.writeQuery({ query: getUpnext, data });
+            } catch (e) {
+              console.log("query haven't been called", e);
+            }
+          }
+        }).catch(err => console.log(err))
       : console.log("todo 'remove from upnext'", id, podcastId);
   };
 

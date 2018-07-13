@@ -10,6 +10,9 @@ export default gql`
       title
       author
       pubDate
+      isPlayed
+      inUpnext
+      inFavorites
     }
   }
 `;

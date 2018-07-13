@@ -5,6 +5,14 @@ export default gql`
     addToFavorites(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      podcastArtworkUrl
+      duration
+      title
+      author
+      pubDate
+      isPlayed
+      inUpnext
+      inFavorites
     }
   }
 `;

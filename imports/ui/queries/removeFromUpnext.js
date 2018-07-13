@@ -5,6 +5,7 @@ export default gql`
     removeFromUpnext(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      inUpnext
     }
   }
 `;

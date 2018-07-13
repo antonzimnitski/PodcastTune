@@ -29,7 +29,7 @@ const NewReleases = ({ title, isLoggedIn }) => {
 
 function renderNewReleases() {
   return (
-    <Query query={getNewReleases} pollInterval={5000}>
+    <Query query={getNewReleases} pollInterval={10000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) return null;

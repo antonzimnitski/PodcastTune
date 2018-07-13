@@ -146,7 +146,7 @@ export default {
         },
         { upsert: true }
       );
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     updatePlayedSeconds(_, { id, podcastId, playedSeconds }, { user }) {
       const { _id } = user;
@@ -171,7 +171,7 @@ export default {
         { $addToSet: { upnext: { id, podcastId } } },
         { upsert: true }
       );
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     removeFromUpnext(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -180,7 +180,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { upnext: { id } } });
       }
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     addToFavorites(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -190,7 +190,7 @@ export default {
         { $addToSet: { favorites: { id, podcastId } } },
         { upsert: true }
       );
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     removeFromFavorites(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -199,7 +199,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { favorites: { id } } });
       }
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     markAsPlayed(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -212,7 +212,7 @@ export default {
         },
         { upsert: true }
       );
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     },
     markAsUnplayed(_, { id, podcastId }, { user }) {
       const { _id } = user;
@@ -221,7 +221,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { played: { id } } });
       }
-      return { id, podcastId };
+      return getEpisode(podcastId, id);
     }
   }
 };

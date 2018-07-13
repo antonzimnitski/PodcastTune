@@ -26,7 +26,7 @@ const InProgress = ({ title, isLoggedIn }) => {
 };
 function renderInProgress() {
   return (
-    <Query query={getInProgress} pollInterval={5000}>
+    <Query query={getInProgress} pollInterval={10000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
         if (error) return null;

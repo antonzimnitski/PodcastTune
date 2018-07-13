@@ -5,6 +5,7 @@ export default gql`
     removeFromFavorites(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      inFavorites
     }
   }
 `;

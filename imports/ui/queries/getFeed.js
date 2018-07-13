@@ -8,6 +8,9 @@ export default gql`
       title
       pubDate
       duration
+      inFavorites
+      inUpnext
+      isPlayed
     }
   }
 `;
