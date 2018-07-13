@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query InProgress {
-    inProgress {
+  query newReleases {
+    newReleases {
       id
       podcastId
       podcastArtworkUrl

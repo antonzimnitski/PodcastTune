@@ -1,3 +1,4 @@
+import moment from "moment";
 import UsersData from "./usersData";
 import Podcasts from "./../podcasts/podcasts";
 
@@ -21,7 +22,7 @@ export default {
       if (!user) return null;
       const podcasts = getUserData(user._id, "podcasts");
 
-      if (!podcasts) return null;
+      if (!podcasts || !podcasts.length) return null;
 
       return podcasts.map(podcastId => {
         return Podcasts.findOne({ podcastId });
@@ -49,6 +50,26 @@ export default {
       const { id, podcastId } = playingEpisode;
 
       return getEpisode(podcastId, id);
+    },
+    newReleases(_, __, { user }) {
+      if (!user) return null;
+      const podcasts = getUserData(user._id, "podcasts");
+
+      if (!podcasts || !podcasts.length) return null;
+
+      let result = [];
+
+      podcasts.forEach(podcast => {
+        const podcastData = Podcasts.findOne({ podcastId: podcast });
+        if (podcastData.episodes) {
+          const newEpisodes = podcastData.episodes.filter(episode => {
+            if (episode) return validForNewReleases(episode.pubDate);
+          });
+          Array.prototype.push.apply(result, newEpisodes);
+        }
+      });
+
+      return result;
     },
     upnext(_, __, { user }) {
       if (!user) return null;
@@ -204,3 +225,10 @@ export default {
     }
   }
 };
+
+function validForNewReleases(date) {
+  if (moment(date).isValid()) {
+    return moment(moment().valueOf()).diff(date, "days") <= 14;
+  }
+  return false;
+}

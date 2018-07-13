@@ -9,6 +9,7 @@ export default gql`
       duration
       title
       author
+      pubDate
     }
   }
 `;

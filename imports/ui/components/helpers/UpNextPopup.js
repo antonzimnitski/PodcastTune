@@ -30,7 +30,8 @@ const UpNextPopup = ({
       : console.log("todo it later", id, podcastId);
   };
 
-  const handleRemove = (id, podcastId) => {
+  const handleRemove = (event, id, podcastId) => {
+    event.stopPropagation();
     isLoggedIn
       ? removeFromUpnext({
           variables: {
@@ -59,22 +60,26 @@ const UpNextPopup = ({
         {upnext.map(episode => {
           if (!episode) return;
           return (
-            <div key={episode.id} className="modal__item">
-              <ModalItem
-                item={episode}
-                playIcon={true}
-                onClick={() => handleClick(episode.id, episode.podcastId)}
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 192.33 192.33"
+            <div
+              key={episode.id}
+              className="modal__item"
+              onClick={() => handleClick(episode.id, episode.podcastId)}
+            >
+              <ModalItem item={episode} playIcon={true} />
+              <div
                 className="modal__remove"
+                onClick={event =>
+                  handleRemove(event, episode.id, episode.podcastId)
+                }
               >
-                <g onClick={() => handleRemove(episode.id, episode.podcastId)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 192.33 192.33"
+                >
                   <path d="M96.17 126.57l-65.06 65.06-30.4-30.41 65.05-65.05L.71 31.11 31.11.71l65.06 65.05L161.22.71l30.41 30.4-65.06 65.06 65.06 65.05-30.41 30.41-65.05-65.06z" />
                   <path d="M161.22 1.41l29.7 29.7-64.35 64.35-.7.71.7.7 64.35 64.35-29.7 29.7-64.35-64.35-.7-.7-.71.7-64.35 64.35-29.7-29.7 64.35-64.35.71-.7-.71-.71L1.41 31.11l29.7-29.7 64.35 64.35.71.71.7-.71 64.35-64.35m0-1.41l-65 65.05L31.11 0 0 31.11l65.05 65.06L0 161.22l31.11 31.11 65.06-65.05 65.05 65.05 31.11-31.11-65.05-65 65.05-65.06L161.22 0z" />
-                </g>
-              </svg>
+                </svg>
+              </div>
             </div>
           );
         })}

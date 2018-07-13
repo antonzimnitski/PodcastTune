@@ -7,7 +7,7 @@ import Loader from "./helpers/Loader";
 import SubscribeButton from "./helpers/SubscribeButton";
 
 import getPodcast from "./../queries/getPodcast";
-import getLoggedUser from "./../queries/getLoggedUser";
+import getLoggedUserId from "./../queries/getLoggedUserId";
 import getFeed from "./../queries/getFeed";
 
 class PodcastPage extends Component {
@@ -58,7 +58,7 @@ class PodcastPage extends Component {
                 </div>
               </div>
 
-              <Query query={getLoggedUser}>
+              <Query query={getLoggedUserId}>
                 {({ loading, error, data }) => {
                   if (loading) return null;
                   if (error) throw error;

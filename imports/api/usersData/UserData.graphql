@@ -2,6 +2,7 @@ type UserData {
   _id: String!
   podcasts: [Podcast]
   playingEpisode: Episode
+  newReleases: [Episode]
   inProgress: [Episode]
   upnext: [Episode]
   favorites: [Episode]
@@ -11,6 +12,7 @@ type UserData {
 extend type Query {
   podcasts: [Podcast]
   playingEpisode: Episode
+  newReleases: [Episode]
   upnext: [Episode]
   inProgress: [Episode]
   favorites: [Episode]

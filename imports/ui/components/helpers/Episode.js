@@ -14,7 +14,7 @@ import addToFavorites from "./../../queries/addToFavorites";
 
 class Episode extends Component {
   formatDate(date) {
-    if (moment(date).isValid()) {
+    if (date && moment(date).isValid()) {
       const format =
         moment(date).year() === moment().year() ? "MMM D" : "MMM D, YYYY";
       return moment(date).format(format);

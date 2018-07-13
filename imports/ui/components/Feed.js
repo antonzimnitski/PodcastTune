@@ -41,8 +41,6 @@ class Feed extends Component {
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
       : console.log("todo it later", id, podcastId);
-
-    Session.set("isPlayerOpen", true);
   }
 
   handleEpisodeModal(id, podcastId) {
