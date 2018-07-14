@@ -14,6 +14,8 @@ import removeFromUpnext from "./../../queries/removeFromUpnext";
 import addToUpnext from "./../../queries/addToUpnext";
 import removeFromFavorites from "./../../queries/removeFromFavorites";
 import addToFavorites from "./../../queries/addToFavorites";
+import markAsUnplayed from "./../../queries/markAsUnplayed";
+import markAsPlayed from "./../../queries/markAsPlayed";
 
 class Episode extends Component {
   formatDate(date) {
@@ -28,6 +30,28 @@ class Episode extends Component {
   formatDuration(seconds) {
     if (!seconds) return "";
     return moment.duration(seconds, "seconds").format();
+  }
+
+  handlePlayedStatus(id, podcastId, isPlayed) {
+    const { markAsUnplayed, markAsPlayed } = this.props;
+
+    isPlayed
+      ? markAsUnplayed({
+          variables: {
+            id,
+            podcastId
+          }
+        })
+          .then(res => console.log("Episode marked as unplayed", res.data))
+          .catch(err => console.log(err))
+      : markAsPlayed({
+          variables: {
+            id,
+            podcastId
+          }
+        })
+          .then(res => console.log("Episode marked as played", res.data))
+          .catch(err => console.log(err));
   }
 
   handleUpnext(id, podcastId, isInUpNext) {
@@ -116,7 +140,7 @@ class Episode extends Component {
       isPlayingEpisode ? " episode--playing" : ""
     }${episode.inUpnext ? " episode--in-upnext" : ""}${
       episode.inFavorites ? " episode--in-favorites" : ""
-    }`;
+    }${episode.isPlayed ? " episode--played" : ""}`;
 
     return (
       <div className={episodeClassName}>
@@ -176,6 +200,32 @@ class Episode extends Component {
           <p>{this.formatDuration(episode.duration)}</p>
         </div>
         <div className="episode__controls">
+          <div
+            onClick={() =>
+              isLoggedIn && !isPlayingEpisode
+                ? this.handlePlayedStatus(
+                    episode.id,
+                    episode.podcastId,
+                    episode.isPlayed
+                  )
+                : console.log("loggin on signup")
+            }
+          >
+            <svg
+              className="controls__status-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 405.72 298.71"
+            >
+              <path
+                className="status-icon__unplayed"
+                d="M398.42 7.29a25.07 25.07 0 0 0-35.35 0L131.5 238.86 42.65 150a25.08 25.08 0 0 0-35.36 0 25.08 25.08 0 0 0 0 35.36l106.07 106.06a25.09 25.09 0 0 0 31.36 3.25 25 25 0 0 0 6.22-4.54L398.42 42.65a25.07 25.07 0 0 0 0-35.36z"
+              />
+              <path
+                className="status-icon__played"
+                d="M238.07 149L344.13 42.94a25.07 25.07 0 0 0 0-35.36 25.07 25.07 0 0 0-35.35 0L202.71 113.65 96.65 7.58a25.08 25.08 0 0 0-35.36 0 25.08 25.08 0 0 0 0 35.36L167.36 149 61.29 255.07a25.07 25.07 0 0 0 0 35.35 25.07 25.07 0 0 0 35.36 0l106.06-106.06 106.07 106.06a25.05 25.05 0 0 0 35.35 0 25.05 25.05 0 0 0 0-35.35z"
+              />
+            </svg>
+          </div>
           <div
             onClick={() =>
               isLoggedIn && !isPlayingEpisode
@@ -272,6 +322,8 @@ export default withTracker(() => {
     graphql(addToUpnext, { name: "addToUpnext" }),
     graphql(removeFromUpnext, { name: "removeFromUpnext" }),
     graphql(addToFavorites, { name: "addToFavorites" }),
-    graphql(removeFromFavorites, { name: "removeFromFavorites" })
+    graphql(removeFromFavorites, { name: "removeFromFavorites" }),
+    graphql(markAsPlayed, { name: "markAsPlayed" }),
+    graphql(markAsUnplayed, { name: "markAsUnplayed" })
   )(Episode)
 );

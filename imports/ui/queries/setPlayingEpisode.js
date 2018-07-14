@@ -5,6 +5,8 @@ export default gql`
     setPlayingEpisode(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      isPlayed
+      inUpnext
     }
   }
 `;

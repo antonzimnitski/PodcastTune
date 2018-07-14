@@ -15,6 +15,10 @@
   }
 }
 
+.episode--played.episode {
+  color: $light-gray;
+}
+
 .episode:last-of-type + button {
   margin-top: $small-space;
 
@@ -26,7 +30,7 @@
 .episode:hover .title__text {
   color: $light-blue;
 }
-
+.episode:hover .controls__status-icon,
 .episode:hover .controls__up-next,
 .episode:hover .star__icon {
   @include laptop {
@@ -99,6 +103,10 @@
   }
 }
 
+.episode__author a {
+  color: inherit;
+}
+
 .star__icon {
   fill: $dark-gray;
   width: 1.5rem;
@@ -127,14 +135,16 @@
   width: 3rem;
 }
 
-.controls__up-next {
+.controls__up-next,
+.controls__status-icon {
   fill: $dark-gray;
   width: 2.5rem;
-  margin-right: $space;
+  margin-right: $small-space;
 }
 
 .star__icon,
-.controls__up-next {
+.controls__up-next,
+.controls__status-icon {
   display: none;
 
   @include tablet {
@@ -176,11 +186,13 @@
   opacity: 0;
 }
 
-.up-next__add {
+.up-next__add,
+.status-icon__unplayed {
   opacity: 1;
 }
 
-.up-next__remove {
+.up-next__remove,
+.status-icon__played {
   opacity: 0;
 }
 
@@ -196,4 +208,12 @@
   display: block;
   opacity: 1;
   fill: $yellow;
+}
+
+.episode--played .status-icon__unplayed {
+  opacity: 0;
+}
+
+.episode--played .status-icon__played {
+  opacity: 1;
 }

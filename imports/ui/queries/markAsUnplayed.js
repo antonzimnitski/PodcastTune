@@ -5,6 +5,7 @@ export default gql`
     markAsUnplayed(podcastId: $podcastId, id: $id) {
       id
       podcastId
+      isPlayed
     }
   }
 `;
