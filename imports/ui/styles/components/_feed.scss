@@ -19,7 +19,7 @@
   color: $light-gray;
 }
 
-.episode:last-of-type + button {
+.feed + button {
   margin-top: $small-space;
 
   @include tablet {

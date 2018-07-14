@@ -11,17 +11,18 @@ import getInProgress from "./../queries/getInProgress";
 
 const InProgress = ({ title, isLoggedIn }) => {
   return (
-    <div className="in-progress">
+    <React.Fragment>
       <InnerHeader title={title} />
-
-      {isLoggedIn ? (
-        renderInProgress()
-      ) : (
-        <div className="in-progress__content">
-          <h2>To see your in progress episodes Login or Signup.</h2>
-        </div>
-      )}
-    </div>
+      <div className="in-progress">
+        {isLoggedIn ? (
+          renderInProgress()
+        ) : (
+          <div className="in-progress__content">
+            <h2>To see your in progress episodes Login or Signup.</h2>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
 function renderInProgress() {

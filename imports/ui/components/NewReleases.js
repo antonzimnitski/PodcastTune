@@ -11,19 +11,20 @@ import getNewReleases from "./../queries/getNewReleases";
 
 const NewReleases = ({ title, isLoggedIn }) => {
   return (
-    <div className="new-releases">
+    <React.Fragment>
       <InnerHeader title={title} />
-
-      {isLoggedIn ? (
-        renderNewReleases()
-      ) : (
-        <div className="new-releases__content">
-          <h2>
-            To see new episodes of your subscribed podcasts Login or Signup.
-          </h2>
-        </div>
-      )}
-    </div>
+      <div className="new-releases">
+        {isLoggedIn ? (
+          renderNewReleases()
+        ) : (
+          <div className="new-releases__content">
+            <h2>
+              To see new episodes of your subscribed podcasts Login or Signup.
+            </h2>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
 

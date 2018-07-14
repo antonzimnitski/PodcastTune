@@ -10,17 +10,18 @@ import getFavorites from "./../queries/getFavorites";
 
 const Favorites = ({ title, isLoggedIn }) => {
   return (
-    <div className="favorites">
+    <React.Fragment>
       <InnerHeader title={title} />
-
-      {isLoggedIn ? (
-        renderFavorites()
-      ) : (
-        <div className="favorites__content">
-          <h2>To see your in favorite episodes Login or Signup.</h2>
-        </div>
-      )}
-    </div>
+      <div className="favorites">
+        {isLoggedIn ? (
+          renderFavorites()
+        ) : (
+          <div className="favorites__content">
+            <h2>To see your in favorite episodes Login or Signup.</h2>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
 

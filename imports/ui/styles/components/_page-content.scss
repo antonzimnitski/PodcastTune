@@ -70,6 +70,10 @@
 }
 
 .page-content__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   position: relative;
   top: $header-height;
   height: calc(#{100vh} - #{$header-height});
@@ -105,6 +109,7 @@
 }
 
 .main {
+  width: 100%;
   max-width: $main-width;
   margin: 0 auto;
 }
@@ -137,6 +142,13 @@
   }
 }
 
+.podcasts,
+.favorites,
+.in-progress,
+.new-releases {
+  padding: $small-space;
+}
+
 .new-releases__content,
 .in-progress__content,
 .favorites__content,
@@ -160,6 +172,17 @@
   }
 }
 
+.podcasts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @include laptop {
+    justify-content: flex-start;
+  }
+}
+
 .podcasts__card {
   display: inline-block;
   margin: $small-space;
@@ -167,7 +190,15 @@
 }
 
 .podcasts__image {
-  width: 20rem;
+  width: 11rem;
+
+  @include tablet {
+    width: 18rem;
+  }
+
+  @include desktop {
+    width: 25rem;
+  }
 }
 
 .podcasts__card:hover {
@@ -175,7 +206,7 @@
 }
 
 .footer {
-  margin-top: $space;
+  padding: $space;
   text-align: center;
 }
 

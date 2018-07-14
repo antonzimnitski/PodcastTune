@@ -8,26 +8,27 @@
   }
 }
 
+.preview-list + button {
+  margin-top: $small-space;
+
+  @include tablet {
+    margin-top: $space;
+  }
+}
+
 .preview {
   display: flex;
-  height: 13rem;
-  width: 13rem;
+  height: 12rem;
+  width: 12rem;
 
-  margin-bottom: $small-space;
+  margin: $small-space / 2;
   transition: all 0.3s ease;
 
   @include tablet {
     border: 0.2rem solid transparent;
-    margin-bottom: $space;
+    margin: $small-space;
     width: 100%;
     height: 17rem;
-  }
-}
-
-.preview-list > a:nth-child(odd) {
-  margin-right: $small-space;
-  @include tablet {
-    margin-right: 0;
   }
 }
 

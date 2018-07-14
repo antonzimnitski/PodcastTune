@@ -48,7 +48,7 @@ class App extends Component {
                 <Route
                   path="/favorites"
                   exact
-                  component={() => <Favorites title="Favorites episodes" />}
+                  component={() => <Favorites title="Favorites" />}
                 />
                 <Route
                   path="/new-releases"

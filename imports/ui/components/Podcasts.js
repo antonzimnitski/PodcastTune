@@ -10,17 +10,18 @@ import getSubscribedPodcasts from "./../queries/getSubscribedPodcasts";
 
 const Podcasts = ({ title, isLoggedIn }) => {
   return (
-    <div className="podcasts">
+    <React.Fragment>
       <InnerHeader title={title} />
-
-      {isLoggedIn ? (
-        renderPodcasts()
-      ) : (
-        <div className="podcasts__content">
-          <h2>To see your subscribed podcasts Login or Signup.</h2>
-        </div>
-      )}
-    </div>
+      <div className="podcasts">
+        {isLoggedIn ? (
+          renderPodcasts()
+        ) : (
+          <div className="podcasts__content">
+            <h2>To see your subscribed podcasts Login or Signup.</h2>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
 

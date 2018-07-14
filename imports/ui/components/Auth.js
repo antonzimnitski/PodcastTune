@@ -88,7 +88,10 @@ class Auth extends Component {
               <div
                 className="sidebar__link"
                 onClick={() => {
-                  Meteor.logout(() => this.props.client.resetStore());
+                  Meteor.logout(() => {
+                    this.props.client.resetStore();
+                    this.props.closeSidebar();
+                  });
                 }}
               >
                 Logout

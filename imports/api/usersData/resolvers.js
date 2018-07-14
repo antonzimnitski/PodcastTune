@@ -104,6 +104,7 @@ export default {
   },
   Mutation: {
     subscribe(_, { podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       UsersData.update(
         { _id },
@@ -113,16 +114,19 @@ export default {
       return Podcasts.findOne({ podcastId });
     },
     unsubscribe(_, { podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       UsersData.update({ _id }, { $pull: { podcasts: podcastId } });
       return Podcasts.findOne({ podcastId });
     },
     clearPlayingEpisode(_, __, { user }) {
+      if (!user) return null;
       const { _id } = user;
       UsersData.update({ _id }, { $set: { playingEpisode: null } });
       return null;
     },
     setPlayingEpisode(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
 
@@ -149,6 +153,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     updatePlayedSeconds(_, { id, podcastId, playedSeconds }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       //https://stackoverflow.com/questions/37427610/mongodb-update-or-insert-object-in-array#37428056
       UsersData.update(
@@ -164,6 +169,7 @@ export default {
       return playedSeconds;
     },
     addToUpnext(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
 
       UsersData.update(
@@ -174,6 +180,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     removeFromUpnext(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
 
@@ -183,6 +190,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     addToFavorites(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
 
       UsersData.update(
@@ -193,6 +201,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     removeFromFavorites(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
 
@@ -202,6 +211,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     markAsPlayed(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
 
       UsersData.update(
@@ -215,6 +225,7 @@ export default {
       return getEpisode(podcastId, id);
     },
     markAsUnplayed(_, { id, podcastId }, { user }) {
+      if (!user) return null;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
 
