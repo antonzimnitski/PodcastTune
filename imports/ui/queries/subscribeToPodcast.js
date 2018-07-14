@@ -2,6 +2,9 @@ import gql from "graphql-tag";
 
 export default gql`
   mutation subscribe($podcastId: Int!) {
-    subscribe(podcastId: $podcastId)
+    subscribe(podcastId: $podcastId) {
+      podcastId
+      artworkUrl
+    }
   }
 `;

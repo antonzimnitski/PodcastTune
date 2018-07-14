@@ -497,7 +497,8 @@ class AudioPlayer extends Component {
           <EpisodeModal
             isModalOpen={this.state.isModalOpen}
             handleEpisodeModal={this.handleEpisodeModal}
-            episode={this.state.episode}
+            podcastId={this.state.episode.podcastId}
+            id={this.state.episode.id}
           />
         ) : null}
 

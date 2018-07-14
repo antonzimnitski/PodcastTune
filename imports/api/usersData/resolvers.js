@@ -110,12 +110,12 @@ export default {
         { $addToSet: { podcasts: podcastId } },
         { upsert: true }
       );
-      return podcastId;
+      return Podcasts.findOne({ podcastId });
     },
     unsubscribe(_, { podcastId }, { user }) {
       const { _id } = user;
       UsersData.update({ _id }, { $pull: { podcasts: podcastId } });
-      return podcastId;
+      return Podcasts.findOne({ podcastId });
     },
     clearPlayingEpisode(_, __, { user }) {
       const { _id } = user;

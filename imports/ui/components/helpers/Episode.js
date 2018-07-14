@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { Link } from "react-router-dom";
 import momentDurationFormatSetup from "moment-duration-format";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
@@ -120,12 +121,14 @@ class Episode extends Component {
     return (
       <div className={episodeClassName}>
         {episode.podcastArtworkUrl ? (
-          <div
-            className="episode__artwork"
-            style={{
-              backgroundImage: `url("${episode.podcastArtworkUrl}")`
-            }}
-          />
+          <Link to={`/podcasts/${episode.podcastId}`}>
+            <div
+              className="episode__artwork"
+              style={{
+                backgroundImage: `url("${episode.podcastArtworkUrl}")`
+              }}
+            />
+          </Link>
         ) : null}
         <div className="episode__info">
           <div className="episode__primary">
@@ -158,7 +161,12 @@ class Episode extends Component {
           </div>
 
           {episode.author ? (
-            <p className="episode__author">{episode.author}</p>
+            <p className="episode__author">
+              {" "}
+              <Link to={`/podcasts/${episode.podcastId}`}>
+                {episode.author}
+              </Link>
+            </p>
           ) : null}
         </div>
         <div className="episode__pub-date">

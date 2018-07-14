@@ -85,15 +85,7 @@ class PodcastPage extends Component {
 
                   return (
                     <>
-                      <Feed
-                        feed={data.feed}
-                        query={getFeed}
-                        variables={{
-                          podcastId: podcast.podcastId,
-                          offset: this._offset,
-                          limit: this._limit
-                        }}
-                      />
+                      <Feed feed={data.feed} />
 
                       {data.feed.length >= this._offset + this._limit ? (
                         <button

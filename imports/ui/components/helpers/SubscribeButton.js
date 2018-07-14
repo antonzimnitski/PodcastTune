@@ -3,7 +3,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import { compose, graphql } from "react-apollo";
 import { find } from "lodash";
 
-import getSubscribedPodcastsIds from "./../../queries/getSubscribedPodcastsIds";
+import getSubscribedPodcasts from "./../../queries/getSubscribedPodcasts";
 import subscribeToPodcast from "./../../queries/subscribeToPodcast";
 import unsubscribeFromPodcast from "./../../queries/unsubscribeFromPodcast";
 
@@ -29,7 +29,17 @@ const SubscribeButton = ({
               variables: {
                 podcastId
               },
-              refetchQueries: [{ query: getSubscribedPodcastsIds }]
+              update: (proxy, { data: { subscribe } }) => {
+                try {
+                  const data = proxy.readQuery({
+                    query: getSubscribedPodcasts
+                  });
+                  data.podcasts.push(subscribe);
+                  proxy.writeQuery({ query: getSubscribedPodcasts, data });
+                } catch (e) {
+                  console.log("query haven't been called", e);
+                }
+              }
             }).then(() => console.log("subscribe"));
           }}
           className="subscribe-btn "
@@ -41,7 +51,17 @@ const SubscribeButton = ({
               variables: {
                 podcastId
               },
-              refetchQueries: [{ query: getSubscribedPodcastsIds }]
+              update: (proxy, { data: { unsubscribe } }) => {
+                try {
+                  const data = proxy.readQuery({
+                    query: getSubscribedPodcasts
+                  });
+                  remove(data.podcasts, n => n.id === unsubscribe.id);
+                  proxy.writeQuery({ query: getSubscribedPodcasts, data });
+                } catch (e) {
+                  console.log("query haven't been called", e);
+                }
+              }
             }).then(() => console.log("unsubscribe"));
           }}
           className="subscribe-btn subscribe-btn--subscribed"
@@ -57,9 +77,9 @@ export default withTracker(() => {
   compose(
     graphql(subscribeToPodcast, { name: "subscribe" }),
     graphql(unsubscribeFromPodcast, { name: "unsubscribe" }),
-    graphql(getSubscribedPodcastsIds, {
+    graphql(getSubscribedPodcasts, {
       skip: props => !props.isLoggedIn,
-      options: { pollInterval: 5000 },
+      options: { pollInterval: 10000 },
       props: ({ data: { loading, error, podcasts } }) => ({
         loading,
         error,
