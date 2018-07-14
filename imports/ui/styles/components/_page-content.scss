@@ -173,3 +173,21 @@
 .podcasts__card:hover {
   transform: scale(1.05);
 }
+
+.footer {
+  margin-top: $space;
+  text-align: center;
+}
+
+.footer__text {
+  color: $black;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.footer__link {
+  &:hover {
+    color: $light-blue;
+    text-decoration: underline;
+  }
+}

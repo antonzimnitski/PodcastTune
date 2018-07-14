@@ -14,6 +14,7 @@ import AudioPlayer from "./AudioPlayer";
 import InProgress from "./InProgress";
 import Favorites from "./Favorites";
 import NewReleases from "./NewReleases";
+import Footer from "./Footer";
 
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 
@@ -64,6 +65,7 @@ class App extends Component {
                 <Redirect to="/" />
               </Switch>
             </div>
+            <Footer />
           </div>
           {this.props.isPlayerOpen ? <AudioPlayer /> : null}
           <div
