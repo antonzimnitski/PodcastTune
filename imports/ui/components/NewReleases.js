@@ -47,7 +47,9 @@ function renderNewReleases() {
           );
         }
 
-        return <Feed feed={data.newReleases} />;
+        const feed = data.newReleases.filter(el => !el.isPlayed);
+
+        return <Feed feed={feed} />;
       }}
     </Query>
   );

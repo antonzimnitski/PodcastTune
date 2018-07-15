@@ -1,20 +1,8 @@
 import moment from "moment";
+import { find } from "lodash";
+
 import UsersData from "./usersData";
 import Podcasts from "./../podcasts/podcasts";
-
-function getUserData(_id, field) {
-  const userData = UsersData.findOne({ _id });
-  if (!userData || !userData[field]) return null;
-  return userData[field];
-}
-
-function getEpisode(podcastId, id) {
-  const podcast = Podcasts.findOne({ podcastId });
-  if (podcast.episodes) {
-    return podcast.episodes.find(el => el.id === id);
-  }
-  return null;
-}
 
 export default {
   Query: {
@@ -54,6 +42,7 @@ export default {
     newReleases(_, __, { user }) {
       if (!user) return null;
       const podcasts = getUserData(user._id, "podcasts");
+      const played = getUserData(user._id, "played");
 
       if (!podcasts || !podcasts.length) return null;
 
@@ -63,43 +52,41 @@ export default {
         const podcastData = Podcasts.findOne({ podcastId: podcast });
         if (podcastData.episodes) {
           const newEpisodes = podcastData.episodes.filter(episode => {
-            if (episode) return validForNewReleases(episode.pubDate);
+            if (episode)
+              return (
+                validForNewReleases(episode.pubDate) &&
+                !isPlayed(played, episode.id)
+              );
           });
           Array.prototype.push.apply(result, newEpisodes);
         }
       });
 
-      return result;
+      return result.sort(sortByDate);
     },
     upnext(_, __, { user }) {
       if (!user) return null;
       const upnext = getUserData(user._id, "upnext");
 
-      return !upnext || !upnext.length
-        ? null
-        : upnext.map(({ podcastId, id }) => getEpisode(podcastId, id));
+      return getFeed(upnext);
     },
     inProgress(_, __, { user }) {
       if (!user) return null;
       const inProgress = getUserData(user._id, "inProgress");
 
-      return !inProgress || !inProgress.length
-        ? null
-        : inProgress.map(({ podcastId, id }) => getEpisode(podcastId, id));
+      return getFeed(inProgress).sort(sortByDate);
     },
     favorites(_, __, { user }) {
       if (!user) return null;
       const favorites = getUserData(user._id, "favorites");
-      return !favorites || !favorites.length
-        ? null
-        : favorites.map(({ podcastId, id }) => getEpisode(podcastId, id));
+
+      return getFeed(favorites).sort(sortByDate);
     },
     played(_, __, { user }) {
       if (!user) return null;
       const played = getUserData(user._id, "played");
-      return !played || !played.length
-        ? null
-        : played.map(({ podcastId, id }) => getEpisode(podcastId, id));
+
+      return getFeed(played);
     }
   },
   Mutation: {
@@ -141,6 +128,10 @@ export default {
           }
         );
       }
+      UsersData.update(
+        { _id, "inProgress.id": { $ne: id } },
+        { $push: { inProgress: { id, podcastId, playedSeconds: 0 } } }
+      );
 
       UsersData.update(
         { _id },
@@ -237,9 +228,37 @@ export default {
   }
 };
 
+function getUserData(_id, field) {
+  const userData = UsersData.findOne({ _id });
+  if (!userData || !userData[field]) return null;
+  return userData[field];
+}
+
+function getEpisode(podcastId, id) {
+  const podcast = Podcasts.findOne({ podcastId });
+  if (podcast.episodes && podcast.episodes.length) {
+    return find(podcast.episodes, { id });
+  }
+  return null;
+}
+
+function getFeed(feed) {
+  return !feed || !feed.length
+    ? null
+    : feed.map(({ podcastId, id }) => getEpisode(podcastId, id));
+}
+
+function sortByDate(a, b) {
+  return moment(b.pubDate).valueOf() - moment(a.pubDate).valueOf();
+}
+
 function validForNewReleases(date) {
   if (moment(date).isValid()) {
     return moment(moment().valueOf()).diff(date, "days") <= 14;
   }
   return false;
+}
+
+function isPlayed(played, id) {
+  return played ? find(played, { id }) : false;
 }

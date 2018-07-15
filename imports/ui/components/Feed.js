@@ -8,6 +8,7 @@ import Episode from "./helpers/Episode";
 
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../queries/setPlayingEpisode";
+import getInProgress from "./../queries/getInProgress";
 
 class Feed extends Component {
   constructor(props) {
@@ -31,7 +32,10 @@ class Feed extends Component {
             id,
             podcastId
           },
-          refetchQueries: [{ query: getPlayingEpisode }]
+          refetchQueries: [
+            { query: getPlayingEpisode },
+            { query: getInProgress }
+          ]
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
