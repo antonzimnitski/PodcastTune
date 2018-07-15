@@ -82,13 +82,6 @@
   width: 100%;
 
   @include tablet {
-    //https://stackoverflow.com/questions/13471910/css-applying-padding-to-box-with-scroll-bottom-padding-doesnt-work
-    &:after {
-      content: "";
-      display: block;
-      height: $space;
-      width: 100%;
-    }
     padding: $space $space 0 $space;
   }
 
@@ -172,10 +165,10 @@
   }
 }
 
-.podcasts {
+.podcasts__cards {
   display: flex;
+  width: 100%;
   justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
 
   @include laptop {

@@ -1,3 +1,5 @@
+import "core-js/es6";
+
 import { Meteor } from "meteor/meteor";
 import React from "react";
 import { Session } from "meteor/session";

@@ -44,7 +44,7 @@ function renderPodcasts() {
           );
         }
 
-        return data.podcasts.map(podcast => {
+        const podcasts = data.podcasts.map(podcast => {
           if (!podcast) return;
           return (
             <div key={podcast.podcastId} className="podcasts__card">
@@ -58,6 +58,7 @@ function renderPodcasts() {
             </div>
           );
         });
+        return <div className="podcasts__cards">{podcasts}</div>;
       }}
     </Query>
   );

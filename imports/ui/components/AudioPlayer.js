@@ -51,11 +51,7 @@ class AudioPlayer extends Component {
     const playingEpisode = this.props.playingEpisode;
     this.setState({ mounted: true });
     if (playingEpisode) {
-      this.setState(
-        { episode: playingEpisode },
-        () =>
-          (this.player.current.currentTime = this.state.episode.playedSeconds)
-      );
+      this.setState({ episode: playingEpisode });
     }
 
     this.updatePlayedSeconds();
@@ -76,17 +72,11 @@ class AudioPlayer extends Component {
     }
 
     if (!episode || episode.mediaUrl !== nextProps.playingEpisode.mediaUrl) {
-      this.setState(
-        {
-          isLoading: true,
-          isPlaying: false,
-          episode: nextProps.playingEpisode
-        },
-        () => {
-          this.player.current.currentTime =
-            nextProps.playingEpisode.playedSeconds;
-        }
-      );
+      this.setState({
+        isLoading: true,
+        isPlaying: false,
+        episode: nextProps.playingEpisode
+      });
     }
   }
 
@@ -196,6 +186,7 @@ class AudioPlayer extends Component {
 
   setDuration() {
     this.setState({ duration: this.player.current.duration });
+    this.player.current.currentTime = this.state.episode.playedSeconds;
   }
 
   setPlaybackRate(playbackRate) {
