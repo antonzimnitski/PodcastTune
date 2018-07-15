@@ -159,6 +159,7 @@ class Episode extends Component {
             <div className="episode__title">
               <p
                 className="title__text"
+                title={episode.title}
                 onClick={() =>
                   handleEpisodeModal(episode.id, episode.podcastId)
                 }

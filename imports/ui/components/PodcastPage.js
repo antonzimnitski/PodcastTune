@@ -52,7 +52,7 @@ class PodcastPage extends Component {
                   <p
                     className="podcast__description"
                     dangerouslySetInnerHTML={{
-                      __html: podcast.description || podcast.summary
+                      __html: podcast.summary || podcast.description
                     }}
                   />
                 </div>

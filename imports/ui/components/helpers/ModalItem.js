@@ -21,7 +21,9 @@ const ModalItem = ({ item, playIcon = false }) => {
       </div>
 
       <div className="modal-item__info">
-        <div className="modal-item__title">{item.title}</div>
+        <div className="modal-item__title" title={item.title}>
+          {item.title}
+        </div>
         <div className="modal-item__author">{item.author}</div>
       </div>
     </React.Fragment>

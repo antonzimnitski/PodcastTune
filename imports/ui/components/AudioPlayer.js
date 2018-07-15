@@ -345,6 +345,7 @@ class AudioPlayer extends Component {
             {episode ? (
               <span
                 className="player__title-link"
+                title={episode.title}
                 onClick={() => this.handleEpisodeModal()}
               >
                 {episode.title}

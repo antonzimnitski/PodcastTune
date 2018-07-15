@@ -14,13 +14,25 @@
   position: relative;
 }
 
-.modal__item:hover .modal-item__play-icon,
-.modal__item:hover .modal__remove {
-  opacity: 1;
+.up-next__popup .modal__item:hover .modal-item__play-icon,
+.up-next__popup .modal__item:hover .modal__remove {
+  @include laptop {
+    opacity: 1;
+  }
 }
 
-.modal__item:hover .modal-item__info {
+.up-next__popup .modal__item:hover .modal-item__info {
+  @include laptop {
+    margin-right: $space;
+  }
+}
+
+.up-next__popup .modal-item__info {
   margin-right: $space;
+
+  @include laptop {
+    margin-right: 0;
+  }
 }
 
 .modal-item__artwork {
