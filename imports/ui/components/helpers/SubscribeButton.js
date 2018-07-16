@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { compose, graphql } from "react-apollo";
-import { find } from "lodash";
+import { find, remove } from "lodash";
+
 import LoginWarningModal from "./LoginWarningModal";
+import UnsubscribeModal from "./UnsubscribeModal";
 
 import getSubscribedPodcasts from "./../../queries/getSubscribedPodcasts";
 import subscribeToPodcast from "./../../queries/subscribeToPodcast";
@@ -13,10 +15,13 @@ class SubscribeButton extends Component {
     super(props);
 
     this.state = {
-      isWarningModalOpne: false
+      isWarningModalOpne: false,
+      isUnsubscribeModalOpen: false
     };
 
     this.closeWarningModal = this.closeWarningModal.bind(this);
+    this.closeUnsubscribeModal = this.closeUnsubscribeModal.bind(this);
+    this.unsubscribe = this.unsubscribe.bind(this);
   }
 
   openWarningModal() {
@@ -25,6 +30,14 @@ class SubscribeButton extends Component {
 
   closeWarningModal() {
     this.setState({ isWarningModalOpen: false });
+  }
+
+  openUnsubscribeModal() {
+    this.setState({ isUnsubscribeModalOpen: true });
+  }
+
+  closeUnsubscribeModal() {
+    this.setState({ isUnsubscribeModalOpen: false });
   }
 
   subscribe(podcastId) {
@@ -44,7 +57,9 @@ class SubscribeButton extends Component {
           const data = proxy.readQuery({
             query: getSubscribedPodcasts
           });
-          data.podcasts.push(subscribe);
+          data.podcasts
+            ? data.podcasts.push(subscribe)
+            : (data.podcasts = [subscribe]);
           proxy.writeQuery({ query: getSubscribedPodcasts, data });
         } catch (e) {
           console.log("query haven't been called", e);
@@ -75,22 +90,22 @@ class SubscribeButton extends Component {
   }
 
   render() {
-    const { podcastId, podcasts, error } = this.props;
+    const { podcastId, subscribed } = this.props;
     return (
       <div className="podcast__subscribe">
-        {!find(podcasts, { podcastId }) ? (
+        {subscribed ? (
+          <button
+            onClick={() => {
+              this.openUnsubscribeModal();
+            }}
+            className="subscribe-btn subscribe-btn--subscribed"
+          />
+        ) : (
           <button
             onClick={() => {
               this.subscribe(podcastId);
             }}
             className="subscribe-btn "
-          />
-        ) : (
-          <button
-            onClick={() => {
-              this.unsubscribe(podcastId);
-            }}
-            className="subscribe-btn subscribe-btn--subscribed"
           />
         )}
 
@@ -98,6 +113,15 @@ class SubscribeButton extends Component {
           <LoginWarningModal
             isModalOpen={this.state.isWarningModalOpen}
             closeWarningModal={this.closeWarningModal}
+          />
+        ) : null}
+
+        {this.state.isUnsubscribeModalOpen ? (
+          <UnsubscribeModal
+            isModalOpen={this.state.isUnsubscribeModalOpen}
+            closeUnsubscribeModal={this.closeUnsubscribeModal}
+            unsubscribe={this.unsubscribe}
+            podcastId={this.props.podcastId}
           />
         ) : null}
       </div>
@@ -110,15 +134,6 @@ export default withTracker(() => {
 })(
   compose(
     graphql(subscribeToPodcast, { name: "subscribe" }),
-    graphql(unsubscribeFromPodcast, { name: "unsubscribe" }),
-    graphql(getSubscribedPodcasts, {
-      skip: props => !props.isLoggedIn,
-      options: { pollInterval: 10000 },
-      props: ({ data: { loading, error, podcasts } }) => ({
-        loading,
-        error,
-        podcasts
-      })
-    })
+    graphql(unsubscribeFromPodcast, { name: "unsubscribe" })
   )(SubscribeButton)
 );

@@ -62,7 +62,7 @@ export default {
         }
       });
 
-      return result.sort(sortByDate);
+      return result ? result.sort(sortByDate) : result;
     },
     upnext(_, __, { user }) {
       if (!user) return null;
@@ -73,14 +73,14 @@ export default {
     inProgress(_, __, { user }) {
       if (!user) return null;
       const inProgress = getUserData(user._id, "inProgress");
-
-      return getFeed(inProgress).sort(sortByDate);
+      const feed = getFeed(inProgress);
+      return feed ? feed.sort(sortByDate) : feed;
     },
     favorites(_, __, { user }) {
       if (!user) return null;
       const favorites = getUserData(user._id, "favorites");
-
-      return getFeed(favorites).sort(sortByDate);
+      const feed = getFeed(favorites);
+      return feed ? feed.sort(sortByDate) : feed;
     },
     played(_, __, { user }) {
       if (!user) return null;

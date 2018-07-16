@@ -5,6 +5,7 @@ export default gql`
     subscribe(podcastId: $podcastId) {
       podcastId
       artworkUrl
+      subscribed
     }
   }
 `;

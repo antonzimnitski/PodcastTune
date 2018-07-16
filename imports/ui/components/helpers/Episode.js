@@ -80,7 +80,9 @@ class Episode extends Component {
           update: (proxy, { data: { addToUpnext } }) => {
             try {
               const data = proxy.readQuery({ query: getUpnext });
-              data.upnext.push(addToUpnext);
+              data.upnext
+                ? data.upnext.push(addToUpnext)
+                : (data.upnext = [addToUpnext]);
               proxy.writeQuery({ query: getUpnext, data });
             } catch (e) {
               console.log("query haven't been called", e);
@@ -117,7 +119,10 @@ class Episode extends Component {
           update: (proxy, { data: { addToFavorites } }) => {
             try {
               const data = proxy.readQuery({ query: getFavorites });
-              data.favorites.push(addToFavorites);
+              data.favorites
+                ? data.favorites.push(addToFavorites)
+                : (data.favorites = [addToFavorites]);
+
               proxy.writeQuery({ query: getFavorites, data });
             } catch (e) {
               console.log("query haven't been called", e);

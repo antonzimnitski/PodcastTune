@@ -251,23 +251,18 @@
   text-align: center;
   width: 100%;
 }
-.warning-modal {
-  position: fixed;
-  z-index: 301;
-  background: $warning-modal-background;
-  border-radius: 0.5rem;
-  outline: none;
-  display: flex;
-  flex-direction: column;
-  padding: $small-space;
-  animation: appearance 0.5s ease;
+.warning-modal,
+.unsubscribe-modal {
+  @include fluid-modal($warning-modal-background);
 }
+.unsubscribe-modal__overlay,
 .warning-modal__overlay {
   @include overlay($warning-modal-overlay-background);
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.unsubscribe-modal__header,
 .warning-modal__header {
   font-size: 1.8rem;
   @include tablet {
@@ -281,13 +276,13 @@
     font-size: 1.6rem;
   }
 }
-@keyframes appearance {
-  0% {
-    opacity: 0;
-    scale: 0;
-  }
-  100% {
-    opacity: 1;
-    scale: 1;
-  }
+.unsubscribe-modal {
+  align-items: center;
+}
+.unsubscribe-modal__controls {
+  margin-top: $small-space;
+  padding: 0 $small-space;
+}
+.unsubscribe-modal__controls .button + .button {
+  margin-left: $space;
 }

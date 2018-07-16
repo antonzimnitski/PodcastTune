@@ -11,6 +11,7 @@ export default gql`
       description
       summary
       artworkUrl
+      subscribed
     }
   }
 `;

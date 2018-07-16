@@ -7,7 +7,6 @@ import Loader from "./helpers/Loader";
 import SubscribeButton from "./helpers/SubscribeButton";
 
 import getPodcast from "./../queries/getPodcast";
-import getLoggedUserId from "./../queries/getLoggedUserId";
 import getFeed from "./../queries/getFeed";
 
 class PodcastPage extends Component {
@@ -59,7 +58,10 @@ class PodcastPage extends Component {
                 </div>
               </div>
 
-              <SubscribeButton podcastId={podcast.podcastId} />
+              <SubscribeButton
+                subscribed={podcast.subscribed}
+                podcastId={podcast.podcastId}
+              />
 
               <Query
                 query={getFeed}

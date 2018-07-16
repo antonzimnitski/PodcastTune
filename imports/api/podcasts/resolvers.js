@@ -1,6 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 import Podcasts from "./podcasts";
+import UsersData from "./../usersData/usersData";
 
 export default {
   Query: {
@@ -43,6 +44,17 @@ export default {
       }
       console.timeEnd("podcast");
       return result;
+    }
+  },
+  Podcast: {
+    subscribed: (data, _, { user }) => {
+      if (!user) return false;
+      const { _id } = user;
+      const userData = UsersData.findOne({ _id });
+      console.log(userData);
+      if (!userData || !userData.podcasts) return false;
+      console.log(userData.podcasts);
+      return !!userData.podcasts.find(el => el === data.podcastId);
     }
   }
 };

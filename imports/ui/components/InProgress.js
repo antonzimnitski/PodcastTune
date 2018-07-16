@@ -32,7 +32,7 @@ function renderInProgress() {
         if (loading) return <Loader />;
         if (error) return null;
 
-        if (!data || !data.inProgress || data.inProgress.length === 0) {
+        if (!data || !data.inProgress || !data.inProgress.length) {
           return (
             <div className="in-progress__content">
               <h2>No episodes in progress.</h2>

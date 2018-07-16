@@ -16,6 +16,12 @@
   margin: 0 auto;
 }
 
+.button--danger {
+  background: $light-red;
+  color: $white;
+  border-color: $light-red;
+}
+
 .button:hover {
   transform: translateY(-0.3rem);
   box-shadow: 0 $button-spacing (2 * $button-spacing) $button-shadow-color;

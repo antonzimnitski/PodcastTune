@@ -160,6 +160,7 @@
 .controls__play {
   fill: $light-blue;
   width: 3rem;
+  cursor: pointer;
 }
 
 .controls__up-next,
@@ -167,6 +168,7 @@
   fill: $dark-gray;
   width: 2.5rem;
   margin-right: $small-space;
+  cursor: pointer;
 }
 
 .controls__up-next,
