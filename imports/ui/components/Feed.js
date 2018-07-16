@@ -5,6 +5,7 @@ import { withTracker } from "meteor/react-meteor-data";
 
 import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
+import LoginWarningModal from "./helpers/LoginWarningModal";
 
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../queries/setPlayingEpisode";
@@ -15,12 +16,15 @@ class Feed extends Component {
     super(props);
 
     this.state = {
-      isModalOpen: false,
+      isEpisodeModalOpen: false,
+      isWarningModalOpen: false,
       id: null,
       podcastId: null
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
+    this.closeWarningModal = this.closeWarningModal.bind(this);
+    this.openWarningModal = this.openWarningModal.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -43,7 +47,19 @@ class Feed extends Component {
   }
 
   handleEpisodeModal(id, podcastId) {
-    this.setState({ isModalOpen: !this.state.isModalOpen, id, podcastId });
+    this.setState({
+      isEpisodeModalOpen: !this.state.isEpisodeModalOpen,
+      id,
+      podcastId
+    });
+  }
+
+  openWarningModal() {
+    this.setState({ isWarningModalOpen: true });
+  }
+
+  closeWarningModal() {
+    this.setState({ isWarningModalOpen: false });
   }
 
   isPlayingEpisode(id) {
@@ -63,6 +79,7 @@ class Feed extends Component {
             <Episode
               key={episode.id}
               episode={episode}
+              openWarningModal={this.openWarningModal}
               handleEpisodeModal={this.handleEpisodeModal}
               handleClick={this.handleClick}
               isPlayingEpisode={this.isPlayingEpisode(episode.id)}
@@ -78,12 +95,18 @@ class Feed extends Component {
       <React.Fragment>
         {this.renderFeed()}
 
-        {this.state.isModalOpen ? (
+        {this.state.isEpisodeModalOpen ? (
           <EpisodeModal
-            isModalOpen={this.state.isModalOpen}
+            isModalOpen={this.state.isEpisodeModalOpen}
             handleEpisodeModal={this.handleEpisodeModal}
             podcastId={this.state.podcastId}
             id={this.state.id}
+          />
+        ) : null}
+        {this.state.isWarningModalOpen ? (
+          <LoginWarningModal
+            isModalOpen={this.state.isWarningModalOpen}
+            closeWarningModal={this.closeWarningModal}
           />
         ) : null}
       </React.Fragment>

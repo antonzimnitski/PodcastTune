@@ -251,3 +251,43 @@
   text-align: center;
   width: 100%;
 }
+.warning-modal {
+  position: fixed;
+  z-index: 301;
+  background: $warning-modal-background;
+  border-radius: 0.5rem;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  padding: $small-space;
+  animation: appearance 0.5s ease;
+}
+.warning-modal__overlay {
+  @include overlay($warning-modal-overlay-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.warning-modal__header {
+  font-size: 1.8rem;
+  @include tablet {
+    font-size: 2.2rem;
+  }
+}
+.warning-modal__text {
+  font-size: 1.2rem;
+  margin-top: $small-space / 2;
+  @include tablet {
+    font-size: 1.6rem;
+  }
+}
+@keyframes appearance {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}

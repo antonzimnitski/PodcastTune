@@ -25,6 +25,7 @@ class PodcastPage extends Component {
         {({ loading, error, data }) => {
           if (loading) return <Loader />;
           if (error || !data.podcast) {
+            console.error(error);
             return <div>Sorry! There was an error loading your podcast.</div>;
           }
           const { podcast } = data;
@@ -58,16 +59,7 @@ class PodcastPage extends Component {
                 </div>
               </div>
 
-              <Query query={getLoggedUserId}>
-                {({ loading, error, data }) => {
-                  if (loading) return null;
-                  if (error) throw error;
-
-                  return data.user._id ? (
-                    <SubscribeButton podcastId={podcast.podcastId} />
-                  ) : null;
-                }}
-              </Query>
+              <SubscribeButton podcastId={podcast.podcastId} />
 
               <Query
                 query={getFeed}

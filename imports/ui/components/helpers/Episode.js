@@ -132,6 +132,7 @@ class Episode extends Component {
     const {
       episode,
       isPlayingEpisode,
+      openWarningModal,
       handleEpisodeModal,
       handleClick,
       isLoggedIn
@@ -177,7 +178,7 @@ class Episode extends Component {
                         episode.podcastId,
                         episode.inFavorites
                       )
-                    : console.log("loggin on signup")
+                    : openWarningModal()
                 }
               >
                 <path d="M168.8 61.3l-58.3-8.5L84.4 0 58.3 52.8 0 61.3l42.2 41.1-10 58.1 52.2-27.4 52.2 27.4-10-58.1 42.2-41.1z" />
