@@ -248,6 +248,12 @@ class AudioPlayer extends Component {
     }
   }
 
+  onProgressClick(e) {
+    const offset = e.target.getBoundingClientRect();
+    const pos = (e.pageX - offset.left) / offset.width;
+    this.setTime(pos * this.state.duration);
+  }
+
   handleMute() {
     this.onMute(!this.state.isMuted);
   }
@@ -367,14 +373,13 @@ class AudioPlayer extends Component {
             )}
           </div>
           <div className="player__seek-bar">
-            <input
-              className="seek-bar__range"
+            <progress
+              className="seek-bar__progress"
+              onClick={e => this.onProgressClick(e)}
               onChange={e => this.setTime(Number(e.target.value))}
               value={episode ? episode.playedSeconds : 0}
-              type="range"
               min="0"
               max={this.state.duration}
-              step="1"
             />
             <div className="seek-bar__time">
               <span className="seek-bar__text seek-bar__text--left">

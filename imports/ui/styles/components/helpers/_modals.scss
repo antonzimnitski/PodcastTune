@@ -55,6 +55,7 @@
 }
 
 .modal-item__info {
+  overflow: hidden;
   min-width: 0;
   padding: $small-space; //https://stackoverflow.com/questions/45813304/text-overflow-ellipsis-on-flex-child-not-working
 }

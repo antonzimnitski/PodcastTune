@@ -43,9 +43,8 @@
   background: $dark-blue;
   height: $header-height;
   width: 100%;
-  align-items: center;
-  justify-content: space-around;
   z-index: 200;
+  align-items: center;
 
   @include laptop {
     display: none;
@@ -53,6 +52,7 @@
 }
 
 .top-header__logo {
+  margin: 0 auto;
   width: 15rem;
 
   @include tablet {
