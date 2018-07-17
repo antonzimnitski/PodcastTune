@@ -73,6 +73,12 @@ class Feed extends Component {
     if (this.props.feed.length === 0) return <div>There is no episodes.</div>;
     return (
       <div className="feed">
+        <div className="feed__header">
+          <div className="episode__info">Episode title</div>
+          <div className="episode__pub-date">Release Date</div>
+          <div className="episode__duration">Duration</div>
+          <div className="episode__controls" />
+        </div>
         {this.props.feed.map(episode => {
           if (!episode) return;
           return (

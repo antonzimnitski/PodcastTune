@@ -23,7 +23,7 @@ export default {
       }
 
       if (isUpdateNeeded(result.updatedAt)) {
-        const podcast = await getData(podcastId);
+        const podcast = await fetchPodcast(podcastId);
 
         if (!podcast || !podcast.episodes) return null;
         podcast.episodes.forEach(episode => {

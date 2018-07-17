@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
-import { compose, graphql } from "react-apollo";
-import { find, remove } from "lodash";
+import { withApollo, compose, graphql } from "react-apollo";
+import { remove } from "lodash";
 
 import LoginWarningModal from "./LoginWarningModal";
 import UnsubscribeModal from "./UnsubscribeModal";
@@ -41,7 +41,7 @@ class SubscribeButton extends Component {
   }
 
   subscribe(podcastId) {
-    const { subscribe, isLoggedIn } = this.props;
+    const { subscribe, isLoggedIn, client } = this.props;
 
     if (!isLoggedIn) {
       this.openWarningModal();
@@ -62,6 +62,7 @@ class SubscribeButton extends Component {
             : (data.podcasts = [subscribe]);
           proxy.writeQuery({ query: getSubscribedPodcasts, data });
         } catch (e) {
+          client.query({ query: getSubscribedPodcasts });
           console.log("query haven't been called", e);
         }
       }
@@ -69,7 +70,7 @@ class SubscribeButton extends Component {
   }
 
   unsubscribe(podcastId) {
-    const { unsubscribe } = this.props;
+    const { unsubscribe, client } = this.props;
 
     unsubscribe({
       variables: {
@@ -83,6 +84,7 @@ class SubscribeButton extends Component {
           remove(data.podcasts, n => n.id === unsubscribe.id);
           proxy.writeQuery({ query: getSubscribedPodcasts, data });
         } catch (e) {
+          client.query({ query: getSubscribedPodcasts });
           console.log("query haven't been called", e);
         }
       }
@@ -135,5 +137,5 @@ export default withTracker(() => {
   compose(
     graphql(subscribeToPodcast, { name: "subscribe" }),
     graphql(unsubscribeFromPodcast, { name: "unsubscribe" })
-  )(SubscribeButton)
+  )(withApollo(SubscribeButton))
 );
