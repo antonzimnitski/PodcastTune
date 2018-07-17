@@ -1,12 +1,13 @@
 import Podcasts from "./../podcasts/podcasts";
 import UsersData from "./../usersData/usersData";
+import moment from "moment";
 
 export default {
   Query: {
     feed(_, { podcastId, offset, limit }) {
       const podcast = Podcasts.findOne({ podcastId });
       if (podcast.episodes) {
-        return podcast.episodes.slice(offset, offset + limit);
+        return podcast.episodes.slice(offset, offset + limit).sort(sortByDate);
       }
     },
     episode(_, { podcastId, id }, { user }) {
@@ -47,4 +48,8 @@ function inUserData(user, id, field) {
   if (!userData || !userData[field]) return false;
 
   return !!userData[field].find(el => el.id === id);
+}
+
+function sortByDate(a, b) {
+  return moment(b.pubDate).valueOf() - moment(a.pubDate).valueOf();
 }

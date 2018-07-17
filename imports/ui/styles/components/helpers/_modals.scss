@@ -2,6 +2,7 @@
 .modal__list {
   overflow-y: auto;
   width: 100%;
+  flex: 1;
 }
 
 .modal__item {
@@ -133,12 +134,13 @@
     $episode-modal-background
   );
   padding: $small-space;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .episode-modal__overlay {
   @include overlay($episode-modal-overlay-background);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .episode-modal__title {
   font-size: 2rem;
@@ -206,12 +208,13 @@
     $background: $auth-modal-background
   );
   padding: $large-space;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .auth-modal__overlay {
   @include overlay($auth-modal-overlay-background);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .auth-modal__title {
   font-size: 2.5rem;
@@ -255,13 +258,14 @@
 .warning-modal,
 .unsubscribe-modal {
   @include fluid-modal($warning-modal-background);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .unsubscribe-modal__overlay,
 .warning-modal__overlay {
   @include overlay($warning-modal-overlay-background);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .unsubscribe-modal__header,
 .warning-modal__header {

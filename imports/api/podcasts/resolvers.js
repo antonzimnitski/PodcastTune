@@ -51,9 +51,7 @@ export default {
       if (!user) return false;
       const { _id } = user;
       const userData = UsersData.findOne({ _id });
-      console.log(userData);
       if (!userData || !userData.podcasts) return false;
-      console.log(userData.podcasts);
       return !!userData.podcasts.find(el => el === data.podcastId);
     }
   }

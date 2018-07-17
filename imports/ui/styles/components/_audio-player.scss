@@ -150,7 +150,7 @@
 .player__controls-center {
   min-width: 0;
   max-width: 80rem;
-  flex: 1 1;
+  flex: 1 1 100%;
   align-self: center;
   text-align: center;
   @include tablet {
@@ -219,6 +219,7 @@
 
 .seek-bar__text {
   font-weight: 500;
+  display: inline-block;
 }
 
 .player__playback-rate {

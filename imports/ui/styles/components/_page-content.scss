@@ -52,6 +52,7 @@
 }
 
 .top-header__logo {
+  display: inline-block;
   margin: 0 auto;
   width: 15rem;
 
@@ -184,6 +185,7 @@
 
 .podcasts__image {
   width: 11rem;
+  height: auto;
 
   @include tablet {
     width: 18rem;

@@ -382,12 +382,12 @@ class AudioPlayer extends Component {
               max={this.state.duration}
             />
             <div className="seek-bar__time">
-              <span className="seek-bar__text seek-bar__text--left">
+              <span className="seek-bar__text">
                 {this.state.isReady && !this.state.isLoading
                   ? this.formatSeconds(episode.playedSeconds)
                   : "--/--"}
               </span>
-              <span className="seek-bar__text seek-bar__text--right">
+              <span className="seek-bar__text">
                 {this.state.isReady && !this.state.isLoading
                   ? this.formatSeconds(this.state.duration)
                   : "--/--"}
