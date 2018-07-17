@@ -1,16 +1,16 @@
-import axios from "axios";
 import moment from "moment";
 import Podcasts from "./podcasts";
 import UsersData from "./../usersData/usersData";
+import fetchPodcast from "./../../ui/utils/fetchPodcast";
 
 export default {
   Query: {
-    async podcast(obj, { podcastId }) {
+    async podcast(_, { podcastId }) {
       console.time("podcast");
       const result = Podcasts.findOne({ podcastId });
 
       if (!result) {
-        const podcast = await getData(podcastId);
+        const podcast = await fetchPodcast(podcastId);
 
         if (!podcast) return null;
         Podcasts.update(
@@ -56,12 +56,6 @@ export default {
     }
   }
 };
-
-function getData(podcastId) {
-  return axios
-    .get(`https://podcast-rest-api.herokuapp.com/api/podcasts/${podcastId}`)
-    .then(res => res.data.data);
-}
 
 function isUpdateNeeded(time) {
   return moment(moment().valueOf()).diff(time, "hours") >= 1;
