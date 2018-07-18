@@ -3,6 +3,7 @@ const { ObjectID } = Mongo;
 
 import axios from "axios";
 import X2JS from "x2js";
+import moment from "moment";
 import getPodcastItunesPreview from "./getPodcastItunesPreview";
 
 export default async podcastId => {
@@ -75,6 +76,7 @@ function getEpisodes(data, podcastId, podcastArtworkUrl) {
         mediaUrl: getMediaUrl(episode),
         duration: getDuration(episode),
         pubDate: getPubDate(episode),
+        pubDateUnix: getPubDateUnix(episode),
         linkToEpisode: getLinkToEpisode(episode)
       };
     } catch (error) {
@@ -112,6 +114,10 @@ function toSeconds(time) {
 
 function getPubDate(data) {
   return data.pubDate;
+}
+
+function getPubDateUnix(data) {
+  return moment(data.pubDate).unix();
 }
 
 function getLinkToEpisode(data) {

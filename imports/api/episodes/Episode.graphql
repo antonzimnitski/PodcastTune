@@ -8,6 +8,7 @@ type Episode {
   mediaUrl: String
   duration: Float
   pubDate: String
+  pubDateUnix: Float
   linkToEpisode: String
   playedSeconds: Float
   inFavorites: Boolean

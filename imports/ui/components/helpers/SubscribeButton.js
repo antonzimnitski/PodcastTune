@@ -11,6 +11,10 @@ import subscribeToPodcast from "./../../queries/subscribeToPodcast";
 import unsubscribeFromPodcast from "./../../queries/unsubscribeFromPodcast";
 
 class SubscribeButton extends Component {
+  componentDidUpdate() {
+    console.log("button did update");
+  }
+
   constructor(props) {
     super(props);
 

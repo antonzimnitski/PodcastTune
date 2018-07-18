@@ -18,28 +18,14 @@ export default {
           { ...podcast, updatedAt: moment().valueOf() },
           { upsert: true }
         );
+
         console.timeEnd("podcast");
         return Podcasts.findOne({ podcastId });
       }
 
       if (isUpdateNeeded(result.updatedAt)) {
-        const podcast = await fetchPodcast(podcastId);
+        updatePodcast(podcastId);
 
-        if (!podcast || !podcast.episodes) return null;
-        podcast.episodes.forEach(episode => {
-          if (!episode || !episode.mediaUrl) return;
-          Podcasts.update(
-            { podcastId, "episodes.mediaUrl": { $ne: episode.mediaUrl } },
-            { $push: { episodes: episode } }
-          );
-        });
-        Podcasts.update(
-          { podcastId },
-          {
-            $set: { updatedAt: moment().valueOf() }
-          }
-        );
-        console.timeEnd("podcast");
         return Podcasts.findOne({ podcastId });
       }
       console.timeEnd("podcast");
@@ -59,4 +45,27 @@ export default {
 
 function isUpdateNeeded(time) {
   return moment(moment().valueOf()).diff(time, "hours") >= 1;
+}
+
+async function updatePodcast(podcastId) {
+  const podcast = await fetchPodcast(podcastId);
+
+  if (!podcast || !podcast.episodes) return null;
+  podcast.episodes.forEach(episode => {
+    if (!episode || !episode.mediaUrl) return;
+    Podcasts.update(
+      { podcastId, "episodes.mediaUrl": { $ne: episode.mediaUrl } },
+      {
+        $push: {
+          episodes: { $each: [episode], $sort: { pubDateUnix: -1 } }
+        }
+      }
+    );
+  });
+  Podcasts.update(
+    { podcastId },
+    {
+      $set: { updatedAt: moment().valueOf() }
+    }
+  );
 }

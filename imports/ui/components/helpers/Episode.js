@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import momentDurationFormatSetup from "moment-duration-format";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { graphql, compose } from "react-apollo";
+import { withApollo, graphql, compose } from "react-apollo";
 import { remove } from "lodash";
 
 import getUpnext from "./../../queries/getUpnext";
@@ -55,7 +55,7 @@ class Episode extends Component {
   }
 
   handleUpnext(id, podcastId, isInUpNext) {
-    const { removeFromUpnext, addToUpnext } = this.props;
+    const { removeFromUpnext, addToUpnext, client } = this.props;
     isInUpNext
       ? removeFromUpnext({
           variables: {
@@ -68,6 +68,7 @@ class Episode extends Component {
               remove(data.upnext, n => n.id === removeFromUpnext.id);
               proxy.writeQuery({ query: getUpnext, data });
             } catch (e) {
+              client.query({ query: getUpnext });
               console.log("query haven't been called", e);
             }
           }
@@ -80,11 +81,13 @@ class Episode extends Component {
           update: (proxy, { data: { addToUpnext } }) => {
             try {
               const data = proxy.readQuery({ query: getUpnext });
+              remove(data.upnext, n => n.id === removeFromUpnext.id);
               data.upnext
                 ? data.upnext.push(addToUpnext)
                 : (data.upnext = [addToUpnext]);
               proxy.writeQuery({ query: getUpnext, data });
             } catch (e) {
+              client.query({ query: getUpnext });
               console.log("query haven't been called", e);
             }
           }
@@ -92,7 +95,7 @@ class Episode extends Component {
   }
 
   handleFavorites(id, podcastId, isInFavorites) {
-    const { removeFromFavorites, addToFavorites } = this.props;
+    const { removeFromFavorites, addToFavorites, client } = this.props;
     isInFavorites
       ? removeFromFavorites({
           variables: {
@@ -105,6 +108,7 @@ class Episode extends Component {
               remove(data.favorites, n => n.id === removeFromFavorites.id);
               proxy.writeQuery({ query: getFavorites, data });
             } catch (e) {
+              client.query({ query: getFavorites });
               console.log("query haven't been called", e);
             }
           }
@@ -125,6 +129,7 @@ class Episode extends Component {
 
               proxy.writeQuery({ query: getFavorites, data });
             } catch (e) {
+              client.query({ query: getFavorites });
               console.log("query haven't been called", e);
             }
           }
@@ -332,5 +337,5 @@ export default withTracker(() => {
     graphql(removeFromFavorites, { name: "removeFromFavorites" }),
     graphql(markAsPlayed, { name: "markAsPlayed" }),
     graphql(markAsUnplayed, { name: "markAsUnplayed" })
-  )(Episode)
+  )(withApollo(Episode))
 );

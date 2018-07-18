@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Query } from "react-apollo";
+import moment from "moment";
 
 import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
@@ -12,6 +13,10 @@ import getFeed from "./../queries/getFeed";
 class PodcastPage extends Component {
   _offset = 0;
   _limit = 100;
+
+  isUpdateNeeded(time) {
+    return moment(moment().valueOf()).diff(+time, "hours") >= 1;
+  }
 
   renderPodcast() {
     return (
@@ -28,6 +33,7 @@ class PodcastPage extends Component {
             return <div>Sorry! There was an error loading your podcast.</div>;
           }
           const { podcast } = data;
+
           return (
             <div className="podcast">
               <div className="podcast__header">
@@ -71,11 +77,16 @@ class PodcastPage extends Component {
                   limit: this._limit
                 }}
               >
-                {({ loading, error, data, fetchMore }) => {
+                {({ loading, error, data, refetch, fetchMore }) => {
                   if (loading) return <Loader />;
                   if (error) throw error;
                   if (data.feed.length === 0)
                     return <div>There is no episodes.</div>;
+
+                  if (this.isUpdateNeeded(data.podcast.updatedAt)) {
+                    console.log("will update");
+                    setTimeout(() => refetch(), 5000);
+                  }
 
                   return (
                     <>

@@ -8,6 +8,7 @@ type Podcast @cacheControl(maxAge: 3600) {
   summary: String
   artworkUrl: String
   subscribed: Boolean
+  updatedAt: String
   episodes: [Episode]
 }
 

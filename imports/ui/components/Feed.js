@@ -10,6 +10,7 @@ import LoginWarningModal from "./helpers/LoginWarningModal";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../queries/setPlayingEpisode";
 import getInProgress from "./../queries/getInProgress";
+import getUpnext from "./../queries/getUpnext";
 
 class Feed extends Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class Feed extends Component {
           },
           refetchQueries: [
             { query: getPlayingEpisode },
-            { query: getInProgress }
+            { query: getInProgress },
+            { query: getUpnext }
           ]
         })
           .then(res => console.log("success", res.data))
