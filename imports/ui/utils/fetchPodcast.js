@@ -64,9 +64,10 @@ function getEpisodes(data, podcastId, podcastArtworkUrl) {
   if (!item) return null;
 
   const episodes = Array.isArray(item) ? item : [item];
-  return episodes.map(episode => {
+  const result = [];
+  episodes.forEach(episode => {
     try {
-      return {
+      result.push({
         id: new ObjectID().valueOf(),
         podcastId,
         podcastArtworkUrl,
@@ -78,12 +79,15 @@ function getEpisodes(data, podcastId, podcastArtworkUrl) {
         pubDate: getPubDate(episode),
         pubDateUnix: getPubDateUnix(episode),
         linkToEpisode: getLinkToEpisode(episode)
-      };
+      });
     } catch (error) {
       console.log("error", error);
-      // console.log(episode);
+      console.log("error in episode", episode);
       return;
     }
+  });
+  return result.sort((a, b) => {
+    a.pubDateUnix - b.pubDateUnix;
   });
 }
 
