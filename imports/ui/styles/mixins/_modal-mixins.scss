@@ -8,36 +8,15 @@
   background: $background;
 }
 
-@mixin modal($height, $width, $background) {
+@mixin modal {
   position: fixed;
   z-index: 301;
-  width: 100%;
-  height: 70vh;
-  @include tablet {
-    width: $width;
-    height: auto;
-    @if $height {
-      height: $height;
-    }
-  }
   border-radius: 0.5rem;
   outline: none;
-  background: $background;
+  background: $modal-background;
   display: flex;
   flex-direction: column;
 
-  animation: appearance 0.5s ease;
-}
-
-@mixin fluid-modal($background) {
-  position: fixed;
-  z-index: 301;
-  background: $background;
-  border-radius: 0.5rem;
-  outline: none;
-  display: flex;
-  flex-direction: column;
-  padding: $small-space;
   animation: appearance 0.5s ease;
 }
 

@@ -35,27 +35,36 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
 
           return (
             <>
-              <div className="episode-modal__title">{title}</div>
-              <div className="episode-modal__author">{author}</div>
-              <div className="episode-modal__pub-date">
-                Published
-                {moment(pubDate).format(" MMM D, YYYY")}
+              <div className="modal__header">
+                <h2 className="modal__title">{title}</h2>
+                <div
+                  className="modal__close"
+                  onClick={() => handleEpisodeModal()}
+                />
+                <div className="episode-modal__author">{author}</div>
               </div>
-              {linkToEpisode ? (
-                <a
-                  className="episode-modal__link-to-episode"
-                  href={linkToEpisode}
-                  target="_blank"
-                >
-                  Link to episode
-                </a>
-              ) : null}
-              <div
-                className="episode-modal__description"
-                dangerouslySetInnerHTML={{
-                  __html: description
-                }}
-              />
+
+              <div className="episode__details">
+                <div className="episode-modal__pub-date">
+                  Published
+                  {moment(pubDate).format(" MMM D, YYYY")}
+                </div>
+                {linkToEpisode ? (
+                  <a
+                    className="episode-modal__link-to-episode"
+                    href={linkToEpisode}
+                    target="_blank"
+                  >
+                    Link to episode
+                  </a>
+                ) : null}
+                <div
+                  className="episode-modal__description"
+                  dangerouslySetInnerHTML={{
+                    __html: description
+                  }}
+                />
+              </div>
             </>
           );
         }}
