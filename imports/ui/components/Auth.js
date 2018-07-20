@@ -141,6 +141,15 @@ class Auth extends Component {
             className="auth-modal"
             overlayClassName="auth-modal__overlay"
           >
+            <div className="modal__header">
+              <h2 className="modal__title">
+                {this.state.isLoginOpen ? "Login" : "Join"}
+              </h2>
+              <div
+                className="modal__close"
+                onClick={() => this.closeAuthModal()}
+              />
+            </div>
             {this.modalContent()}
           </Modal>
         ) : null}

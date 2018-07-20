@@ -43,7 +43,6 @@ export class Signup extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1 className="auth-modal__title">Join</h1>
         {this.state.error ? (
           <p className="auth-modal__error">{this.state.error}</p>
         ) : (

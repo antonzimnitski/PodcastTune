@@ -43,6 +43,7 @@ class AudioPlayer extends Component {
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
     this.onQueueItemClick = this.onQueueItemClick.bind(this);
+    this.handleUpNextPopup = this.handleUpNextPopup.bind(this);
   }
 
   _lastVolume = 0;
@@ -480,15 +481,13 @@ class AudioPlayer extends Component {
           </div>
         </div>
 
-        <Modal
-          isOpen={this.state.isPopupOpen}
-          onRequestClose={() => this.handleUpNextPopup()}
-          ariaHideApp={false}
-          className="up-next__popup"
-          overlayClassName="up-next__popup-overlay"
-        >
-          <UpNextPopup onQueueItemClick={this.onQueueItemClick} />
-        </Modal>
+        {this.state.isPopupOpen ? (
+          <UpNextPopup
+            isModalOpen={this.state.isPopupOpen}
+            handleUpNextPopup={this.handleUpNextPopup}
+            onQueueItemClick={this.onQueueItemClick}
+          />
+        ) : null}
 
         {this.state.isModalOpen ? (
           <EpisodeModal

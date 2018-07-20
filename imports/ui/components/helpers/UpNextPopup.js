@@ -3,6 +3,7 @@ import { compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { remove } from "lodash";
+import Modal from "react-modal";
 
 import ModalItem from "./ModalItem";
 
@@ -12,6 +13,8 @@ import getPlayingEpisode from "./../../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
 const UpNextPopup = ({
+  isModalOpen,
+  handleUpNextPopup,
   upnext,
   isLoggedIn,
   setPlayingEpisode,
@@ -52,17 +55,13 @@ const UpNextPopup = ({
       : console.log("todo 'remove from upnext'", id, podcastId);
   };
 
-  if (!upnext || upnext.length === 0) {
-    return (
+  const content =
+    !upnext || !upnext.length ? (
       <div className="up-next__empty">
         <h2 className="up-next__title">Your Up Next is Empty</h2>
         <p className="empty__text">Add some episodes</p>
       </div>
-    );
-  }
-  return (
-    <React.Fragment>
-      <h2 className="up-next__title">Up Next</h2>
+    ) : (
       <div className="modal__list">
         {upnext.map(episode => {
           if (!episode) return;
@@ -78,20 +77,27 @@ const UpNextPopup = ({
                 onClick={event =>
                   handleRemove(event, episode.id, episode.podcastId)
                 }
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 192.33 192.33"
-                >
-                  <path d="M96.17 126.57l-65.06 65.06-30.4-30.41 65.05-65.05L.71 31.11 31.11.71l65.06 65.05L161.22.71l30.41 30.4-65.06 65.06 65.06 65.05-30.41 30.41-65.05-65.06z" />
-                  <path d="M161.22 1.41l29.7 29.7-64.35 64.35-.7.71.7.7 64.35 64.35-29.7 29.7-64.35-64.35-.7-.7-.71.7-64.35 64.35-29.7-29.7 64.35-64.35.71-.7-.71-.71L1.41 31.11l29.7-29.7 64.35 64.35.71.71.7-.71 64.35-64.35m0-1.41l-65 65.05L31.11 0 0 31.11l65.05 65.06L0 161.22l31.11 31.11 65.06-65.05 65.05 65.05 31.11-31.11-65.05-65 65.05-65.06L161.22 0z" />
-                </svg>
-              </div>
+              />
             </div>
           );
         })}
       </div>
-    </React.Fragment>
+    );
+
+  return (
+    <Modal
+      isOpen={isModalOpen}
+      onRequestClose={() => handleUpNextPopup()}
+      ariaHideApp={false}
+      className="up-next__popup"
+      overlayClassName="up-next__popup-overlay"
+    >
+      <div className="modal__header">
+        <h2 className="modal__title">Up Next</h2>
+        <div className="modal__close" onClick={() => handleUpNextPopup()} />
+      </div>
+      {content}
+    </Modal>
   );
 };
 
