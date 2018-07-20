@@ -24,20 +24,22 @@
   @include overlay($modal-overlay-background);
 }
 
-.episode__details {
-  overflow-y: auto;
-}
-
-.episode-modal__title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: $small-space;
-}
-
 .episode-modal__author {
   font-size: 1.4rem;
   font-style: italic;
   margin-bottom: $space;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
+}
+
+.episode__details {
+  overflow-y: auto;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .episode-modal__link-to-episode,

@@ -4,10 +4,6 @@
   flex-direction: column;
   width: 100%;
   padding: $small-space;
-
-  @include tablet {
-    padding: $small-space;
-  }
 }
 
 .podcast__header {
@@ -22,6 +18,10 @@
   width: $podcast-image-size;
   height: $podcast-image-size;
 
+  @include tablet-small {
+    margin-right: $small-space;
+  }
+
   @include tablet {
     margin-right: $space;
   }
@@ -30,17 +30,25 @@
 .podcast__info {
   display: none;
 
-  @include tablet {
+  @include tablet-small {
     display: block;
     flex: 1 1;
   }
 }
 
 .podcast__title {
-  font-size: $podcast-title;
+  font-size: 2.5rem;
   line-height: 1.2;
   letter-spacing: -0.1rem;
-  padding-right: 12rem;
+
+  @include tablet {
+    font-size: 3rem;
+    padding-right: 12rem;
+  }
+
+  @include desktop {
+    font-size: 3.5rem;
+  }
 }
 
 .podcast__subscribe {
@@ -64,6 +72,10 @@
 
 .podcast__description {
   margin-top: $small-space;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .podcast__description img {

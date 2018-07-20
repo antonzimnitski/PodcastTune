@@ -60,10 +60,18 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @include desktop {
+    font-size: $preview-title-font-size * 1.2;
+  }
 }
 
 .preview__description {
   width: 100%;
   font-size: $preview-desc-font-size;
   line-height: 1.4;
+
+  @include desktop {
+    font-size: $preview-desc-font-size * 1.2;
+  }
 }

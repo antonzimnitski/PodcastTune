@@ -4,6 +4,12 @@
   }
 }
 
+@mixin tablet-small() {
+  @media (min-width: $breakpoint-tablet-small) {
+    @content;
+  }
+}
+
 @mixin tablet() {
   @media (min-width: $breakpoint-tablet) {
     @content;

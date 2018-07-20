@@ -157,8 +157,16 @@
     padding-top: 10rem;
   }
 
+  @include desktop {
+    font-size: 1.8rem;
+  }
+
   h2 {
     margin-bottom: $small-space;
+
+    @include desktop {
+      font-size: 2.2rem;
+    }
   }
 
   a {
@@ -209,6 +217,10 @@
   color: $black;
   font-size: 1.4rem;
   font-weight: 500;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .footer__link {

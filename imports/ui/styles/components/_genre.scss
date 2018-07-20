@@ -31,6 +31,11 @@
   @include tablet {
     max-width: 30rem;
   }
+
+  @include desktop {
+    font-size: $genre-title-font-size * 1.2;
+    max-width: 35rem;
+  }
 }
 
 .genre-nav__subgenre-group {
@@ -42,6 +47,10 @@
 .genre-nav__subgenre-item {
   display: block;
   padding-bottom: $genre-spacing;
+
+  @include desktop {
+    font-size: 1.6rem;
+  }
 }
 
 .genre-nav__group-title:hover,

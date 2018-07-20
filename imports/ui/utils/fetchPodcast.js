@@ -86,9 +86,7 @@ function getEpisodes(data, podcastId, podcastArtworkUrl) {
       return;
     }
   });
-  return result.sort((a, b) => {
-    a.pubDateUnix - b.pubDateUnix;
-  });
+  return result;
 }
 
 function getMediaUrl(data) {

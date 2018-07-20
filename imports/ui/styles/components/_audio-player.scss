@@ -25,32 +25,31 @@
 }
 
 .player__skip,
-.player__play,
 .player__skip-text {
   display: none;
   cursor: pointer;
 
   @include tablet {
     display: block;
-    width: $player-controls-icons-size;
-    height: $player-controls-icons-size;
+    width: 4rem;
+    height: 4rem;
   }
 
   @include desktop {
-    width: $player-controls-icons-size-desktop;
-    height: $player-controls-icons-size-desktop;
+    width: 6rem;
+    height: 6rem;
   }
 }
 
 .player__play {
   display: block;
   fill: $black;
-  width: $player-controls-icons-size;
-  height: $player-controls-icons-size;
+  width: 5rem;
+  height: 5rem;
 
   @include desktop {
-    width: $player-controls-icons-size-desktop;
-    height: $player-controls-icons-size-desktop;
+    width: 8rem;
+    height: 8rem;
   }
 }
 
@@ -112,14 +111,14 @@
 
 .player__skip-text {
   text-align: center;
-  line-height: $player-controls-icons-size;
+  line-height: 4rem;
   display: block;
   font-weight: 600;
   color: $black;
 
   @include desktop {
     font-size: 2rem;
-    line-height: $player-controls-icons-size-desktop;
+    line-height: 6rem;
   }
 }
 
@@ -149,7 +148,7 @@
 
 .player__controls-center {
   min-width: 0;
-  max-width: 80rem;
+  max-width: 70rem;
   flex: 1 1 100%;
   align-self: center;
   text-align: center;
@@ -158,7 +157,7 @@
   }
 
   @include desktop {
-    max-width: 100rem;
+    max-width: 90rem;
   }
 }
 
@@ -220,6 +219,10 @@
 .seek-bar__text {
   font-weight: 500;
   display: inline-block;
+  @include laptop {
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+  }
 }
 
 .player__playback-rate {
@@ -243,6 +246,11 @@
   height: 2rem;
   transition: all 0.3s ease;
 
+  @include laptop {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
   @include desktop {
     width: 3rem;
     height: 3rem;
@@ -263,7 +271,7 @@
 }
 
 .playback-rate__text {
-  margin: $small-space 0;
+  margin: $small-space / 2 0;
   width: 3.5rem;
   height: 2.5rem;
   font-size: 1.2rem;
@@ -271,6 +279,15 @@
   text-align: center;
   border-radius: 0.5rem;
   border: 0.2rem solid $black;
+
+  @include laptop {
+    font-size: 1.4rem;
+  }
+
+  @include desktop {
+    font-size: 1.6rem;
+    margin: $small-space 0;
+  }
 }
 
 .player__volume {
@@ -330,6 +347,11 @@
   width: 2.5rem;
   height: 3rem;
   fill: $black;
+
+  @include laptop {
+    width: 3rem;
+    height: 3.5rem;
+  }
 
   @include desktop {
     width: 4rem;

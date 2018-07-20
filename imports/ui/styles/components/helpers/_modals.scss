@@ -12,6 +12,10 @@
 .modal__title {
   font-size: 2.2rem;
   padding-right: $large-space;
+
+  @include desktop {
+    font-size: 2.5rem;
+  }
 }
 
 .modal__close {
@@ -21,6 +25,10 @@
   top: 0;
   right: 0;
   background-image: $close-icon-svg;
+}
+
+.modal__list {
+  overflow-y: auto;
 }
 
 .modal__item {
