@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, Query } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 
 import EpisodeModal from "./helpers/EpisodeModal";
@@ -11,6 +11,28 @@ import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../queries/setPlayingEpisode";
 import getInProgress from "./../queries/getInProgress";
 import getUpnext from "./../queries/getUpnext";
+
+import gql from "graphql-tag";
+
+const LOCAL_EPISODE = gql`
+  query playingEpisode {
+    playingEpisode @client {
+      id
+      podcastId
+      podcastArtworkUrl
+      title
+      mediaUrl
+      pubDate
+      author
+    }
+  }
+`;
+
+const setLocalEpisode = gql`
+  mutation setPlayingEpisodeLocal($id: String!, $podcastId: Int!) {
+    setPlayingEpisodeLocal(id: $id, podcastId: $podcastId) @client
+  }
+`;
 
 class Feed extends Component {
   constructor(props) {
@@ -30,7 +52,7 @@ class Feed extends Component {
   }
 
   handleClick(id, podcastId) {
-    const { isLoggedIn, setPlayingEpisode } = this.props;
+    const { isLoggedIn, setPlayingEpisode, setLocalEpisode } = this.props;
     isLoggedIn
       ? setPlayingEpisode({
           variables: {
@@ -45,7 +67,18 @@ class Feed extends Component {
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
-      : console.log("todo it later", id, podcastId);
+      : setLocalEpisode({
+          variables: {
+            id,
+            podcastId
+          },
+          refetchQueries: [{ query: LOCAL_EPISODE }]
+        })
+          .then(res => console.log("method seLocalEpisode have been finished"))
+          .catch(error =>
+            console.log("error in setLocalEpisode on client", error)
+          );
+    // : console.log("todo it later", id, podcastId);
   }
 
   handleEpisodeModal(id, podcastId) {
@@ -132,6 +165,7 @@ export default withTracker(() => {
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })
-    })
+    }),
+    graphql(setLocalEpisode, { name: "setLocalEpisode" })
   )(Feed)
 );

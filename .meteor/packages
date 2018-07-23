@@ -22,3 +22,4 @@ react-meteor-data
 accounts-password@1.5.1
 underscore
 force-ssl
+deanius:promise
