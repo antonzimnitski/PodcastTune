@@ -12,27 +12,8 @@ import setPlayingEpisode from "./../queries/setPlayingEpisode";
 import getInProgress from "./../queries/getInProgress";
 import getUpnext from "./../queries/getUpnext";
 
-import gql from "graphql-tag";
-
-const LOCAL_EPISODE = gql`
-  query playingEpisode {
-    playingEpisode @client {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      author
-    }
-  }
-`;
-
-const setLocalEpisode = gql`
-  mutation setPlayingEpisodeLocal($id: String!, $podcastId: Int!) {
-    setPlayingEpisodeLocal(id: $id, podcastId: $podcastId) @client
-  }
-`;
+import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
+import setLocalPlayingEpisode from "./../../localData/queries/setLocalPlayingEpisode";
 
 class Feed extends Component {
   constructor(props) {
@@ -52,7 +33,11 @@ class Feed extends Component {
   }
 
   handleClick(id, podcastId) {
-    const { isLoggedIn, setPlayingEpisode, setLocalEpisode } = this.props;
+    const {
+      isLoggedIn,
+      setPlayingEpisode,
+      setLocalPlayingEpisode
+    } = this.props;
     isLoggedIn
       ? setPlayingEpisode({
           variables: {
@@ -67,16 +52,16 @@ class Feed extends Component {
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
-      : setLocalEpisode({
+      : setLocalPlayingEpisode({
           variables: {
             id,
             podcastId
           },
-          refetchQueries: [{ query: LOCAL_EPISODE }]
+          refetchQueries: [{ query: getLocalPlayingEpisode }]
         })
           .then(res => console.log("method seLocalEpisode have been finished"))
           .catch(error =>
-            console.log("error in setLocalEpisode on client", error)
+            console.log("error in setLocalPlayingEpisode on client", error)
           );
     // : console.log("todo it later", id, podcastId);
   }
@@ -166,6 +151,6 @@ export default withTracker(() => {
         playingEpisode
       })
     }),
-    graphql(setLocalEpisode, { name: "setLocalEpisode" })
+    graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" })
   )(Feed)
 );

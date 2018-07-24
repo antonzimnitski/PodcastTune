@@ -17,6 +17,7 @@ import NewReleases from "./NewReleases";
 import Footer from "./Footer";
 
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
+import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
 class App extends Component {
   componentDidUpdate(prevProps, prevState) {
@@ -88,6 +89,12 @@ export default withTracker(() => {
   compose(
     graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
+      props: ({ data: { playingEpisode } }) => ({
+        playingEpisode
+      })
+    }),
+    graphql(getLocalPlayingEpisode, {
+      skip: props => props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })

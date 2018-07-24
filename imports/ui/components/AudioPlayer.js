@@ -4,7 +4,6 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import Modal from "react-modal";
 import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
@@ -17,6 +16,8 @@ import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import markAsPlayed from "./../queries/markAsPlayed";
 import updatePlayedSeconds from "./../queries/updatePlayedSeconds";
 import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
+
+import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -523,6 +524,12 @@ export default withTracker(() => {
   compose(
     graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
+      props: ({ data: { playingEpisode } }) => ({
+        playingEpisode
+      })
+    }),
+    graphql(getLocalPlayingEpisode, {
+      skip: props => props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
       })

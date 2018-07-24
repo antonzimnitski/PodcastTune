@@ -1,15 +1,16 @@
-import gql from "graphql-tag";
+import getLocalPlayingEpisode from "./../queries/getLocalPlayingEpisode";
 
 export default (resolvers = {
   Query: {
     playingEpisode(_, __, { cache }) {
-      const data = cache.readQuery({ query: LOCAL_EPISODE });
-
+      console.log("in localEpisode query");
+      const data = cache.readQuery({ query: getLocalPlayingEpisode });
+      console.log("in localEpisode after readQuery", data);
       return data.playingEpisode;
     }
   },
   Mutation: {
-    async setPlayingEpisodeLocal(_, { id, podcastId }, { cache }) {
+    async setPlayingEpisode(_, { id, podcastId }, { cache }) {
       let episode = await Meteor.callPromise("getEpisode", id, podcastId)
         .then(res => res)
         .catch(error => console.log("error in Meteor.callPromise", error));
@@ -17,9 +18,12 @@ export default (resolvers = {
       const data = {
         playingEpisode: {
           ...episode,
+          playedSeconds: 0,
           __typename: "Episode"
         }
       };
+
+      console.log("in setPlayingEpisodeLocal query");
 
       cache.writeData({ data });
 
@@ -27,17 +31,3 @@ export default (resolvers = {
     }
   }
 });
-
-const LOCAL_EPISODE = gql`
-  query playingEpisode {
-    playingEpisode @client {
-      id
-      podcastId
-      podcastArtworkUrl
-      title
-      mediaUrl
-      pubDate
-      author
-    }
-  }
-`;

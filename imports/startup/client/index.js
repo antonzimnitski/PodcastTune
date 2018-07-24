@@ -17,16 +17,10 @@ import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
 
-import {
-  queueSplice,
-  setStorageValue,
-  getStorageValue
-} from "./../../ui/utils/utils";
-
 import App from "./../../ui/components/App";
 import { withClientState } from "apollo-link-state";
 
-import playingEpisode from "./../../resolvers/playingEpisode";
+import playingEpisode from "./../../localData/resolvers/playingEpisode";
 
 const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")
