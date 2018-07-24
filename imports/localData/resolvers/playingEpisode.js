@@ -1,31 +1,58 @@
+import { remove } from "lodash";
+
 import getLocalPlayingEpisode from "./../queries/getLocalPlayingEpisode";
+import getLocalUpnext from "./../queries/getLocalUpnext";
 
 export default (resolvers = {
   Query: {
-    playingEpisode(_, __, { cache }) {
-      console.log("in localEpisode query");
+    localPlayingEpisode(_, __, { cache }) {
       const data = cache.readQuery({ query: getLocalPlayingEpisode });
-      console.log("in localEpisode after readQuery", data);
-      return data.playingEpisode;
+      return data.localPlayingEpisode;
+    },
+    localUpnext(_, __, { cache }) {
+      console.log("localUpnext query", cache);
+      const data = cache.readQuery({ query: getLocalUpnext });
+      return data.localUpnext;
     }
   },
   Mutation: {
-    async setPlayingEpisode(_, { id, podcastId }, { cache }) {
+    async setLocalPlayingEpisode(_, { id, podcastId }, { cache }) {
+      let episodeData;
+      let upnextData;
       let episode = await Meteor.callPromise("getEpisode", id, podcastId)
         .then(res => res)
         .catch(error => console.log("error in Meteor.callPromise", error));
 
-      const data = {
-        playingEpisode: {
+      const prevEpisode = cache.readQuery({
+        query: getLocalPlayingEpisode
+      });
+
+      episodeData = {
+        localPlayingEpisode: {
           ...episode,
           playedSeconds: 0,
           __typename: "Episode"
         }
       };
 
-      console.log("in setPlayingEpisodeLocal query");
+      if (prevEpisode.localPlayingEpisode) {
+        const prevUpnext = cache.readQuery({ query: getLocalUpnext });
 
-      cache.writeData({ data });
+        remove(
+          prevUpnext.localUpnext,
+          n => n.id === prevEpisode.localPlayingEpisode.id
+        );
+        prevUpnext.localUpnext.push(prevEpisode.localPlayingEpisode);
+        upnextData = {
+          localUpnext: prevUpnext.localUpnext
+        };
+
+        console.log("localupnext", upnextData);
+
+        cache.writeQuery({ query: getLocalUpnext, data: upnextData });
+      }
+
+      cache.writeQuery({ query: getLocalPlayingEpisode, data: episodeData });
 
       return null;
     }

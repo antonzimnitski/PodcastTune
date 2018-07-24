@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query PlayingEpisode {
-    playingEpisode @client {
+  query LocalPlayingEpisode {
+    localPlayingEpisode @client {
       id
       podcastId
       podcastArtworkUrl

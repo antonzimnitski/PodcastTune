@@ -59,8 +59,8 @@ const cache = new InMemoryCache({
 // });
 
 const defaultState = {
-  playingEpisode: null,
-  queue: []
+  localPlayingEpisode: null,
+  localUpnext: []
 };
 
 const stateLink = withClientState({
@@ -74,6 +74,8 @@ const client = new ApolloClient({
   link: ApolloLink.from([authLink, stateLink, httpLink]),
   cache
 });
+
+client.onResetStore(stateLink.writeDefaults);
 
 const ApolloApp = () => (
   <ApolloProvider client={client}>

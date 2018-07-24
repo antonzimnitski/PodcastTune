@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
+import { Session } from "meteor/session";
 import Modal from "react-modal";
 import { Query, withApollo } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
@@ -34,7 +35,6 @@ class Auth extends Component {
 
   onSuccess() {
     this.closeAuthModal();
-    this.props.client.resetStore();
   }
 
   loginContent() {
@@ -91,6 +91,7 @@ class Auth extends Component {
                 onClick={() => {
                   Meteor.logout(() => {
                     this.props.client.resetStore();
+                    Session.set("isPlayerOpen", false);
                     this.props.closeSidebar();
                   });
                 }}

@@ -50,7 +50,9 @@ class AudioPlayer extends Component {
   _lastVolume = 0;
 
   componentDidMount() {
-    const playingEpisode = this.props.playingEpisode;
+    console.log("componentDidMount", this.props);
+    const playingEpisode =
+      this.props.playingEpisode || this.props.localPlayingEpisode;
     this.setState({ mounted: true });
     if (playingEpisode) {
       this.setState({ episode: playingEpisode });
@@ -60,24 +62,31 @@ class AudioPlayer extends Component {
     this.getSeconds();
   }
 
+  componentDidUpdate() {
+    console.log("componentDidUpdate", this.props);
+  }
+
   componentWillUnmount() {
     clearTimeout(this.getSecondsTimeout);
     clearTimeout(this.updatePlayedSecondsTimeout);
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("componentWillReceiveProps", nextProps);
     const { episode } = this.state;
+    const nextEpisode =
+      nextProps.playingEpisode || nextProps.localPlayingEpisode;
 
-    if (!nextProps.playingEpisode) {
+    if (!nextEpisode) {
       this.clearEpisode();
       return;
     }
 
-    if (!episode || episode.mediaUrl !== nextProps.playingEpisode.mediaUrl) {
+    if (!episode || episode.mediaUrl !== nextEpisode.mediaUrl) {
       this.setState({
         isLoading: true,
         isPlaying: false,
-        episode: nextProps.playingEpisode
+        episode: nextEpisode
       });
     }
   }
@@ -124,20 +133,26 @@ class AudioPlayer extends Component {
 
   clearEpisode() {
     if (!this.state.episode) return;
-    const { id, podcastId } = this.state.episode;
+
     this.setState({
       episode: null,
       isReady: false,
       isPlaying: false,
       duration: 0
     });
-    this.props.markAsPlayed({
+  }
+
+  onEnded() {
+    const { id, podcastId } = this.state.episode;
+    const { markAsPlayed, clearPlayingEpisode } = this.props;
+    this.clearEpisode();
+    markAsPlayed({
       variables: {
         id,
         podcastId
       }
     });
-    this.props.clearPlayingEpisode({
+    clearPlayingEpisode({
       refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
     });
   }
@@ -505,7 +520,7 @@ class AudioPlayer extends Component {
           src={episode ? episode.mediaUrl : null}
           onLoadedMetadata={() => this.setDuration()}
           onCanPlay={() => this.onReady()}
-          onEnded={() => this.clearEpisode()}
+          onEnded={() => this.onEnded()}
           onPlay={() => this.onPlay()}
           onPause={() => this.onPause()}
           muted={this.state.isMuted}
@@ -530,12 +545,21 @@ export default withTracker(() => {
     }),
     graphql(getLocalPlayingEpisode, {
       skip: props => props.isLoggedIn,
-      props: ({ data: { playingEpisode } }) => ({
-        playingEpisode
+      props: ({ data: { localPlayingEpisode } }) => ({
+        localPlayingEpisode
       })
     }),
-    graphql(updatePlayedSeconds, { name: "updatePlayedSeconds" }),
-    graphql(markAsPlayed, { name: "markAsPlayed" }),
-    graphql(clearPlayingEpisode, { name: "clearPlayingEpisode" })
+    graphql(updatePlayedSeconds, {
+      skip: props => !props.isLoggedIn,
+      name: "updatePlayedSeconds"
+    }),
+    graphql(markAsPlayed, {
+      skip: props => !props.isLoggedIn,
+      name: "markAsPlayed"
+    }),
+    graphql(clearPlayingEpisode, {
+      skip: props => !props.isLoggedIn,
+      name: "clearPlayingEpisode"
+    })
   )(AudioPlayer)
 );

@@ -21,7 +21,8 @@ import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpi
 
 class App extends Component {
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.playingEpisode) Session.set("isPlayerOpen", true);
+    if (this.props.playingEpisode || this.props.localPlayingEpisode)
+      Session.set("isPlayerOpen", true);
     console.log("did update");
   }
 
@@ -95,8 +96,8 @@ export default withTracker(() => {
     }),
     graphql(getLocalPlayingEpisode, {
       skip: props => props.isLoggedIn,
-      props: ({ data: { playingEpisode } }) => ({
-        playingEpisode
+      props: ({ data: { localPlayingEpisode } }) => ({
+        localPlayingEpisode
       })
     })
   )(App)

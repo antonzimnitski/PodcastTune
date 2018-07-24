@@ -12,10 +12,13 @@ import getUpnext from "./../../queries/getUpnext";
 import getPlayingEpisode from "./../../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
+import getLocalUpnext from "./../../../localData/queries/getLocalUpnext";
+
 const UpNextPopup = ({
   isModalOpen,
   handleUpNextPopup,
   upnext,
+  localUpnext,
   isLoggedIn,
   setPlayingEpisode,
   removeFromUpnext
@@ -55,15 +58,17 @@ const UpNextPopup = ({
       : console.log("todo 'remove from upnext'", id, podcastId);
   };
 
+  const episodes = upnext || localUpnext;
+
   const content =
-    !upnext || !upnext.length ? (
+    !episodes || !episodes.length ? (
       <div className="up-next__empty">
         <h2 className="up-next__title">Your Up Next is Empty</h2>
         <p className="empty__text">Add some episodes</p>
       </div>
     ) : (
       <div className="modal__list">
-        {upnext.map(episode => {
+        {episodes.map(episode => {
           if (!episode) return;
           return (
             <div
@@ -106,11 +111,32 @@ export default withTracker(() => {
 })(
   compose(
     graphql(getUpnext, {
+      skip: props => !props.isLoggedIn,
       props: ({ data: { upnext } }) => ({
         upnext
       })
     }),
-    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
-    graphql(removeFromUpnext, { name: "removeFromUpnext" })
+    graphql(setPlayingEpisode, {
+      skip: props => !props.isLoggedIn,
+      name: "setPlayingEpisode"
+    }),
+    graphql(removeFromUpnext, {
+      skip: props => !props.isLoggedIn,
+      name: "removeFromUpnext"
+    }),
+    graphql(getLocalUpnext, {
+      skip: props => props.isLoggedIn,
+      props: ({ data: { localUpnext } }) => ({
+        localUpnext
+      })
+    }),
+    graphql(setPlayingEpisode, {
+      skip: props => !props.isLoggedIn,
+      name: "setPlayingEpisode"
+    }),
+    graphql(removeFromUpnext, {
+      skip: props => !props.isLoggedIn,
+      name: "removeFromUpnext"
+    })
   )(UpNextPopup)
 );
