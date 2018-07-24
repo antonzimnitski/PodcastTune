@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Session } from "meteor/session";
-import { graphql, compose, Query } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 
 import EpisodeModal from "./helpers/EpisodeModal";
@@ -63,7 +62,6 @@ class Feed extends Component {
           .catch(error =>
             console.log("error in setLocalPlayingEpisode on client", error)
           );
-    // : console.log("todo it later", id, podcastId);
   }
 
   handleEpisodeModal(id, podcastId) {

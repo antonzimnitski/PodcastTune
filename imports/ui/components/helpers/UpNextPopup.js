@@ -13,6 +13,9 @@ import getPlayingEpisode from "./../../queries/getPlayingEpisode";
 import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
 import getLocalUpnext from "./../../../localData/queries/getLocalUpnext";
+import getLocalPlayingEpisode from "./../../../localData/queries/getLocalPlayingEpisode";
+import setLocalPlayingEpisode from "./../../../localData/queries/setLocalPlayingEpisode";
+import removeFromLocalUpnext from "./../../../localData/queries/removeFromLocalUpnext";
 
 const UpNextPopup = ({
   isModalOpen,
@@ -21,7 +24,9 @@ const UpNextPopup = ({
   localUpnext,
   isLoggedIn,
   setPlayingEpisode,
-  removeFromUpnext
+  removeFromUpnext,
+  setLocalPlayingEpisode,
+  removeFromLocalUpnext
 }) => {
   const handleClick = (id, podcastId) => {
     isLoggedIn
@@ -34,7 +39,22 @@ const UpNextPopup = ({
         })
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
-      : console.log("todo it later", id, podcastId);
+      : setLocalPlayingEpisode({
+          variables: {
+            id,
+            podcastId
+          },
+          refetchQueries: [
+            { query: getLocalPlayingEpisode },
+            { query: getLocalUpnext }
+          ]
+        })
+          .then(res =>
+            console.log("method setLocalPlayingEpisode have been finished")
+          )
+          .catch(error =>
+            console.log("error in setLocalPlayingEpisode on client", error)
+          );
   };
 
   const handleRemove = (event, id, podcastId) => {
@@ -55,7 +75,12 @@ const UpNextPopup = ({
             }
           }
         }).catch(err => console.log(err))
-      : console.log("todo 'remove from upnext'", id, podcastId);
+      : removeFromLocalUpnext({
+          variables: {
+            id,
+            podcastId
+          }
+        });
   };
 
   const episodes = upnext || localUpnext;
@@ -117,11 +142,9 @@ export default withTracker(() => {
       })
     }),
     graphql(setPlayingEpisode, {
-      skip: props => !props.isLoggedIn,
       name: "setPlayingEpisode"
     }),
     graphql(removeFromUpnext, {
-      skip: props => !props.isLoggedIn,
       name: "removeFromUpnext"
     }),
     graphql(getLocalUpnext, {
@@ -137,6 +160,8 @@ export default withTracker(() => {
     graphql(removeFromUpnext, {
       skip: props => !props.isLoggedIn,
       name: "removeFromUpnext"
-    })
+    }),
+    graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" }),
+    graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" })
   )(UpNextPopup)
 );

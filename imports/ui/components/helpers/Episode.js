@@ -55,7 +55,17 @@ class Episode extends Component {
   }
 
   handleUpnext(id, podcastId, isInUpNext) {
-    const { removeFromUpnext, addToUpnext, client } = this.props;
+    const {
+      removeFromUpnext,
+      addToUpnext,
+      client,
+      isPlayingEpisode
+    } = this.props;
+
+    if (isPlayingEpisode) {
+      console.log("currentEpisode");
+      return;
+    }
     isInUpNext
       ? removeFromUpnext({
           variables: {
@@ -240,13 +250,13 @@ class Episode extends Component {
           </div>
           <div
             onClick={() =>
-              isLoggedIn && !isPlayingEpisode
+              isLoggedIn
                 ? this.handleUpnext(
                     episode.id,
                     episode.podcastId,
                     episode.inUpnext
                   )
-                : console.log("loggin on signup")
+                : openWarningModal()
             }
           >
             <svg

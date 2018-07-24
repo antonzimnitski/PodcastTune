@@ -40,19 +40,31 @@ export default (resolvers = {
 
         remove(
           prevUpnext.localUpnext,
-          n => n.id === prevEpisode.localPlayingEpisode.id
+          n => n.id === prevEpisode.localPlayingEpisode.id || n.id === id
         );
-        prevUpnext.localUpnext.push(prevEpisode.localPlayingEpisode);
+
+        prevUpnext.localUpnext.unshift(prevEpisode.localPlayingEpisode);
+
         upnextData = {
           localUpnext: prevUpnext.localUpnext
         };
-
-        console.log("localupnext", upnextData);
 
         cache.writeQuery({ query: getLocalUpnext, data: upnextData });
       }
 
       cache.writeQuery({ query: getLocalPlayingEpisode, data: episodeData });
+
+      return null;
+    },
+    removeFromLocalUpnext(_, { id, podcastId }, { cache }) {
+      const prevUpnext = cache.readQuery({ query: getLocalUpnext });
+      remove(prevUpnext.localUpnext, n => n.id === id);
+
+      const data = {
+        localUpnext: prevUpnext.localUpnext
+      };
+
+      cache.writeQuery({ query: getLocalUpnext, data });
 
       return null;
     }

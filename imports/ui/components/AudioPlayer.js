@@ -50,7 +50,6 @@ class AudioPlayer extends Component {
   _lastVolume = 0;
 
   componentDidMount() {
-    console.log("componentDidMount", this.props);
     const playingEpisode =
       this.props.playingEpisode || this.props.localPlayingEpisode;
     this.setState({ mounted: true });
@@ -62,17 +61,12 @@ class AudioPlayer extends Component {
     this.getSeconds();
   }
 
-  componentDidUpdate() {
-    console.log("componentDidUpdate", this.props);
-  }
-
   componentWillUnmount() {
     clearTimeout(this.getSecondsTimeout);
     clearTimeout(this.updatePlayedSecondsTimeout);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("componentWillReceiveProps", nextProps);
     const { episode } = this.state;
     const nextEpisode =
       nextProps.playingEpisode || nextProps.localPlayingEpisode;
