@@ -1,18 +1,40 @@
 import { remove } from "lodash";
 
-import getLocalPlayingEpisode from "./../queries/getLocalPlayingEpisode";
-import getLocalUpnext from "./../queries/getLocalUpnext";
+import getLocalPlayingEpisodeQuery from "./../queries/getLocalPlayingEpisode";
+import getLocalUpnextQuery from "./../queries/getLocalUpnext";
 
 export default (resolvers = {
   Query: {
     localPlayingEpisode(_, __, { cache }) {
-      const data = cache.readQuery({ query: getLocalPlayingEpisode });
-      return data.localPlayingEpisode;
+      const prevEpisode = getLocalEpisode(cache);
+
+      if (!prevEpisode) {
+        const prevUpnext = getLocalUpnext(cache);
+
+        if (prevUpnext && prevUpnext.length) {
+          const episode = prevUpnext.shift();
+
+          const upnextData = {
+            localUpnext: prevUpnext
+          };
+
+          const episodeData = {
+            localPlayingEpisode: episode
+          };
+
+          setLocalEpisode(cache, episodeData);
+          setLocalUpnext(cache, upnextData);
+
+          return episode;
+        }
+
+        return null;
+      }
+
+      return prevEpisode;
     },
     localUpnext(_, __, { cache }) {
-      console.log("localUpnext query", cache);
-      const data = cache.readQuery({ query: getLocalUpnext });
-      return data.localUpnext;
+      return getLocalUpnext(cache);
     }
   },
   Mutation: {
@@ -23,9 +45,7 @@ export default (resolvers = {
         .then(res => res)
         .catch(error => console.log("error in Meteor.callPromise", error));
 
-      const prevEpisode = cache.readQuery({
-        query: getLocalPlayingEpisode
-      });
+      const prevEpisode = getLocalEpisode(cache);
 
       episodeData = {
         localPlayingEpisode: {
@@ -35,38 +55,61 @@ export default (resolvers = {
         }
       };
 
-      if (prevEpisode.localPlayingEpisode) {
-        const prevUpnext = cache.readQuery({ query: getLocalUpnext });
+      if (prevEpisode) {
+        const prevUpnext = getLocalUpnext(cache);
 
-        remove(
-          prevUpnext.localUpnext,
-          n => n.id === prevEpisode.localPlayingEpisode.id || n.id === id
-        );
+        remove(prevUpnext, n => n.id === prevEpisode.id || n.id === id);
 
-        prevUpnext.localUpnext.unshift(prevEpisode.localPlayingEpisode);
+        prevUpnext.unshift(prevEpisode);
 
         upnextData = {
-          localUpnext: prevUpnext.localUpnext
+          localUpnext: prevUpnext
         };
 
-        cache.writeQuery({ query: getLocalUpnext, data: upnextData });
+        setLocalUpnext(cache, upnextData);
       }
 
-      cache.writeQuery({ query: getLocalPlayingEpisode, data: episodeData });
+      setLocalEpisode(cache, episodeData);
+
+      return null;
+    },
+    clearLocalPlayingEpisode(_, __, { cache }) {
+      const data = {
+        localPlayingEpisode: null
+      };
+
+      setLocalEpisode(cache, data);
 
       return null;
     },
     removeFromLocalUpnext(_, { id, podcastId }, { cache }) {
-      const prevUpnext = cache.readQuery({ query: getLocalUpnext });
-      remove(prevUpnext.localUpnext, n => n.id === id);
+      const prevUpnext = getLocalUpnext(cache);
+      remove(prevUpnext, n => n.id === id);
 
       const data = {
-        localUpnext: prevUpnext.localUpnext
+        localUpnext: prevUpnext
       };
 
-      cache.writeQuery({ query: getLocalUpnext, data });
+      setLocalUpnext(cache, data);
 
       return null;
     }
   }
 });
+
+function getLocalEpisode(cache) {
+  return cache.readQuery({ query: getLocalPlayingEpisodeQuery })
+    .localPlayingEpisode;
+}
+
+function getLocalUpnext(cache) {
+  return cache.readQuery({ query: getLocalUpnextQuery }).localUpnext;
+}
+
+function setLocalEpisode(cache, data) {
+  cache.writeQuery({ query: getLocalPlayingEpisodeQuery, data });
+}
+
+function setLocalUpnext(cache, data) {
+  cache.writeQuery({ query: getLocalUpnextQuery, data });
+}

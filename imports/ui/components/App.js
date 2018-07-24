@@ -23,7 +23,6 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.playingEpisode || this.props.localPlayingEpisode)
       Session.set("isPlayerOpen", true);
-    console.log("did update");
   }
 
   render() {

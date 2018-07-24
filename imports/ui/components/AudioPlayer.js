@@ -18,6 +18,8 @@ import updatePlayedSeconds from "./../queries/updatePlayedSeconds";
 import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
 
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
+import getLocalUpnext from "../../localData/queries/getLocalUpnext";
+import clearLocalPlayingEpisode from "../../localData/queries/clearLocalPlayingEpisode";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -138,7 +140,13 @@ class AudioPlayer extends Component {
 
   onEnded() {
     const { id, podcastId } = this.state.episode;
-    const { markAsPlayed, clearPlayingEpisode } = this.props;
+    const {
+      isLoggedIn,
+      markAsPlayed,
+      clearPlayingEpisode,
+      clearLocalPlayingEpisode
+    } = this.props;
+
     this.clearEpisode();
     markAsPlayed({
       variables: {
@@ -146,9 +154,17 @@ class AudioPlayer extends Component {
         podcastId
       }
     });
-    clearPlayingEpisode({
-      refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
-    });
+
+    isLoggedIn
+      ? clearPlayingEpisode({
+          refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
+        })
+      : clearLocalPlayingEpisode({
+          refetchQueries: [
+            { query: getLocalPlayingEpisode },
+            { query: getLocalUpnext }
+          ]
+        });
   }
 
   onReady() {
@@ -552,8 +568,10 @@ export default withTracker(() => {
       name: "markAsPlayed"
     }),
     graphql(clearPlayingEpisode, {
-      skip: props => !props.isLoggedIn,
       name: "clearPlayingEpisode"
+    }),
+    graphql(clearLocalPlayingEpisode, {
+      name: "clearLocalPlayingEpisode"
     })
   )(AudioPlayer)
 );
