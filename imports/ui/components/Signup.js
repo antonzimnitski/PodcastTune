@@ -36,6 +36,7 @@ export class Signup extends Component {
       } else {
         this.setState({ error: "" });
         this.props.onClose();
+        this.props.client.resetStore();
       }
     });
   }

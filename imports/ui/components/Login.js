@@ -29,6 +29,7 @@ export class Login extends Component {
 
       if (!err) {
         this.props.onClose();
+        this.props.client.resetStore();
       }
     });
   }

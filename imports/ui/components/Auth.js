@@ -34,6 +34,7 @@ class Auth extends Component {
 
   onSuccess() {
     this.closeAuthModal();
+    this.props.client.resetStore();
   }
 
   loginContent() {
@@ -110,6 +111,7 @@ class Auth extends Component {
           onClose={this.closeAuthModal}
           onSuccess={this.onSuccess}
           onSwap={this.swapForms}
+          client={this.props.client}
         />
       );
     if (this.state.isLoginOpen)
@@ -118,6 +120,7 @@ class Auth extends Component {
           onClose={this.closeAuthModal}
           onSuccess={this.onSuccess}
           onSwap={this.swapForms}
+          client={this.props.client}
         />
       );
   }
@@ -158,8 +161,6 @@ class Auth extends Component {
   }
 }
 
-export default withApollo(
-  withTracker(() => {
-    return { isLoggedIn: !!Meteor.userId() };
-  })(Auth)
-);
+export default withTracker(() => {
+  return { isLoggedIn: !!Meteor.userId() };
+})(withApollo(Auth));
