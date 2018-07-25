@@ -60,7 +60,8 @@ const cache = new InMemoryCache({
 
 const defaultState = {
   localPlayingEpisode: null,
-  localUpnext: []
+  localUpnext: [],
+  localInProgress: []
 };
 
 const stateLink = withClientState({

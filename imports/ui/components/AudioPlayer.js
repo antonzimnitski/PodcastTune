@@ -18,8 +18,9 @@ import updatePlayedSeconds from "./../queries/updatePlayedSeconds";
 import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
 
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
-import getLocalUpnext from "../../localData/queries/getLocalUpnext";
-import clearLocalPlayingEpisode from "../../localData/queries/clearLocalPlayingEpisode";
+import getLocalUpnext from "./../../localData/queries/getLocalUpnext";
+import clearLocalPlayingEpisode from "./../../localData/queries/clearLocalPlayingEpisode";
+import updateLocalPlayedSeconds from "./../../localData/queries/updateLocalPlayedSeconds";
 
 class AudioPlayer extends Component {
   constructor(props) {
@@ -88,13 +89,8 @@ class AudioPlayer extends Component {
   }
 
   getSeconds = () => {
-    const { episode } = this.state;
-    if (
-      episode &&
-      this.player.current &&
-      this.state.isReady &&
-      this.state.isPlaying
-    ) {
+    const { episode, isReady, isPlaying } = this.state;
+    if (episode && this.player.current && isReady && isPlaying) {
       this.setState({
         episode: update(this.state.episode, {
           playedSeconds: { $set: +this.player.current.currentTime.toFixed(2) }
@@ -105,20 +101,27 @@ class AudioPlayer extends Component {
   };
 
   updatePlayedSeconds = () => {
-    const { episode } = this.state;
-    if (
-      episode &&
-      this.player.current &&
-      this.state.isReady &&
-      this.state.isPlaying
-    ) {
-      this.props.updatePlayedSeconds({
-        variables: {
-          id: episode.id,
-          podcastId: episode.podcastId,
-          playedSeconds: episode.playedSeconds
-        }
-      });
+    const { episode, isReady, isPlaying } = this.state;
+    const {
+      isLoggedIn,
+      updatePlayedSeconds,
+      updateLocalPlayedSeconds
+    } = this.props;
+    if (episode && this.player.current && isReady && isPlaying) {
+      isLoggedIn
+        ? updatePlayedSeconds({
+            variables: {
+              id: episode.id,
+              podcastId: episode.podcastId,
+              playedSeconds: episode.playedSeconds
+            }
+          })
+        : updateLocalPlayedSeconds({
+            variables: {
+              id: episode.id,
+              playedSeconds: episode.playedSeconds
+            }
+          });
     }
 
     this.updatePlayedSecondsTimeout = setTimeout(
@@ -130,12 +133,15 @@ class AudioPlayer extends Component {
   clearEpisode() {
     if (!this.state.episode) return;
 
-    this.setState({
-      episode: null,
-      isReady: false,
-      isPlaying: false,
-      duration: 0
-    });
+    this.setState(
+      {
+        episode: null,
+        isReady: false,
+        isPlaying: false,
+        duration: 0
+      },
+      () => (this.player.current.src = null)
+    );
   }
 
   onEnded() {
@@ -268,7 +274,7 @@ class AudioPlayer extends Component {
       if (newTime <= 0) {
         this.setTime(0);
       } else if (newTime >= duration) {
-        this.setTime(duration);
+        this.onEnded();
       } else {
         this.setTime(newTime);
       }
@@ -560,7 +566,6 @@ export default withTracker(() => {
       })
     }),
     graphql(updatePlayedSeconds, {
-      skip: props => !props.isLoggedIn,
       name: "updatePlayedSeconds"
     }),
     graphql(markAsPlayed, {
@@ -572,6 +577,9 @@ export default withTracker(() => {
     }),
     graphql(clearLocalPlayingEpisode, {
       name: "clearLocalPlayingEpisode"
+    }),
+    graphql(updateLocalPlayedSeconds, {
+      name: "updateLocalPlayedSeconds"
     })
   )(AudioPlayer)
 );

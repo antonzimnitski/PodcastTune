@@ -1,12 +1,13 @@
-import { remove } from "lodash";
+import { remove, find } from "lodash";
 
 import getLocalPlayingEpisodeQuery from "./../queries/getLocalPlayingEpisode";
 import getLocalUpnextQuery from "./../queries/getLocalUpnext";
+import getLocalInProgressQuery from "./../queries/getLocalInProgress";
 
 export default (resolvers = {
   Query: {
     localPlayingEpisode(_, __, { cache }) {
-      const prevEpisode = getLocalEpisode(cache);
+      const prevEpisode = getLocalPlayingEpisode(cache);
 
       if (!prevEpisode) {
         const prevUpnext = getLocalUpnext(cache);
@@ -22,7 +23,7 @@ export default (resolvers = {
             localPlayingEpisode: episode
           };
 
-          setLocalEpisode(cache, episodeData);
+          setLocalPlayingEpisode(cache, episodeData);
           setLocalUpnext(cache, upnextData);
 
           return episode;
@@ -38,6 +39,20 @@ export default (resolvers = {
     }
   },
   Mutation: {
+    updateLocalPlayedSeconds(_, { id, playedSeconds }, { cache }) {
+      const prevInProgress = getLocalInProgress(cache);
+
+      remove(prevInProgress, n => n.id === id);
+      prevInProgress.push({ id, playedSeconds, __typename: "ids" });
+
+      data = {
+        localInProgress: [...prevInProgress]
+      };
+
+      setLocalInProgress(cache, data);
+
+      return null;
+    },
     async setLocalPlayingEpisode(_, { id, podcastId }, { cache }) {
       let episodeData;
       let upnextData;
@@ -45,12 +60,13 @@ export default (resolvers = {
         .then(res => res)
         .catch(error => console.log("error in Meteor.callPromise", error));
 
-      const prevEpisode = getLocalEpisode(cache);
+      const prevEpisode = getLocalPlayingEpisode(cache);
+      const playedSeconds = getPlayedSeconds(cache, id);
 
       episodeData = {
         localPlayingEpisode: {
           ...episode,
-          playedSeconds: 0,
+          playedSeconds: playedSeconds,
           __typename: "Episode"
         }
       };
@@ -69,7 +85,7 @@ export default (resolvers = {
         setLocalUpnext(cache, upnextData);
       }
 
-      setLocalEpisode(cache, episodeData);
+      setLocalPlayingEpisode(cache, episodeData);
 
       return null;
     },
@@ -78,7 +94,7 @@ export default (resolvers = {
         localPlayingEpisode: null
       };
 
-      setLocalEpisode(cache, data);
+      getLocalPlayingEpisode(cache, data);
 
       return null;
     },
@@ -97,19 +113,32 @@ export default (resolvers = {
   }
 });
 
-function getLocalEpisode(cache) {
+function getLocalPlayingEpisode(cache) {
   return cache.readQuery({ query: getLocalPlayingEpisodeQuery })
     .localPlayingEpisode;
+}
+
+function setLocalPlayingEpisode(cache, data) {
+  cache.writeQuery({ query: getLocalPlayingEpisodeQuery, data });
 }
 
 function getLocalUpnext(cache) {
   return cache.readQuery({ query: getLocalUpnextQuery }).localUpnext;
 }
 
-function setLocalEpisode(cache, data) {
-  cache.writeQuery({ query: getLocalPlayingEpisodeQuery, data });
-}
-
 function setLocalUpnext(cache, data) {
   cache.writeQuery({ query: getLocalUpnextQuery, data });
+}
+
+function getLocalInProgress(cache) {
+  return cache.readQuery({ query: getLocalInProgressQuery }).localInProgress;
+}
+
+function setLocalInProgress(cache, data) {
+  cache.writeQuery({ query: getLocalInProgressQuery, data });
+}
+
+function getPlayedSeconds(cache, id) {
+  const inProgress = getLocalInProgress(cache);
+  return find(inProgress, { id }) ? find(inProgress, { id }).playedSeconds : 0;
 }
