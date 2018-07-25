@@ -17,6 +17,6 @@ type Episode {
 }
 
 extend type Query {
-  feed(podcastId: Int!, offset: Int!, limit: Int!): [Episode]
+  feed(podcastId: Int!, limit: Int!): [Episode]
   episode(podcastId: Int!, id: String!): Episode
 }

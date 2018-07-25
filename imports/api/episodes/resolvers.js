@@ -4,10 +4,10 @@ import moment from "moment";
 
 export default {
   Query: {
-    feed(_, { podcastId, offset, limit }) {
+    feed(_, { podcastId, limit }) {
       const podcast = Podcasts.findOne({ podcastId });
       if (podcast.episodes) {
-        return podcast.episodes.slice(offset, offset + limit).sort(sortByDate);
+        return podcast.episodes.slice(0, limit).sort(sortByDate);
       }
     },
     episode(_, { podcastId, id }, { user }) {
