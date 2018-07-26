@@ -98,6 +98,32 @@ export default (resolvers = {
 
       return null;
     },
+    markLocalAsPlayed(_, { id }, { cache }) {
+      const episode = getObjectById(cache, id);
+      const data = {
+        [id]: {
+          ...episode,
+          isPlayed: true
+        }
+      };
+
+      setObjectData(cache, data);
+
+      return null;
+    },
+    markLocalAsUnplayed(_, { id }, { cache }) {
+      const episode = getObjectById(cache, id);
+      const data = {
+        [id]: {
+          ...episode,
+          isPlayed: false
+        }
+      };
+
+      setObjectData(cache, data);
+
+      return null;
+    },
     removeFromLocalUpnext(_, { id, podcastId }, { cache }) {
       const prevUpnext = getLocalUpnext(cache);
       remove(prevUpnext, n => n.id === id);
@@ -142,3 +168,18 @@ function getPlayedSeconds(cache, id) {
   const inProgress = getLocalInProgress(cache);
   return find(inProgress, { id }) ? find(inProgress, { id }).playedSeconds : 0;
 }
+
+function getObjectById(cache, id) {
+  return cache.data.data[id];
+}
+
+function setObjectData(cache, data) {
+  cache.writeData({ data });
+}
+
+// const epiData = {
+//   [id]: {
+//     ...Episdasode,
+//     inFavorites: true
+//   }
+// };

@@ -17,6 +17,9 @@ import addToFavorites from "./../../queries/addToFavorites";
 import markAsUnplayed from "./../../queries/markAsUnplayed";
 import markAsPlayed from "./../../queries/markAsPlayed";
 
+import markLocalAsPlayed from "./../../../localData/queries/markLocalAsPlayed";
+import markLocalAsUnplayed from "./../../../localData/queries/markLocalAsUnplayed";
+
 class Episode extends Component {
   formatDate(date) {
     if (date && moment(date).isValid()) {
@@ -33,6 +36,12 @@ class Episode extends Component {
   }
 
   handlePlayedStatus(id, podcastId, isPlayed) {
+    this.props.isLoggedIn
+      ? this.loggedPlayedStatus(id, podcastId, isPlayed)
+      : this.localPlayedStatus(id, isPlayed);
+  }
+
+  loggedPlayedStatus(id, podcastId, isPlayed) {
     const { markAsUnplayed, markAsPlayed } = this.props;
 
     isPlayed
@@ -41,17 +50,25 @@ class Episode extends Component {
             id,
             podcastId
           }
-        })
-          .then(res => console.log("Episode marked as unplayed", res.data))
-          .catch(err => console.log(err))
+        }).catch(err => console.log("Error in markAsUnplayed", err))
       : markAsPlayed({
           variables: {
             id,
             podcastId
           }
-        })
-          .then(res => console.log("Episode marked as played", res.data))
-          .catch(err => console.log(err));
+        }).catch(err => console.log("Error in markAsPlayed", err));
+  }
+
+  localPlayedStatus(id, isPlayed) {
+    const { markLocalAsUnplayed, markLocalAsPlayed } = this.props;
+
+    isPlayed
+      ? markLocalAsUnplayed({
+          variables: { id }
+        }).catch(err => console.log("Error in markLocalAsUnplayed", err))
+      : markLocalAsPlayed({
+          variables: { id }
+        }).catch(err => console.log("Error in markLocalAsPlayed", err));
   }
 
   handleUpnext(id, podcastId, isInUpNext) {
@@ -82,7 +99,7 @@ class Episode extends Component {
               console.log("query haven't been called", e);
             }
           }
-        }).catch(err => console.log(err))
+        }).catch(err => console.log("Error in removeFromUpnext", err))
       : addToUpnext({
           variables: {
             id,
@@ -101,7 +118,7 @@ class Episode extends Component {
               console.log("query haven't been called", e);
             }
           }
-        }).catch(err => console.log(err));
+        }).catch(err => console.log("Error in addToUpnext", err));
   }
 
   handleFavorites(id, podcastId, isInFavorites) {
@@ -122,9 +139,7 @@ class Episode extends Component {
               console.log("query haven't been called", e);
             }
           }
-        })
-          .then(res => console.log("Episode removed from Favorites", res.data))
-          .catch(err => console.log(err))
+        }).catch(err => console.log("Error in removeFromFavorites", err))
       : addToFavorites({
           variables: {
             id,
@@ -143,9 +158,7 @@ class Episode extends Component {
               console.log("query haven't been called", e);
             }
           }
-        })
-          .then(res => console.log("Episode added Favorites", res.data))
-          .catch(err => console.log(err));
+        }).catch(err => console.log("Error in addToFavorites", err));
   }
 
   render() {
@@ -157,20 +170,33 @@ class Episode extends Component {
       handleClick,
       isLoggedIn
     } = this.props;
+
+    const {
+      inFavorites,
+      inUpnext,
+      isPlayed,
+      podcastArtworkUrl,
+      podcastId,
+      id,
+      title,
+      author,
+      pubDate,
+      duration
+    } = episode;
     const episodeClassName = `episode${
       isPlayingEpisode ? " episode--playing" : ""
-    }${episode.inUpnext ? " episode--in-upnext" : ""}${
-      episode.inFavorites ? " episode--in-favorites" : ""
-    }${episode.isPlayed ? " episode--played" : ""}`;
+    }${inUpnext ? " episode--in-upnext" : ""}${
+      inFavorites ? " episode--in-favorites" : ""
+    }${isPlayed ? " episode--played" : ""}`;
 
     return (
       <div className={episodeClassName}>
-        {episode.podcastArtworkUrl ? (
-          <Link to={`/podcasts/${episode.podcastId}`}>
+        {podcastArtworkUrl ? (
+          <Link to={`/podcasts/${podcastId}`}>
             <div
               className="episode__artwork"
               style={{
-                backgroundImage: `url("${episode.podcastArtworkUrl}")`
+                backgroundImage: `url("${podcastArtworkUrl}")`
               }}
             />
           </Link>
@@ -180,12 +206,10 @@ class Episode extends Component {
             <div className="episode__title">
               <p
                 className="title__text"
-                title={episode.title}
-                onClick={() =>
-                  handleEpisodeModal(episode.id, episode.podcastId)
-                }
+                title={title}
+                onClick={() => handleEpisodeModal(id, podcastId)}
               >
-                {episode.title}
+                {title}
               </p>
               <svg
                 className="star__icon"
@@ -193,11 +217,7 @@ class Episode extends Component {
                 viewBox="0 0 168.8 160.5"
                 onClick={() =>
                   isLoggedIn
-                    ? this.handleFavorites(
-                        episode.id,
-                        episode.podcastId,
-                        episode.inFavorites
-                      )
+                    ? this.handleFavorites(id, podcastId, inFavorites)
                     : openWarningModal()
                 }
               >
@@ -206,30 +226,23 @@ class Episode extends Component {
             </div>
           </div>
 
-          {episode.author ? (
+          {author ? (
             <p className="episode__author">
-              {" "}
-              <Link to={`/podcasts/${episode.podcastId}`}>
-                {episode.author}
-              </Link>
+              <Link to={`/podcasts/${podcastId}`}>{author}</Link>
             </p>
           ) : null}
         </div>
         <div className="episode__pub-date">
-          <p>{this.formatDate(episode.pubDate)}</p>
+          <p>{this.formatDate(pubDate)}</p>
         </div>
         <div className="episode__duration">
-          <p>{this.formatDuration(episode.duration)}</p>
+          <p>{this.formatDuration(duration)}</p>
         </div>
         <div className="episode__controls">
           <div
             onClick={() =>
-              isLoggedIn && !isPlayingEpisode
-                ? this.handlePlayedStatus(
-                    episode.id,
-                    episode.podcastId,
-                    episode.isPlayed
-                  )
+              !isPlayingEpisode
+                ? this.handlePlayedStatus(id, podcastId, isPlayed)
                 : console.log("loggin on signup")
             }
           >
@@ -251,11 +264,7 @@ class Episode extends Component {
           <div
             onClick={() =>
               isLoggedIn
-                ? this.handleUpnext(
-                    episode.id,
-                    episode.podcastId,
-                    episode.inUpnext
-                  )
+                ? this.handleUpnext(id, podcastId, inUpnext)
                 : openWarningModal()
             }
           >
@@ -285,7 +294,7 @@ class Episode extends Component {
             <g
               onClick={() =>
                 !isPlayingEpisode
-                  ? handleClick(episode.id, episode.podcastId)
+                  ? handleClick(id, podcastId)
                   : console.log("playing episode")
               }
               id="icon"
@@ -346,6 +355,8 @@ export default withTracker(() => {
     graphql(addToFavorites, { name: "addToFavorites" }),
     graphql(removeFromFavorites, { name: "removeFromFavorites" }),
     graphql(markAsPlayed, { name: "markAsPlayed" }),
-    graphql(markAsUnplayed, { name: "markAsUnplayed" })
+    graphql(markAsUnplayed, { name: "markAsUnplayed" }),
+    graphql(markLocalAsPlayed, { name: "markLocalAsPlayed" }),
+    graphql(markLocalAsUnplayed, { name: "markLocalAsUnplayed" })
   )(withApollo(Episode))
 );
