@@ -7,8 +7,10 @@ import { Meteor } from "meteor/meteor";
 import { withApollo, graphql, compose } from "react-apollo";
 import { remove } from "lodash";
 
+import getInProgress from "./../../queries/getInProgress";
 import getUpnext from "./../../queries/getUpnext";
 import getFavorites from "./../../queries/getFavorites";
+import getPlayingEpisode from "./../../queries/getPlayingEpisode";
 
 import removeFromUpnext from "./../../queries/removeFromUpnext";
 import addToUpnext from "./../../queries/addToUpnext";
@@ -16,11 +18,18 @@ import removeFromFavorites from "./../../queries/removeFromFavorites";
 import addToFavorites from "./../../queries/addToFavorites";
 import markAsUnplayed from "./../../queries/markAsUnplayed";
 import markAsPlayed from "./../../queries/markAsPlayed";
+import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
+import setLocalPlayingEpisode from "./../../../localData/queries/setLocalPlayingEpisode";
+import getLocalPlayingEpisode from "./../../../localData/queries/getLocalPlayingEpisode";
 import addToLocalUpnext from "./../../../localData/queries/addToLocalUpnext";
 import removeFromLocalUpnext from "./../../../localData/queries/removeFromLocalUpnext";
 import markLocalAsPlayed from "./../../../localData/queries/markLocalAsPlayed";
 import markLocalAsUnplayed from "./../../../localData/queries/markLocalAsUnplayed";
+
+import isPLaying from "./../../../localData/queries/isPlaying";
+import play from "./../../../localData/queries/play";
+import pause from "./../../../localData/queries/pause";
 
 class Episode extends Component {
   formatDate(date) {
@@ -35,6 +44,42 @@ class Episode extends Component {
   formatDuration(seconds) {
     if (!seconds) return "";
     return moment.duration(seconds, "seconds").format();
+  }
+
+  handleClick(id, podcastId, isPlayingEpisode) {
+    const { pause, play, isPlaying, isLoggedIn } = this.props;
+
+    if (!isPlayingEpisode) {
+      isLoggedIn
+        ? this.loggedClick(id, podcastId)
+        : this.localClick(id, podcastId);
+    } else {
+      isPlaying ? pause() : play();
+    }
+  }
+
+  loggedClick(id, podcastId) {
+    const { setPlayingEpisode } = this.props;
+
+    setPlayingEpisode({
+      variables: { id, podcastId },
+      refetchQueries: [
+        { query: getPlayingEpisode },
+        { query: getInProgress },
+        { query: getUpnext }
+      ]
+    }).catch(err => console.log("Error in setPlayingEpisode on client", err));
+  }
+
+  localClick(id, podcastId) {
+    const { setLocalPlayingEpisode } = this.props;
+
+    setLocalPlayingEpisode({
+      variables: { id, podcastId },
+      refetchQueries: [{ query: getLocalPlayingEpisode }]
+    }).catch(err =>
+      console.log("Error in setLocalPlayingEpisode on client", err)
+    );
   }
 
   handlePlayedStatus(id, podcastId, isPlayed) {
@@ -173,8 +218,8 @@ class Episode extends Component {
       isPlayingEpisode,
       openWarningModal,
       handleEpisodeModal,
-      handleClick,
-      isLoggedIn
+      isLoggedIn,
+      isPlaying
     } = this.props;
 
     const {
@@ -190,7 +235,7 @@ class Episode extends Component {
       duration
     } = episode;
     const episodeClassName = `episode${
-      isPlayingEpisode ? " episode--playing" : ""
+      isPlayingEpisode && isPlaying ? " episode--playing" : ""
     }${inUpnext ? " episode--in-upnext" : ""}${
       inFavorites ? " episode--in-favorites" : ""
     }${isPlayed ? " episode--played" : ""}`;
@@ -298,11 +343,7 @@ class Episode extends Component {
             viewBox="0 0 250 250"
           >
             <g
-              onClick={() =>
-                !isPlayingEpisode
-                  ? handleClick(id, podcastId)
-                  : console.log("playing episode")
-              }
+              onClick={() => this.handleClick(id, podcastId, isPlayingEpisode)}
               id="icon"
             >
               <g id="circle">
@@ -356,6 +397,12 @@ export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
+    graphql(isPLaying, {
+      props: ({ data: { isPlaying } }) => ({
+        isPlaying
+      })
+    }),
+    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
     graphql(addToUpnext, { name: "addToUpnext" }),
     graphql(removeFromUpnext, { name: "removeFromUpnext" }),
     graphql(addToFavorites, { name: "addToFavorites" }),
@@ -365,6 +412,9 @@ export default withTracker(() => {
     graphql(markLocalAsPlayed, { name: "markLocalAsPlayed" }),
     graphql(markLocalAsUnplayed, { name: "markLocalAsUnplayed" }),
     graphql(addToLocalUpnext, { name: "addToLocalUpnext" }),
-    graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" })
+    graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" }),
+    graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" }),
+    graphql(play, { name: "play" }),
+    graphql(pause, { name: "pause" })
   )(withApollo(Episode))
 );

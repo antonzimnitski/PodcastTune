@@ -7,12 +7,8 @@ import Episode from "./helpers/Episode";
 import LoginWarningModal from "./helpers/LoginWarningModal";
 
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
-import setPlayingEpisode from "./../queries/setPlayingEpisode";
-import getInProgress from "./../queries/getInProgress";
-import getUpnext from "./../queries/getUpnext";
 
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
-import setLocalPlayingEpisode from "./../../localData/queries/setLocalPlayingEpisode";
 
 class Feed extends Component {
   constructor(props) {
@@ -28,34 +24,6 @@ class Feed extends Component {
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
     this.closeWarningModal = this.closeWarningModal.bind(this);
     this.openWarningModal = this.openWarningModal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(id, podcastId) {
-    const {
-      isLoggedIn,
-      setPlayingEpisode,
-      setLocalPlayingEpisode
-    } = this.props;
-    isLoggedIn
-      ? setPlayingEpisode({
-          variables: { id, podcastId },
-          refetchQueries: [
-            { query: getPlayingEpisode },
-            { query: getInProgress },
-            { query: getUpnext }
-          ]
-        })
-          .then(res => console.log("success", res.data))
-          .catch(err => console.log(err))
-      : setLocalPlayingEpisode({
-          variables: { id, podcastId },
-          refetchQueries: [{ query: getLocalPlayingEpisode }]
-        })
-          .then(res => console.log("method seLocalEpisode have been finished"))
-          .catch(error =>
-            console.log("error in setLocalPlayingEpisode on client", error)
-          );
   }
 
   handleEpisodeModal(id, podcastId) {
@@ -100,7 +68,6 @@ class Feed extends Component {
               episode={episode}
               openWarningModal={this.openWarningModal}
               handleEpisodeModal={this.handleEpisodeModal}
-              handleClick={this.handleClick}
               isPlayingEpisode={this.isPlayingEpisode(episode.id)}
             />
           );
@@ -137,7 +104,6 @@ export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
 })(
   compose(
-    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
     graphql(getPlayingEpisode, {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
@@ -149,7 +115,6 @@ export default withTracker(() => {
       props: ({ data: { localPlayingEpisode } }) => ({
         localPlayingEpisode
       })
-    }),
-    graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" })
+    })
   )(Feed)
 );

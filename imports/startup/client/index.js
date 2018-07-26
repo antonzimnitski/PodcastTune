@@ -21,6 +21,7 @@ import App from "./../../ui/components/App";
 import { withClientState } from "apollo-link-state";
 
 import playingEpisode from "./../../localData/resolvers/playingEpisode";
+import playingStatus from "./../../localData/resolvers/playingStatus";
 
 const httpLink = new HttpLink({
   uri: Meteor.absoluteUrl("graphql")
@@ -59,6 +60,7 @@ const cache = new InMemoryCache({
 // });
 
 const defaultState = {
+  isPlaying: false,
   localPlayingEpisode: null,
   localUpnext: [],
   localInProgress: []
@@ -66,7 +68,7 @@ const defaultState = {
 
 const stateLink = withClientState({
   cache,
-  resolvers: playingEpisode,
+  resolvers: merge(playingStatus, playingEpisode),
   defaults: defaultState
 });
 
