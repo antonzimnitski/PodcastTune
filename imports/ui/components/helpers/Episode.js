@@ -17,6 +17,8 @@ import addToFavorites from "./../../queries/addToFavorites";
 import markAsUnplayed from "./../../queries/markAsUnplayed";
 import markAsPlayed from "./../../queries/markAsPlayed";
 
+import addToLocalUpnext from "./../../../localData/queries/addToLocalUpnext";
+import removeFromLocalUpnext from "./../../../localData/queries/removeFromLocalUpnext";
 import markLocalAsPlayed from "./../../../localData/queries/markLocalAsPlayed";
 import markLocalAsUnplayed from "./../../../localData/queries/markLocalAsUnplayed";
 
@@ -46,16 +48,10 @@ class Episode extends Component {
 
     isPlayed
       ? markAsUnplayed({
-          variables: {
-            id,
-            podcastId
-          }
+          variables: { id, podcastId }
         }).catch(err => console.log("Error in markAsUnplayed", err))
       : markAsPlayed({
-          variables: {
-            id,
-            podcastId
-          }
+          variables: { id, podcastId }
         }).catch(err => console.log("Error in markAsPlayed", err));
   }
 
@@ -72,23 +68,24 @@ class Episode extends Component {
   }
 
   handleUpnext(id, podcastId, isInUpNext) {
-    const {
-      removeFromUpnext,
-      addToUpnext,
-      client,
-      isPlayingEpisode
-    } = this.props;
+    const { isLoggedIn, isPlayingEpisode } = this.props;
 
     if (isPlayingEpisode) {
       console.log("currentEpisode");
       return;
     }
+
+    isLoggedIn
+      ? this.loggedUpnext(id, podcastId, isInUpNext)
+      : this.localUpnext(id, podcastId, isInUpNext);
+  }
+
+  loggedUpnext(id, podcastId, isInUpNext) {
+    const { removeFromUpnext, addToUpnext, client } = this.props;
+
     isInUpNext
       ? removeFromUpnext({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           update: (proxy, { data: { removeFromUpnext } }) => {
             try {
               const data = proxy.readQuery({ query: getUpnext });
@@ -101,10 +98,7 @@ class Episode extends Component {
           }
         }).catch(err => console.log("Error in removeFromUpnext", err))
       : addToUpnext({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           update: (proxy, { data: { addToUpnext } }) => {
             try {
               const data = proxy.readQuery({ query: getUpnext });
@@ -119,6 +113,18 @@ class Episode extends Component {
             }
           }
         }).catch(err => console.log("Error in addToUpnext", err));
+  }
+
+  localUpnext(id, podcastId, isInUpNext) {
+    const { removeFromLocalUpnext, addToLocalUpnext } = this.props;
+
+    isInUpNext
+      ? removeFromLocalUpnext({
+          variables: { id }
+        }).catch(err => console.log("Error in removeFromLocalUpnext", err))
+      : addToLocalUpnext({
+          variables: { id, podcastId }
+        }).catch(err => console.log("Error in addToLocalUpnext", err));
   }
 
   handleFavorites(id, podcastId, isInFavorites) {
@@ -263,9 +269,9 @@ class Episode extends Component {
           </div>
           <div
             onClick={() =>
-              isLoggedIn
+              !isPlayingEpisode
                 ? this.handleUpnext(id, podcastId, inUpnext)
-                : openWarningModal()
+                : console.log("playingEpisode")
             }
           >
             <svg
@@ -357,6 +363,8 @@ export default withTracker(() => {
     graphql(markAsPlayed, { name: "markAsPlayed" }),
     graphql(markAsUnplayed, { name: "markAsUnplayed" }),
     graphql(markLocalAsPlayed, { name: "markLocalAsPlayed" }),
-    graphql(markLocalAsUnplayed, { name: "markLocalAsUnplayed" })
+    graphql(markLocalAsUnplayed, { name: "markLocalAsUnplayed" }),
+    graphql(addToLocalUpnext, { name: "addToLocalUpnext" }),
+    graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" })
   )(withApollo(Episode))
 );

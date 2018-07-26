@@ -39,10 +39,7 @@ class Feed extends Component {
     } = this.props;
     isLoggedIn
       ? setPlayingEpisode({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           refetchQueries: [
             { query: getPlayingEpisode },
             { query: getInProgress },
@@ -52,10 +49,7 @@ class Feed extends Component {
           .then(res => console.log("success", res.data))
           .catch(err => console.log(err))
       : setLocalPlayingEpisode({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           refetchQueries: [{ query: getLocalPlayingEpisode }]
         })
           .then(res => console.log("method seLocalEpisode have been finished"))
@@ -81,7 +75,8 @@ class Feed extends Component {
   }
 
   isPlayingEpisode(id) {
-    const { playingEpisode } = this.props;
+    const playingEpisode =
+      this.props.playingEpisode || this.props.localPlayingEpisode;
     if (!playingEpisode) return false;
 
     return playingEpisode.id === id;
@@ -147,6 +142,12 @@ export default withTracker(() => {
       skip: props => !props.isLoggedIn,
       props: ({ data: { playingEpisode } }) => ({
         playingEpisode
+      })
+    }),
+    graphql(getLocalPlayingEpisode, {
+      skip: props => props.isLoggedIn,
+      props: ({ data: { localPlayingEpisode } }) => ({
+        localPlayingEpisode
       })
     }),
     graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" })

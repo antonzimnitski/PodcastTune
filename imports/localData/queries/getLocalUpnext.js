@@ -7,6 +7,9 @@ export default gql`
       podcastId
       podcastArtworkUrl
       title
+      mediaUrl
+      pubDate
+      playedSeconds
       author
     }
   }

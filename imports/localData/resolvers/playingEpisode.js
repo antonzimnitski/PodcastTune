@@ -56,9 +56,7 @@ export default (resolvers = {
     async setLocalPlayingEpisode(_, { id, podcastId }, { cache }) {
       let episodeData;
       let upnextData;
-      let episode = await Meteor.callPromise("getEpisode", id, podcastId)
-        .then(res => res)
-        .catch(error => console.log("error in Meteor.callPromise", error));
+      const episode = await getEpisodeFromServer(id, podcastId);
 
       const prevEpisode = getLocalPlayingEpisode(cache);
       const playedSeconds = getPlayedSeconds(cache, id);
@@ -71,11 +69,12 @@ export default (resolvers = {
         }
       };
 
+      markUnplayed(cache, id);
+
       if (prevEpisode) {
         const prevUpnext = getLocalUpnext(cache);
 
         remove(prevUpnext, n => n.id === prevEpisode.id || n.id === id);
-
         prevUpnext.unshift(prevEpisode);
 
         upnextData = {
@@ -94,33 +93,56 @@ export default (resolvers = {
         localPlayingEpisode: null
       };
 
-      getLocalPlayingEpisode(cache, data);
+      setLocalPlayingEpisode(cache, data);
 
       return null;
     },
     markLocalAsPlayed(_, { id }, { cache }) {
       const episode = getObjectById(cache, id);
-      const data = {
+      const prevInProgress = getLocalInProgress(cache);
+
+      const episodeData = {
         [id]: {
           ...episode,
           isPlayed: true
         }
       };
 
-      setObjectData(cache, data);
+      remove(prevInProgress, n => n.id === id);
+      inProgressData = {
+        localInProgress: [...prevInProgress]
+      };
+
+      setObjectData(cache, episodeData);
+      setLocalInProgress(cache, inProgressData);
 
       return null;
     },
     markLocalAsUnplayed(_, { id }, { cache }) {
-      const episode = getObjectById(cache, id);
-      const data = {
-        [id]: {
-          ...episode,
-          isPlayed: false
-        }
+      markUnplayed(cache, id);
+
+      return null;
+    },
+    async addToLocalUpnext(_, { id, podcastId }, { cache }) {
+      const prevUpnext = getLocalUpnext(cache);
+      const episode = await getEpisodeFromServer(id, podcastId);
+      const playedSeconds = getPlayedSeconds(cache, id);
+
+      episodeData = {
+        ...episode,
+        playedSeconds: playedSeconds,
+        __typename: "Episode"
       };
 
-      setObjectData(cache, data);
+      remove(prevUpnext, n => n.id === id);
+      prevUpnext.push(episodeData);
+
+      const data = {
+        localUpnext: prevUpnext
+      };
+
+      addToUpnext(cache, id);
+      setLocalUpnext(cache, data);
 
       return null;
     },
@@ -133,11 +155,18 @@ export default (resolvers = {
       };
 
       setLocalUpnext(cache, data);
+      removeFromUpnext(cache, id);
 
       return null;
     }
   }
 });
+
+function getEpisodeFromServer(id, podcastId) {
+  return Meteor.callPromise("getEpisode", id, podcastId)
+    .then(res => res)
+    .catch(error => console.log("error in Meteor.callPromise", error));
+}
 
 function getLocalPlayingEpisode(cache) {
   return cache.readQuery({ query: getLocalPlayingEpisodeQuery })
@@ -177,9 +206,36 @@ function setObjectData(cache, data) {
   cache.writeData({ data });
 }
 
-// const epiData = {
-//   [id]: {
-//     ...Episdasode,
-//     inFavorites: true
-//   }
-// };
+function markUnplayed(cache, id) {
+  const episode = getObjectById(cache, id);
+  const data = {
+    [id]: {
+      ...episode,
+      isPlayed: false
+    }
+  };
+
+  setObjectData(cache, data);
+}
+
+function addToUpnext(cache, id) {
+  const episode = getObjectById(cache, id);
+  const episodeData = {
+    [id]: {
+      ...episode,
+      inUpnext: true
+    }
+  };
+  setObjectData(cache, episodeData);
+}
+
+function removeFromUpnext(cache, id) {
+  const episode = getObjectById(cache, id);
+  const episodeData = {
+    [id]: {
+      ...episode,
+      inUpnext: false
+    }
+  };
+  setObjectData(cache, episodeData);
+}

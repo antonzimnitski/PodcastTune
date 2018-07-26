@@ -19,6 +19,8 @@ import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
 
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 import getLocalUpnext from "./../../localData/queries/getLocalUpnext";
+
+import markLocalAsPlayed from "./../../localData/queries/markLocalAsPlayed";
 import clearLocalPlayingEpisode from "./../../localData/queries/clearLocalPlayingEpisode";
 import updateLocalPlayedSeconds from "./../../localData/queries/updateLocalPlayedSeconds";
 
@@ -108,19 +110,13 @@ class AudioPlayer extends Component {
       updateLocalPlayedSeconds
     } = this.props;
     if (episode && this.player.current && isReady && isPlaying) {
+      const { id, podcastId, playedSeconds } = episode;
       isLoggedIn
         ? updatePlayedSeconds({
-            variables: {
-              id: episode.id,
-              podcastId: episode.podcastId,
-              playedSeconds: episode.playedSeconds
-            }
+            variables: { id, podcastId, playedSeconds }
           })
         : updateLocalPlayedSeconds({
-            variables: {
-              id: episode.id,
-              playedSeconds: episode.playedSeconds
-            }
+            variables: { id, playedSeconds }
           });
     }
 
@@ -146,31 +142,34 @@ class AudioPlayer extends Component {
 
   onEnded() {
     const { id, podcastId } = this.state.episode;
-    const {
-      isLoggedIn,
-      markAsPlayed,
-      clearPlayingEpisode,
-      clearLocalPlayingEpisode
-    } = this.props;
-
     this.clearEpisode();
-    markAsPlayed({
-      variables: {
-        id,
-        podcastId
-      }
-    });
 
-    isLoggedIn
-      ? clearPlayingEpisode({
-          refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
-        })
-      : clearLocalPlayingEpisode({
-          refetchQueries: [
-            { query: getLocalPlayingEpisode },
-            { query: getLocalUpnext }
-          ]
-        });
+    this.props.isLoggedIn
+      ? this.onLoggedEnded(id, podcastId)
+      : this.onLocalEnded(id);
+  }
+
+  onLoggedEnded(id, podcastId) {
+    const { markAsPlayed, clearPlayingEpisode } = this.props;
+    markAsPlayed({
+      variables: { id, podcastId }
+    });
+    clearPlayingEpisode({
+      refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
+    });
+  }
+
+  onLocalEnded(id) {
+    const { markLocalAsPlayed, clearLocalPlayingEpisode } = this.props;
+    markLocalAsPlayed({
+      variables: { id }
+    });
+    clearLocalPlayingEpisode({
+      refetchQueries: [
+        { query: getLocalPlayingEpisode },
+        { query: getLocalUpnext }
+      ]
+    });
   }
 
   onReady() {
@@ -565,21 +564,11 @@ export default withTracker(() => {
         localPlayingEpisode
       })
     }),
-    graphql(updatePlayedSeconds, {
-      name: "updatePlayedSeconds"
-    }),
-    graphql(markAsPlayed, {
-      skip: props => !props.isLoggedIn,
-      name: "markAsPlayed"
-    }),
-    graphql(clearPlayingEpisode, {
-      name: "clearPlayingEpisode"
-    }),
-    graphql(clearLocalPlayingEpisode, {
-      name: "clearLocalPlayingEpisode"
-    }),
-    graphql(updateLocalPlayedSeconds, {
-      name: "updateLocalPlayedSeconds"
-    })
+    graphql(updatePlayedSeconds, { name: "updatePlayedSeconds" }),
+    graphql(markAsPlayed, { name: "markAsPlayed" }),
+    graphql(clearPlayingEpisode, { name: "clearPlayingEpisode" }),
+    graphql(clearLocalPlayingEpisode, { name: "clearLocalPlayingEpisode" }),
+    graphql(updateLocalPlayedSeconds, { name: "updateLocalPlayedSeconds" }),
+    graphql(markLocalAsPlayed, { name: "markLocalAsPlayed" })
   )(AudioPlayer)
 );
