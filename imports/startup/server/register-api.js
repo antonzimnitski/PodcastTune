@@ -2,7 +2,7 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-//da9\][7431das
+//da9\][74311das
 import UsersSchema from "./../../api/users/User.graphql";
 import UsersResolvers from "./../../api/users/resolvers";
 

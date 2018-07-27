@@ -69,8 +69,6 @@ export default (resolvers = {
         }
       };
 
-      markUnplayed(cache, id);
-
       if (prevEpisode) {
         const prevUpnext = getLocalUpnext(cache);
 
@@ -85,7 +83,7 @@ export default (resolvers = {
       }
 
       setLocalPlayingEpisode(cache, episodeData);
-
+      setFieldValue(cache, id, "isPlayed", false);
       return null;
     },
     clearLocalPlayingEpisode(_, __, { cache }) {
@@ -98,28 +96,21 @@ export default (resolvers = {
       return null;
     },
     markLocalAsPlayed(_, { id }, { cache }) {
-      const episode = getObjectById(cache, id);
       const prevInProgress = getLocalInProgress(cache);
-
-      const episodeData = {
-        [id]: {
-          ...episode,
-          isPlayed: true
-        }
-      };
 
       remove(prevInProgress, n => n.id === id);
       inProgressData = {
         localInProgress: [...prevInProgress]
       };
 
-      setObjectData(cache, episodeData);
+      setFieldValue(cache, id, "isPlayed", true);
+      setFieldValue(cache, id, "inUpnext", false);
       setLocalInProgress(cache, inProgressData);
 
       return null;
     },
     markLocalAsUnplayed(_, { id }, { cache }) {
-      markUnplayed(cache, id);
+      setFieldValue(cache, id, "isPlayed", false);
 
       return null;
     },
@@ -141,12 +132,12 @@ export default (resolvers = {
         localUpnext: prevUpnext
       };
 
-      addToUpnext(cache, id);
+      setFieldValue(cache, id, "inUpnext", true);
       setLocalUpnext(cache, data);
 
       return null;
     },
-    removeFromLocalUpnext(_, { id, podcastId }, { cache }) {
+    removeFromLocalUpnext(_, { id }, { cache }) {
       const prevUpnext = getLocalUpnext(cache);
       remove(prevUpnext, n => n.id === id);
 
@@ -155,7 +146,7 @@ export default (resolvers = {
       };
 
       setLocalUpnext(cache, data);
-      removeFromUpnext(cache, id);
+      setFieldValue(cache, id, "inUpnext", false);
 
       return null;
     }
@@ -206,35 +197,12 @@ function setObjectData(cache, data) {
   cache.writeData({ data });
 }
 
-function markUnplayed(cache, id) {
-  const episode = getObjectById(cache, id);
-  const data = {
-    [id]: {
-      ...episode,
-      isPlayed: false
-    }
-  };
-
-  setObjectData(cache, data);
-}
-
-function addToUpnext(cache, id) {
+function setFieldValue(cache, id, field, value) {
   const episode = getObjectById(cache, id);
   const episodeData = {
     [id]: {
       ...episode,
-      inUpnext: true
-    }
-  };
-  setObjectData(cache, episodeData);
-}
-
-function removeFromUpnext(cache, id) {
-  const episode = getObjectById(cache, id);
-  const episodeData = {
-    [id]: {
-      ...episode,
-      inUpnext: false
+      [field]: value
     }
   };
   setObjectData(cache, episodeData);
