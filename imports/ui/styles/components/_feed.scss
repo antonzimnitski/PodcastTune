@@ -264,6 +264,10 @@
   transform: scale(1.2);
 }
 
+.play__circle {
+  fill: $white;
+}
+
 .controls__play:hover .play__circle {
   fill: $light-blue;
 }
