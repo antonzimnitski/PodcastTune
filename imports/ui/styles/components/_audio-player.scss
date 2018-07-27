@@ -18,6 +18,8 @@
   @include desktop {
     height: $player-height-desktop;
   }
+
+  @include noselect;
 }
 
 .player-is-open .player {

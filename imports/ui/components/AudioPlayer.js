@@ -52,7 +52,6 @@ class AudioPlayer extends Component {
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
-    this.onQueueItemClick = this.onQueueItemClick.bind(this);
     this.handleUpNextPopup = this.handleUpNextPopup.bind(this);
   }
 
@@ -193,14 +192,25 @@ class AudioPlayer extends Component {
 
   onReady() {
     this.setState({ isReady: true, isLoading: false }, () => {
+      this.setPlaybackRate(this.state.playbackRate);
       this.onPlay();
     });
   }
 
   onPlay() {
     if (this.state.isReady) {
-      this.props.play();
-      this.player.current.play();
+      /* 
+        To prevent crash in Edge and IE
+        https://developers.google.com/web/updates/2016/03/play-returns-promise
+     */
+      const playPromise = this.player.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => this.props.play())
+          .catch(() => console.log("autoplay blocked"));
+      } else {
+        this.props.play();
+      }
     }
   }
 
@@ -317,14 +327,8 @@ class AudioPlayer extends Component {
     this.setState({ isModalOpen: !this.state.isModalOpen });
   }
 
-  onQueueItemClick(episode) {
-    this.props.updateCurrentEpisode({
-      variables: { episode }
-    });
-  }
-
   formatSeconds(seconds) {
-    //TODO fix 0 seconds text
+    // fix 0 seconds text
     return moment.duration(seconds > 1 ? seconds : 1, "seconds").format();
   }
 

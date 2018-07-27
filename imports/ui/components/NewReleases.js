@@ -33,7 +33,9 @@ function renderNewReleases() {
     <Query query={getNewReleases} pollInterval={10000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
-        if (error) return null;
+        if (error) {
+          return <div>Sorry! There was an error loading New Releases.</div>;
+        }
 
         if (!data || !data.newReleases || !data.newReleases.length) {
           return (

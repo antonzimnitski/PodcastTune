@@ -27,12 +27,18 @@ const Favorites = ({ title, isLoggedIn }) => {
 
 function renderFavorites() {
   return (
-    <Query query={getFavorites} pollInterval={10000}>
+    <Query query={getFavorites} pollInterval={30000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
-        if (error) return null;
+        if (error) {
+          return (
+            <div>
+              Sorry! There was an error loading yout favourite episodes.
+            </div>
+          );
+        }
 
-        if (!data || !data.favorites || data.favorites.length === 0) {
+        if (!data || !data.favorites || !data.favorites.length) {
           return (
             <div className="favorites__content">
               <h2>No favorites episodes available.</h2>

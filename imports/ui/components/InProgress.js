@@ -27,10 +27,14 @@ const InProgress = ({ title, isLoggedIn }) => {
 };
 function renderInProgress() {
   return (
-    <Query query={getInProgress} pollInterval={10000}>
+    <Query query={getInProgress} pollInterval={30000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
-        if (error) return null;
+        if (error) {
+          return (
+            <div>Sorry! There was an error loading In Progress episodes.</div>
+          );
+        }
 
         if (!data || !data.inProgress || !data.inProgress.length) {
           return (
@@ -43,8 +47,9 @@ function renderInProgress() {
             </div>
           );
         }
+        const filterFeed = data.inProgress.filter(episode => !episode.isPlayed);
 
-        return <Feed feed={data.inProgress} />;
+        return <Feed feed={filterFeed} />;
       }}
     </Query>
   );

@@ -20,8 +20,8 @@ class DiscoverByGenre extends Component {
     return this.props.data.podcastsPreviews.map((podcast, index) => {
       if (index >= this.state.limit) return;
       return (
-        <Link to={`/podcasts/${podcast.id}`} key={podcast.id}>
-          <div className="preview">
+        <div key={podcast.id} className="preview">
+          <Link to={`/podcasts/${podcast.id}`}>
             <img
               className="preview__image"
               src={podcast.artwork}
@@ -33,8 +33,8 @@ class DiscoverByGenre extends Component {
                 <div className="preview__description">{podcast.summary}</div>
               ) : null}
             </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
       );
     });
   }

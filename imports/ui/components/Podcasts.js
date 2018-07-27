@@ -27,12 +27,18 @@ const Podcasts = ({ title, isLoggedIn }) => {
 
 function renderPodcasts() {
   return (
-    <Query query={getSubscribedPodcasts} pollInterval={5000}>
+    <Query query={getSubscribedPodcasts} pollInterval={30000}>
       {({ loading, error, data }) => {
         if (loading) return <Loader />;
-        if (error) throw error;
+        if (error) {
+          return (
+            <div>
+              Sorry! There was an error loading your Sunscribed Podcasts.
+            </div>
+          );
+        }
 
-        if (!data || !data.podcasts || data.podcasts.length === 0) {
+        if (!data || !data.podcasts || !data.podcasts.length) {
           return (
             <div className="podcasts__content">
               <h2>Oh no! It's empty!</h2>
