@@ -52,12 +52,18 @@
 }
 
 .podcast__subscribe {
-  margin: $small-space auto;
+  margin: $small-space 0;
+
+  text-align: center;
 
   @include tablet {
     position: absolute;
-    top: $space;
+    top: $small-space;
     right: $small-space;
+  }
+
+  @include laptop {
+    top: $space;
   }
 }
 

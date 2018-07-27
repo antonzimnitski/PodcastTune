@@ -1,11 +1,5 @@
 .preview-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  @include tablet {
-    display: block;
-  }
+  display: block;
 }
 
 .preview-list + button {
@@ -17,12 +11,17 @@
 }
 
 .preview {
-  display: flex;
-  height: 12rem;
-  width: 12rem;
-
-  margin: $small-space / 2 0;
+  display: inline-block;
+  width: 50%;
   transition: all 0.3s ease;
+
+  @include large-phone {
+    width: 33%;
+  }
+
+  @include tablet-small {
+    width: 25%;
+  }
 
   @include tablet {
     border: 0.2rem solid transparent;
@@ -33,12 +32,27 @@
 }
 
 .preview:hover {
-  border-color: $light-blue;
-  transform: scale(1.02);
+  @include laptop {
+    border-color: $light-blue;
+    transform: scale(1.02);
+  }
+}
+
+.preview__link {
+  @include tablet {
+    display: flex;
+    height: 100%;
+  }
 }
 
 .preview__image {
-  height: 100%;
+  height: auto;
+  width: 100%;
+  border: none;
+
+  @include tablet {
+    width: auto;
+  }
 }
 
 .preview__info {

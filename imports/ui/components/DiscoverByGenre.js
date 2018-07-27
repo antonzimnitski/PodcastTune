@@ -21,7 +21,7 @@ class DiscoverByGenre extends Component {
       if (index >= this.state.limit) return;
       return (
         <div key={podcast.id} className="preview">
-          <Link to={`/podcasts/${podcast.id}`}>
+          <Link className="preview__link" to={`/podcasts/${podcast.id}`}>
             <img
               className="preview__image"
               src={podcast.artwork}

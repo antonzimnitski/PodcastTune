@@ -106,6 +106,7 @@
   width: 100%;
   max-width: $main-width;
   margin: 0 auto;
+  flex: 0 0 auto;
 }
 
 .player-is-open .page-content__sidebar,
@@ -175,37 +176,40 @@
 }
 
 .podcasts__cards {
-  display: flex;
   width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-
-  @include laptop {
-    justify-content: flex-start;
-  }
 }
 
 .podcasts__card {
   display: inline-block;
-  margin: $small-space;
+  width: 50%;
   transition: all 0.3s ease;
+
+  @include large-phone {
+    width: 33%;
+  }
+
+  @include tablet {
+    width: 25%;
+  }
+
+  @include laptop {
+    width: 20%;
+  }
 }
 
 .podcasts__image {
-  width: 11rem;
+  width: 100%;
   height: auto;
 
   @include tablet {
-    width: 18rem;
-  }
-
-  @include desktop {
-    width: 25rem;
+    padding: $small-space;
   }
 }
 
 .podcasts__card:hover {
-  transform: scale(1.05);
+  @include laptop {
+    transform: scale(1.05);
+  }
 }
 
 .footer {

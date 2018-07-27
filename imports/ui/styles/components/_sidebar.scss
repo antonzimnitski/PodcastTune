@@ -12,6 +12,11 @@
     margin: $large-space;
     width: 26rem;
   }
+
+  & img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .sidebar__link {

@@ -78,7 +78,7 @@ class Auth extends Component {
 
   logoutContent() {
     return (
-      <Query query={getLoggedUser}>
+      <Query query={getLoggedUser} skip={!this.props.isLoggedIn}>
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) throw error;
