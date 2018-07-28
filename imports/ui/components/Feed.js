@@ -1,14 +1,40 @@
 import React, { Component } from "react";
-import { graphql, compose } from "react-apollo";
+import { withApollo, graphql, compose } from "react-apollo";
+import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
+import { remove } from "lodash";
 
 import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
 import LoginWarningModal from "./helpers/LoginWarningModal";
 
+import getInProgress from "./../queries/getInProgress";
+import getUpnext from "./../queries/getUpnext";
+import getFavorites from "./../queries/getFavorites";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 
+import removeFromUpnext from "./../queries/removeFromUpnext";
+import addToUpnext from "./../queries/addToUpnext";
+import removeFromFavorites from "./../queries/removeFromFavorites";
+import addToFavorites from "./../queries/addToFavorites";
+import markAsUnplayed from "./../queries/markAsUnplayed";
+import markAsPlayed from "./../queries/markAsPlayed";
+import setPlayingEpisode from "./../queries/setPlayingEpisode";
+
+import setLocalPlayingEpisode from "./../../localData/queries/setLocalPlayingEpisode";
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
+import addToLocalUpnext from "./../../localData/queries/addToLocalUpnext";
+import removeFromLocalUpnext from "./../../localData/queries/removeFromLocalUpnext";
+import markLocalAsPlayed from "./../../localData/queries/markLocalAsPlayed";
+import markLocalAsUnplayed from "./../../localData/queries/markLocalAsUnplayed";
+import getLocalUpnext from "./../../localData/queries/getLocalUpnext";
+
+import clearLocalPlayingEpisode from "./../../localData/queries/clearLocalPlayingEpisode";
+import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
+
+import isPLaying from "./../../localData/queries/isPlaying";
+import play from "./../../localData/queries/play";
+import pause from "./../../localData/queries/pause";
 
 class Feed extends Component {
   constructor(props) {
@@ -23,7 +49,10 @@ class Feed extends Component {
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
     this.closeWarningModal = this.closeWarningModal.bind(this);
-    this.openWarningModal = this.openWarningModal.bind(this);
+    this.handleFavorites = this.handleFavorites.bind(this);
+    this.handleStatus = this.handleStatus.bind(this);
+    this.handleUpnext = this.handleUpnext.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleEpisodeModal(id, podcastId) {
@@ -50,8 +79,215 @@ class Feed extends Component {
     return playingEpisode.id === id;
   }
 
+  handleClick(id, podcastId) {
+    const isPlayingEpisode = this.isPlayingEpisode(id);
+
+    const { pause, play, isPlaying, isLoggedIn } = this.props;
+
+    if (!isPlayingEpisode) {
+      isLoggedIn
+        ? this.loggedClick(id, podcastId)
+        : this.localClick(id, podcastId);
+    } else {
+      isPlaying ? pause() : play();
+    }
+  }
+
+  loggedClick(id, podcastId) {
+    const { setPlayingEpisode } = this.props;
+
+    setPlayingEpisode({
+      variables: { id, podcastId },
+      refetchQueries: [
+        { query: getPlayingEpisode },
+        { query: getInProgress },
+        { query: getUpnext }
+      ]
+    }).catch(err => console.log("Error in setPlayingEpisode on client", err));
+  }
+
+  localClick(id, podcastId) {
+    const { setLocalPlayingEpisode } = this.props;
+
+    setLocalPlayingEpisode({
+      variables: { id, podcastId },
+      refetchQueries: [{ query: getLocalPlayingEpisode }]
+    }).catch(err =>
+      console.log("Error in setLocalPlayingEpisode on client", err)
+    );
+  }
+
+  handleStatus(id, podcastId, isPlayed) {
+    const isPlayingEpisode = this.isPlayingEpisode(id);
+
+    isPlayingEpisode
+      ? this.handlePlayingEpisode(id, podcastId)
+      : this.handlePlayedStatus(id, podcastId, isPlayed);
+  }
+
+  handlePlayedStatus(id, podcastId, isPlayed) {
+    this.props.isLoggedIn
+      ? this.loggedPlayedStatus(id, podcastId, isPlayed)
+      : this.localPlayedStatus(id, isPlayed);
+  }
+
+  loggedPlayedStatus(id, podcastId, isPlayed) {
+    const { markAsUnplayed, markAsPlayed } = this.props;
+
+    isPlayed
+      ? markAsUnplayed({
+          variables: { id, podcastId }
+        }).catch(err => console.log("Error in markAsUnplayed", err))
+      : markAsPlayed({
+          variables: { id, podcastId }
+        }).catch(err => console.log("Error in markAsPlayed", err));
+  }
+
+  localPlayedStatus(id, isPlayed) {
+    const { markLocalAsUnplayed, markLocalAsPlayed } = this.props;
+
+    isPlayed
+      ? markLocalAsUnplayed({
+          variables: { id }
+        }).catch(err => console.log("Error in markLocalAsUnplayed", err))
+      : markLocalAsPlayed({
+          variables: { id }
+        }).catch(err => console.log("Error in markLocalAsPlayed", err));
+  }
+
+  handlePlayingEpisode(id, podcastId) {
+    this.props.isLoggedIn
+      ? this.loggedPlayingEpisode(id, podcastId)
+      : this.localPlayingEpisode(id);
+  }
+
+  loggedPlayingEpisode(id, podcastId) {
+    const { markAsPlayed, clearPlayingEpisode } = this.props;
+
+    markAsPlayed({
+      variables: { id, podcastId }
+    });
+    clearPlayingEpisode({
+      refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
+    });
+  }
+
+  localPlayingEpisode(id) {
+    const { markLocalAsPlayed, clearLocalPlayingEpisode } = this.props;
+
+    markLocalAsPlayed({
+      variables: { id }
+    });
+    clearLocalPlayingEpisode({
+      refetchQueries: [
+        { query: getLocalPlayingEpisode },
+        { query: getLocalUpnext }
+      ]
+    });
+  }
+
+  handleUpnext(id, podcastId, isInUpNext) {
+    const isPlayingEpisode = this.isPlayingEpisode(id);
+
+    if (isPlayingEpisode) {
+      console.log("currentEpisode");
+      return;
+    }
+
+    this.props.isLoggedIn
+      ? this.loggedUpnext(id, podcastId, isInUpNext)
+      : this.localUpnext(id, podcastId, isInUpNext);
+  }
+
+  removeFromCache(proxy, query, field, returnedObj) {
+    const { client } = this.props;
+    try {
+      const data = proxy.readQuery({ query });
+      remove(data[field], n => n.id === returnedObj.id);
+      proxy.writeQuery({ query, data });
+    } catch (e) {
+      client.query({ query });
+      console.log("query haven't been called", query);
+    }
+  }
+
+  addToCache(proxy, query, field, returnedObj) {
+    const { client } = this.props;
+    try {
+      const data = proxy.readQuery({ query });
+      remove(data.upnext, n => n.id === returnedObj.id);
+      data[field]
+        ? data[field].push(returnedObj)
+        : (data[field] = [returnedObj]);
+      proxy.writeQuery({ query, data });
+    } catch (e) {
+      client.query({ query });
+      console.log("query haven't been called", query);
+    }
+  }
+
+  loggedUpnext(id, podcastId, isInUpNext) {
+    const { removeFromUpnext, addToUpnext } = this.props;
+
+    isInUpNext
+      ? removeFromUpnext({
+          variables: { id, podcastId },
+          update: (proxy, { data: { removeFromUpnext } }) =>
+            this.removeFromCache(proxy, getUpnext, "upnext", removeFromUpnext)
+        }).catch(err => console.log("Error in removeFromUpnext", err))
+      : addToUpnext({
+          variables: { id, podcastId },
+          update: (proxy, { data: { addToUpnext } }) =>
+            this.addToCache(proxy, getUpnext, "upnext", addToUpnext)
+        }).catch(err => console.log("Error in addToUpnext", err));
+  }
+
+  localUpnext(id, podcastId, isInUpNext) {
+    const { removeFromLocalUpnext, addToLocalUpnext } = this.props;
+
+    isInUpNext
+      ? removeFromLocalUpnext({
+          variables: { id }
+        }).catch(err => console.log("Error in removeFromLocalUpnext", err))
+      : addToLocalUpnext({
+          variables: { id, podcastId }
+        }).catch(err => console.log("Error in addToLocalUpnext", err));
+  }
+
+  handleFavorites(id, podcastId, isInFavorites) {
+    this.props.isLoggedIn
+      ? this.loggedFavorites(id, podcastId, isInFavorites)
+      : this.openWarningModal();
+  }
+
+  loggedFavorites(id, podcastId, isInFavorites) {
+    const { removeFromFavorites, addToFavorites } = this.props;
+    isInFavorites
+      ? removeFromFavorites({
+          variables: { id, podcastId },
+          update: (proxy, { data: { removeFromFavorites } }) =>
+            this.removeFromCache(
+              proxy,
+              getFavorites,
+              "favorites",
+              removeFromFavorites
+            )
+        }).catch(err => console.log("Error in removeFromFavorites", err))
+      : addToFavorites({
+          variables: { id, podcastId },
+          update: (proxy, { data: { addToFavorites } }) =>
+            this.removeFromCache(
+              proxy,
+              getFavorites,
+              "favorites",
+              addToFavorites
+            )
+        }).catch(err => console.log("Error in addToFavorites", err));
+  }
+
   renderFeed() {
-    if (this.props.feed.length === 0) return <div>There is no episodes.</div>;
+    const { feed, isPlaying } = this.props;
+    if (feed.length === 0) return <div>There is no episodes.</div>;
     return (
       <div className="feed">
         <div className="feed__header">
@@ -60,15 +296,26 @@ class Feed extends Component {
           <div className="episode__duration">Duration</div>
           <div className="episode__controls" />
         </div>
-        {this.props.feed.map(episode => {
+        {feed.map(episode => {
           if (!episode) return;
+          const { id, inUpnext, inFavorites, isPlayed } = episode;
+          const isPlayingEpisode = this.isPlayingEpisode(id);
+
+          const className = `episode${
+            isPlayingEpisode && isPlaying ? " episode--playing" : ""
+          }${inUpnext ? " episode--in-upnext" : ""}${
+            inFavorites ? " episode--in-favorites" : ""
+          }${isPlayed ? " episode--played" : ""}`;
           return (
             <Episode
-              key={episode.id}
+              key={id}
               episode={episode}
-              openWarningModal={this.openWarningModal}
+              className={className}
               handleEpisodeModal={this.handleEpisodeModal}
-              isPlayingEpisode={this.isPlayingEpisode(episode.id)}
+              handleFavorites={this.handleFavorites}
+              handleStatus={this.handleStatus}
+              handleUpnext={this.handleUpnext}
+              handleClick={this.handleClick}
             />
           );
         })}
@@ -77,21 +324,27 @@ class Feed extends Component {
   }
 
   render() {
+    const {
+      isEpisodeModalOpen,
+      isWarningModalOpen,
+      podcastId,
+      id
+    } = this.state;
     return (
       <React.Fragment>
         {this.renderFeed()}
 
-        {this.state.isEpisodeModalOpen ? (
+        {isEpisodeModalOpen ? (
           <EpisodeModal
-            isModalOpen={this.state.isEpisodeModalOpen}
+            isModalOpen={isEpisodeModalOpen}
             handleEpisodeModal={this.handleEpisodeModal}
-            podcastId={this.state.podcastId}
-            id={this.state.id}
+            podcastId={podcastId}
+            id={id}
           />
         ) : null}
         {this.state.isWarningModalOpen ? (
           <LoginWarningModal
-            isModalOpen={this.state.isWarningModalOpen}
+            isModalOpen={isWarningModalOpen}
             closeWarningModal={this.closeWarningModal}
           />
         ) : null}
@@ -115,6 +368,27 @@ export default withTracker(() => {
       props: ({ data: { localPlayingEpisode } }) => ({
         localPlayingEpisode
       })
-    })
-  )(Feed)
+    }),
+    graphql(isPLaying, {
+      props: ({ data: { isPlaying } }) => ({
+        isPlaying
+      })
+    }),
+    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
+    graphql(addToUpnext, { name: "addToUpnext" }),
+    graphql(removeFromUpnext, { name: "removeFromUpnext" }),
+    graphql(addToFavorites, { name: "addToFavorites" }),
+    graphql(removeFromFavorites, { name: "removeFromFavorites" }),
+    graphql(markAsPlayed, { name: "markAsPlayed" }),
+    graphql(markAsUnplayed, { name: "markAsUnplayed" }),
+    graphql(markLocalAsPlayed, { name: "markLocalAsPlayed" }),
+    graphql(markLocalAsUnplayed, { name: "markLocalAsUnplayed" }),
+    graphql(addToLocalUpnext, { name: "addToLocalUpnext" }),
+    graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" }),
+    graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" }),
+    graphql(play, { name: "play" }),
+    graphql(pause, { name: "pause" }),
+    graphql(clearPlayingEpisode, { name: "clearPlayingEpisode" }),
+    graphql(clearLocalPlayingEpisode, { name: "clearLocalPlayingEpisode" })
+  )(withApollo(Feed))
 );
