@@ -23,8 +23,11 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
       >
         {({ loading, error, data }) => {
           if (loading) return null;
-          if (error || !data.episode) throw error;
-
+          if (error || !data.episode) {
+            return (
+              <div>Sorry! There was an error loading episode information.</div>
+            );
+          }
           const {
             title,
             author,

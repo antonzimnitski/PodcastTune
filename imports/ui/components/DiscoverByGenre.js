@@ -16,21 +16,23 @@ class DiscoverByGenre extends Component {
     };
   }
 
-  renderPodcasts() {
-    return this.props.data.podcastsPreviews.map((podcast, index) => {
+  renderPodcasts(podcastsPreviews) {
+    return podcastsPreviews.map((podcast, index) => {
+      const { id, artwork, title, summary } = podcast;
+
       if (index >= this.state.limit) return;
       return (
-        <div key={podcast.id} className="preview">
-          <Link className="preview__link" to={`/podcasts/${podcast.id}`}>
+        <div key={id} className="preview">
+          <Link className="preview__link" to={`/podcasts/${id}`}>
             <img
               className="preview__image"
-              src={podcast.artwork}
-              alt={`${podcast.title} - logo`}
+              src={artwork}
+              alt={`${title} - logo`}
             />
             <div className="preview__info">
-              <div className="preview__title">{podcast.title}</div>
-              {podcast.summary ? (
-                <div className="preview__description">{podcast.summary}</div>
+              <div className="preview__title">{title}</div>
+              {summary ? (
+                <div className="preview__description">{summary}</div>
               ) : null}
             </div>
           </Link>
@@ -39,33 +41,51 @@ class DiscoverByGenre extends Component {
     });
   }
 
-  render() {
-    const content = this.props.data.loading ? (
-      <Loader />
-    ) : (
+  renderContent() {
+    const { limit } = this.state;
+    const { podcastsPreviews } = this.props;
+
+    return (
       <React.Fragment>
-        <div className="preview-list">{this.renderPodcasts()}</div>
-        {this.state.limit <= this.props.data.podcastsPreviews.length - 1 ? (
+        <div className="preview-list">
+          {this.renderPodcasts(podcastsPreviews)}
+        </div>
+        {limit <= podcastsPreviews.length - 1 ? (
           <button
             className="button button--load"
-            onClick={() => this.setState({ limit: this.state.limit + 10 })}
+            onClick={() => this.setState({ limit: limit + 10 })}
           >
             fetch more
           </button>
         ) : null}
       </React.Fragment>
     );
+  }
+
+  render() {
+    const { loading, error } = this.props;
+
+    if (loading) return <Loader />;
+
+    if (error) {
+      return <div>Sorry! There was an error loading podcast previews.</div>;
+    }
 
     return (
       <React.Fragment>
         <InnerHeader title="Discover" />
-        {content}
+        {this.renderContent()}
       </React.Fragment>
     );
   }
 }
 
 export default graphql(fetchPodcastsPreviews, {
+  props: ({ data: { loading, error, podcastsPreviews } }) => ({
+    loading,
+    error,
+    podcastsPreviews
+  }),
   options: props => {
     return {
       variables: {

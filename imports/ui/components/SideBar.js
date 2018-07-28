@@ -36,7 +36,7 @@ const SideBar = () => {
           className="sidebar__link"
           to="/in-progress"
         >
-          In progress
+          In Progress
         </Link>
 
         <Link

@@ -1,25 +1,23 @@
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { withApollo, compose, graphql } from "react-apollo";
-import { remove } from "lodash";
+import { removeFromCache, addToCache } from "./../../utils/apolloCache";
 
 import LoginWarningModal from "./LoginWarningModal";
 import UnsubscribeModal from "./UnsubscribeModal";
+
+import getNewReleases from "./../../queries/getNewReleases";
 
 import getSubscribedPodcasts from "./../../queries/getSubscribedPodcasts";
 import subscribeToPodcast from "./../../queries/subscribeToPodcast";
 import unsubscribeFromPodcast from "./../../queries/unsubscribeFromPodcast";
 
 class SubscribeButton extends Component {
-  componentDidUpdate() {
-    console.log("button did update");
-  }
-
   constructor(props) {
     super(props);
 
     this.state = {
-      isWarningModalOpne: false,
+      isWarningModalOpen: false,
       isUnsubscribeModalOpen: false
     };
 
@@ -44,8 +42,12 @@ class SubscribeButton extends Component {
     this.setState({ isUnsubscribeModalOpen: false });
   }
 
-  subscribe(podcastId) {
-    const { subscribe, isLoggedIn, client } = this.props;
+  handleSubscibe(subscribed) {
+    subscribed ? this.openUnsubscribeModal() : this.subscribe();
+  }
+
+  subscribe() {
+    const { podcastId, subscribe, isLoggedIn, client } = this.props;
 
     if (!isLoggedIn) {
       this.openWarningModal();
@@ -53,81 +55,62 @@ class SubscribeButton extends Component {
     }
 
     subscribe({
-      variables: {
-        podcastId
-      },
+      variables: { podcastId },
+      refetchQueries: [{ query: getNewReleases }],
       update: (proxy, { data: { subscribe } }) => {
-        try {
-          const data = proxy.readQuery({
-            query: getSubscribedPodcasts
-          });
-          data.podcasts
-            ? data.podcasts.push(subscribe)
-            : (data.podcasts = [subscribe]);
-          proxy.writeQuery({ query: getSubscribedPodcasts, data });
-        } catch (e) {
-          client.query({ query: getSubscribedPodcasts });
-          console.log("query haven't been called", e);
-        }
+        addToCache(proxy, client, getSubscribedPodcasts, "podcasts", subscribe);
       }
-    }).then(() => console.log("subscribe"));
+    }).catch(err => console.log("Error in subscribe", err));
   }
 
-  unsubscribe(podcastId) {
-    const { unsubscribe, client } = this.props;
+  unsubscribe() {
+    const { podcastId, unsubscribe, client } = this.props;
 
     unsubscribe({
-      variables: {
-        podcastId
-      },
+      variables: { podcastId },
+      refetchQueries: [{ query: getNewReleases }],
       update: (proxy, { data: { unsubscribe } }) => {
-        try {
-          const data = proxy.readQuery({
-            query: getSubscribedPodcasts
-          });
-          remove(data.podcasts, n => n.id === unsubscribe.id);
-          proxy.writeQuery({ query: getSubscribedPodcasts, data });
-        } catch (e) {
-          client.query({ query: getSubscribedPodcasts });
-          console.log("query haven't been called", e);
-        }
+        removeFromCache(
+          proxy,
+          client,
+          getSubscribedPodcasts,
+          "podcasts",
+          unsubscribe
+        );
       }
-    }).then(() => console.log("unsubscribe"));
+    }).catch(err => console.log("Error in unsubscribe", err));
   }
 
   render() {
+    const { isWarningModalOpen, isUnsubscribeModalOpen } = this.state;
     const { podcastId, subscribed } = this.props;
+
+    const className = `subscribe-btn ${
+      subscribed ? " subscribe-btn--subscribed" : ""
+    }`;
+
     return (
       <div className="podcast__subscribe">
-        {subscribed ? (
-          <button
-            onClick={() => {
-              this.openUnsubscribeModal();
-            }}
-            className="subscribe-btn subscribe-btn--subscribed"
-          />
-        ) : (
-          <button
-            onClick={() => {
-              this.subscribe(podcastId);
-            }}
-            className="subscribe-btn "
-          />
-        )}
+        <button
+          onClick={() => {
+            this.handleSubscibe(subscribed);
+          }}
+          className={className}
+        />
 
-        {this.state.isWarningModalOpen ? (
+        {isWarningModalOpen ? (
           <LoginWarningModal
-            isModalOpen={this.state.isWarningModalOpen}
+            isModalOpen={isWarningModalOpen}
             closeWarningModal={this.closeWarningModal}
           />
         ) : null}
 
-        {this.state.isUnsubscribeModalOpen ? (
+        {isUnsubscribeModalOpen ? (
           <UnsubscribeModal
-            isModalOpen={this.state.isUnsubscribeModalOpen}
+            isModalOpen={isUnsubscribeModalOpen}
             closeUnsubscribeModal={this.closeUnsubscribeModal}
             unsubscribe={this.unsubscribe}
-            podcastId={this.props.podcastId}
+            podcastId={podcastId}
           />
         ) : null}
       </div>

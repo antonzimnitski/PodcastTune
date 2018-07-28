@@ -3,14 +3,11 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
 
-const Header = props => {
+const Header = ({ handleNavToggle, isNavOpen }) => {
   return (
     <div className="top-header">
-      <div
-        className="top-header__nav-toogle"
-        onClick={() => props.handleNavToggle()}
-      >
-        {props.isNavOpen ? xSvg : barsSvg}
+      <div className="top-header__nav-toogle" onClick={() => handleNavToggle()}>
+        {isNavOpen ? xSvg : barsSvg}
       </div>
       <Link className="top-header__logo" to="/">
         <img src="/images/logo.svg" alt="" />

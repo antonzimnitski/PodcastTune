@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
 
@@ -7,58 +7,59 @@ import Loader from "./helpers/Loader";
 
 import fetchGenres from "./../queries/fetchGenres";
 
-class Discover extends Component {
-  renderGenres(arr) {
-    return (
-      <ul className="genre-nav">
-        {arr.map(({ id, name, subgenres }) => {
-          return (
-            <li className="genre-nav__group" key={id}>
-              <Link
-                title={name}
-                className="genre-nav__group-title"
-                to={`discover/${id}`}
-              >
-                {name}
-              </Link>
-              {subgenres.length !== 0 ? (
-                <ul className="genre-nav__subgenre-group">
-                  {subgenres.map(el => {
-                    return (
-                      <li key={el.id}>
-                        <Link
-                          className="genre-nav__subgenre-item"
-                          to={`discover/${el.id}`}
-                        >
-                          {el.name}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
-    );
+const Discover = ({ title, loading, error, genres }) => {
+  if (error) {
+    return <div>Sorry! There was an error loading genres.</div>;
   }
-  // {subgenres ? this.renderGenres(subgenres) : null}
 
-  render() {
-    const content = this.props.data.loading ? (
-      <Loader />
-    ) : (
-      this.renderGenres(this.props.data.genres)
-    );
+  return (
+    <React.Fragment>
+      <InnerHeader title={title} />
+      {loading ? <Loader /> : renderGenres(genres)}
+    </React.Fragment>
+  );
+};
 
-    return (
-      <React.Fragment>
-        <InnerHeader title={this.props.title} />
-        {content}
-      </React.Fragment>
-    );
-  }
+function renderGenres(arr) {
+  return (
+    <ul className="genre-nav">
+      {arr.map(({ id, name, subgenres }) => {
+        return (
+          <li className="genre-nav__group" key={id}>
+            <Link
+              title={name}
+              className="genre-nav__group-title"
+              to={`discover/${id}`}
+            >
+              {name}
+            </Link>
+            {subgenres.length !== 0 ? (
+              <ul className="genre-nav__subgenre-group">
+                {subgenres.map(el => {
+                  return (
+                    <li key={el.id}>
+                      <Link
+                        className="genre-nav__subgenre-item"
+                        to={`discover/${el.id}`}
+                      >
+                        {el.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : null}
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
-export default graphql(fetchGenres)(Discover);
+export default graphql(fetchGenres, {
+  props: ({ data: { loading, error, genres } }) => ({
+    loading,
+    error,
+    genres
+  })
+})(Discover);

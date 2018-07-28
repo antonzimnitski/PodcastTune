@@ -46,6 +46,7 @@ class SearchPopup extends Component {
   }
 
   render() {
+    const { isSearchReady, searchTerm } = this.state;
     return (
       <Modal
         isOpen={this.props.isSearchModelOpen}
@@ -63,13 +64,11 @@ class SearchPopup extends Component {
             type="text"
             ref={this.searchBar}
             placeholder="Find podcasts"
-            value={this.state.term}
+            value={searchTerm}
             onChange={e => this.onInputChange(e)}
           />
         </form>
-        {this.state.isSearchReady ? (
-          <SearchResults searchTerm={this.state.searchTerm} />
-        ) : null}
+        {isSearchReady ? <SearchResults searchTerm={searchTerm} /> : null}
       </Modal>
     );
   }

@@ -1,11 +1,12 @@
 import React from "react";
-import { compose, graphql } from "react-apollo";
+import { withApollo, compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { remove } from "lodash";
 import Modal from "react-modal";
+import { removeFromCache } from "./../../utils/apolloCache";
 
 import ModalItem from "./ModalItem";
+import Loader from "./Loader";
 
 import removeFromUpnext from "./../../queries/removeFromUpnext";
 import getUpnext from "./../../queries/getUpnext";
@@ -18,6 +19,7 @@ import setLocalPlayingEpisode from "./../../../localData/queries/setLocalPlaying
 import removeFromLocalUpnext from "./../../../localData/queries/removeFromLocalUpnext";
 
 const UpNextPopup = ({
+  loading,
   isModalOpen,
   handleUpNextPopup,
   upnext,
@@ -26,67 +28,46 @@ const UpNextPopup = ({
   setPlayingEpisode,
   removeFromUpnext,
   setLocalPlayingEpisode,
-  removeFromLocalUpnext
+  removeFromLocalUpnext,
+  client
 }) => {
   const handleClick = (id, podcastId) => {
     isLoggedIn
       ? setPlayingEpisode({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           refetchQueries: [{ query: getPlayingEpisode }, { query: getUpnext }]
-        })
-          .then(res => console.log("success", res.data))
-          .catch(err => console.log(err))
+        }).catch(err => console.log("Error in setPlayingEpisode", err))
       : setLocalPlayingEpisode({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           refetchQueries: [
             { query: getLocalPlayingEpisode },
             { query: getLocalUpnext }
           ]
-        })
-          .then(res =>
-            console.log("method setLocalPlayingEpisode have been finished")
-          )
-          .catch(error =>
-            console.log("error in setLocalPlayingEpisode on client", error)
-          );
+        }).catch(err => console.log("Error in setLocalPlayingEpisode", err));
   };
 
   const handleRemove = (event, id, podcastId) => {
     event.stopPropagation();
     isLoggedIn
       ? removeFromUpnext({
-          variables: {
-            id,
-            podcastId
-          },
+          variables: { id, podcastId },
           update: (proxy, { data: { removeFromUpnext } }) => {
-            try {
-              const data = proxy.readQuery({ query: getUpnext });
-              remove(data.upnext, n => n.id === removeFromUpnext.id);
-              proxy.writeQuery({ query: getUpnext, data });
-            } catch (e) {
-              console.log("query haven't been called", e);
-            }
+            removeFromCache(
+              proxy,
+              client,
+              getUpnext,
+              "upnext",
+              removeFromUpnext
+            );
           }
-        }).catch(err => console.log(err))
+        }).catch(err => console.log("Error in removeFromUpnext", err))
       : removeFromLocalUpnext({
-          variables: {
-            id,
-            podcastId
-          }
-        });
+          variables: { id, podcastId }
+        }).catch(err => console.log("Error in removeFromUpnext", err));
   };
 
-  const episodes = upnext || localUpnext;
-
-  const content =
-    !episodes || !episodes.length ? (
+  const renderContent = episodes => {
+    return !episodes || !episodes.length ? (
       <div className="up-next__empty">
         <h2 className="up-next__title">Your Up Next is Empty</h2>
         <p className="empty__text">Add some episodes</p>
@@ -95,24 +76,26 @@ const UpNextPopup = ({
       <div className="modal__list">
         {episodes.map(episode => {
           if (!episode) return;
+
+          const { id, podcastId } = episode;
+
           return (
             <div
-              key={episode.id}
+              key={id}
               className="modal__item"
-              onClick={() => handleClick(episode.id, episode.podcastId)}
+              onClick={() => handleClick(id, podcastId)}
             >
               <ModalItem item={episode} playIcon={true} />
               <div
                 className="modal__remove"
-                onClick={event =>
-                  handleRemove(event, episode.id, episode.podcastId)
-                }
+                onClick={event => handleRemove(event, id, podcastId)}
               />
             </div>
           );
         })}
       </div>
     );
+  };
 
   return (
     <Modal
@@ -126,7 +109,7 @@ const UpNextPopup = ({
         <h2 className="modal__title">Up Next</h2>
         <div className="modal__close" onClick={() => handleUpNextPopup()} />
       </div>
-      {content}
+      {loading ? <Loader /> : renderContent(upnext || localUpnext)}
     </Modal>
   );
 };
@@ -137,31 +120,21 @@ export default withTracker(() => {
   compose(
     graphql(getUpnext, {
       skip: props => !props.isLoggedIn,
-      props: ({ data: { upnext } }) => ({
-        upnext
+      props: ({ data: { upnext, loading } }) => ({
+        upnext,
+        loading
       })
-    }),
-    graphql(setPlayingEpisode, {
-      name: "setPlayingEpisode"
-    }),
-    graphql(removeFromUpnext, {
-      name: "removeFromUpnext"
     }),
     graphql(getLocalUpnext, {
       skip: props => props.isLoggedIn,
-      props: ({ data: { localUpnext } }) => ({
-        localUpnext
+      props: ({ data: { localUpnext, loading } }) => ({
+        localUpnext,
+        loading
       })
     }),
-    graphql(setPlayingEpisode, {
-      skip: props => !props.isLoggedIn,
-      name: "setPlayingEpisode"
-    }),
-    graphql(removeFromUpnext, {
-      skip: props => !props.isLoggedIn,
-      name: "removeFromUpnext"
-    }),
+    graphql(setPlayingEpisode, { name: "setPlayingEpisode" }),
+    graphql(removeFromUpnext, { name: "removeFromUpnext" }),
     graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" }),
     graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" })
-  )(UpNextPopup)
+  )(withApollo(UpNextPopup))
 );

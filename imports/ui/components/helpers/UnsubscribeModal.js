@@ -7,7 +7,6 @@ const UnsubscribeModal = ({
   unsubscribe,
   podcastId
 }) => {
-  console.log("podcastId", podcastId);
   return (
     <Modal
       isOpen={isModalOpen}

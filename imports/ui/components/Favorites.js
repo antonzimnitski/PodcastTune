@@ -33,7 +33,7 @@ function renderFavorites() {
         if (error) {
           return (
             <div>
-              Sorry! There was an error loading yout favourite episodes.
+              Sorry! There was an error loading your favourite episodes.
             </div>
           );
         }

@@ -8,13 +8,13 @@ import ModalItem from "./ModalItem";
 
 import doSearch from "./../../queries/doSearch";
 
-const SearchResults = props => {
-  if (props.data.loading) return <Loader />;
-  return (
-    <div className="modal__list">
-      {renderResults(props.data.searchPreviews)}
-    </div>
-  );
+const SearchResults = ({ loading, error, searchPreviews }) => {
+  if (loading) return <Loader />;
+  if (error) {
+    return <div>Sorry! There was an error loading search results.</div>;
+  }
+
+  return <div className="modal__list">{renderResults(searchPreviews)}</div>;
 };
 
 function renderResults(results) {
@@ -38,6 +38,11 @@ function closeSearchModal() {
 }
 
 export default graphql(doSearch, {
+  props: ({ data: { loading, error, searchPreviews } }) => ({
+    loading,
+    error,
+    searchPreviews
+  }),
   options: props => {
     return {
       variables: {

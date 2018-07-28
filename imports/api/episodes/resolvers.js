@@ -5,16 +5,12 @@ import moment from "moment";
 export default {
   Query: {
     feed(_, { podcastId, limit }) {
-      const podcast = Podcasts.findOne({ podcastId });
-      if (podcast.episodes) {
-        return podcast.episodes.slice(0, limit).sort(sortByDate);
-      }
+      return getEpisodes(podcastId)
+        .slice(0, limit)
+        .sort(sortByDate);
     },
-    episode(_, { podcastId, id }, { user }) {
-      const podcast = Podcasts.findOne({ podcastId });
-      if (podcast.episodes) {
-        return podcast.episodes.find(el => el.id === id);
-      }
+    episode(_, { podcastId, id }) {
+      return getEpisodes(podcastId).find(el => el.id === id);
     }
   },
   Episode: {
@@ -52,4 +48,11 @@ function inUserData(user, id, field) {
 
 function sortByDate(a, b) {
   return moment(b.pubDate).valueOf() - moment(a.pubDate).valueOf();
+}
+
+function getEpisodes(podcastId) {
+  const podcast = Podcasts.findOne({ podcastId });
+  if (podcast.episodes) {
+    return podcast.episodes;
+  }
 }

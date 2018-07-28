@@ -38,6 +38,7 @@ class Auth extends Component {
   }
 
   loginContent() {
+    const { closeSidebar } = this.props;
     return (
       <React.Fragment>
         <div
@@ -49,7 +50,7 @@ class Auth extends Component {
                 isLoginOpen: true
               },
               () => {
-                this.props.closeSidebar();
+                closeSidebar();
               }
             )
           }
@@ -65,7 +66,7 @@ class Auth extends Component {
                 isSignupOpen: true
               },
               () => {
-                this.props.closeSidebar();
+                closeSidebar();
               }
             )
           }
@@ -83,6 +84,8 @@ class Auth extends Component {
           if (loading) return null;
           if (error) throw error;
 
+          const { client, closeSidebar } = this.props;
+
           return (
             <React.Fragment>
               <div className="sidebar__link">{data.user.email}</div>
@@ -90,9 +93,9 @@ class Auth extends Component {
                 className="sidebar__link"
                 onClick={() => {
                   Meteor.logout(() => {
-                    this.props.client.resetStore();
+                    client.resetStore();
                     Session.set("isPlayerOpen", false);
-                    this.props.closeSidebar();
+                    closeSidebar();
                   });
                 }}
               >
@@ -106,49 +109,52 @@ class Auth extends Component {
   }
 
   modalContent() {
-    if (this.state.isSignupOpen)
+    const { isSignupOpen, isLoginOpen } = this.state;
+    const { client } = this.props;
+    if (isSignupOpen)
       return (
         <Signup
           onClose={this.closeAuthModal}
           onSuccess={this.onSuccess}
           onSwap={this.swapForms}
-          client={this.props.client}
+          client={client}
         />
       );
-    if (this.state.isLoginOpen)
+    if (isLoginOpen)
       return (
         <Login
           onClose={this.closeAuthModal}
           onSuccess={this.onSuccess}
           onSwap={this.swapForms}
-          client={this.props.client}
+          client={client}
         />
       );
   }
 
   swapForms() {
+    const { isSignupOpen, isLoginOpen } = this.state;
     this.setState({
-      isSignupOpen: !this.state.isSignupOpen,
-      isLoginOpen: !this.state.isLoginOpen
+      isSignupOpen: !isSignupOpen,
+      isLoginOpen: !isLoginOpen
     });
   }
 
   render() {
+    const { isModalOpen, isLoginOpen } = this.state;
+
     return (
       <div className="auth">
         {this.props.isLoggedIn ? this.logoutContent() : this.loginContent()}
-        {this.state.isModalOpen ? (
+        {isModalOpen ? (
           <Modal
-            isOpen={this.state.isModalOpen}
+            isOpen={isModalOpen}
             onRequestClose={() => this.closeAuthModal()}
             ariaHideApp={false}
             className="auth-modal"
             overlayClassName="auth-modal__overlay"
           >
             <div className="modal__header">
-              <h2 className="modal__title">
-                {this.state.isLoginOpen ? "Login" : "Join"}
-              </h2>
+              <h2 className="modal__title">{isLoginOpen ? "Login" : "Join"}</h2>
               <div
                 className="modal__close"
                 onClick={() => this.closeAuthModal()}

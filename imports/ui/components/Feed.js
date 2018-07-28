@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withApollo, graphql, compose } from "react-apollo";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
-import { remove } from "lodash";
+import { removeFromCache, addToCache } from "./../utils/apolloCache";
 
 import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
@@ -199,46 +199,25 @@ class Feed extends Component {
       : this.localUpnext(id, podcastId, isInUpNext);
   }
 
-  removeFromCache(proxy, query, field, returnedObj) {
-    const { client } = this.props;
-    try {
-      const data = proxy.readQuery({ query });
-      remove(data[field], n => n.id === returnedObj.id);
-      proxy.writeQuery({ query, data });
-    } catch (e) {
-      client.query({ query });
-      console.log("query haven't been called", query);
-    }
-  }
-
-  addToCache(proxy, query, field, returnedObj) {
-    const { client } = this.props;
-    try {
-      const data = proxy.readQuery({ query });
-      remove(data.upnext, n => n.id === returnedObj.id);
-      data[field]
-        ? data[field].push(returnedObj)
-        : (data[field] = [returnedObj]);
-      proxy.writeQuery({ query, data });
-    } catch (e) {
-      client.query({ query });
-      console.log("query haven't been called", query);
-    }
-  }
-
   loggedUpnext(id, podcastId, isInUpNext) {
-    const { removeFromUpnext, addToUpnext } = this.props;
+    const { removeFromUpnext, addToUpnext, client } = this.props;
 
     isInUpNext
       ? removeFromUpnext({
           variables: { id, podcastId },
           update: (proxy, { data: { removeFromUpnext } }) =>
-            this.removeFromCache(proxy, getUpnext, "upnext", removeFromUpnext)
+            removeFromCache(
+              proxy,
+              client,
+              getUpnext,
+              "upnext",
+              removeFromUpnext
+            )
         }).catch(err => console.log("Error in removeFromUpnext", err))
       : addToUpnext({
           variables: { id, podcastId },
           update: (proxy, { data: { addToUpnext } }) =>
-            this.addToCache(proxy, getUpnext, "upnext", addToUpnext)
+            addToCache(proxy, client, getUpnext, "upnext", addToUpnext)
         }).catch(err => console.log("Error in addToUpnext", err));
   }
 
@@ -261,13 +240,14 @@ class Feed extends Component {
   }
 
   loggedFavorites(id, podcastId, isInFavorites) {
-    const { removeFromFavorites, addToFavorites } = this.props;
+    const { removeFromFavorites, addToFavorites, client } = this.props;
     isInFavorites
       ? removeFromFavorites({
           variables: { id, podcastId },
           update: (proxy, { data: { removeFromFavorites } }) =>
-            this.removeFromCache(
+            removeFromCache(
               proxy,
+              client,
               getFavorites,
               "favorites",
               removeFromFavorites
@@ -276,8 +256,9 @@ class Feed extends Component {
       : addToFavorites({
           variables: { id, podcastId },
           update: (proxy, { data: { addToFavorites } }) =>
-            this.removeFromCache(
+            removeFromCache(
               proxy,
+              client,
               getFavorites,
               "favorites",
               addToFavorites
