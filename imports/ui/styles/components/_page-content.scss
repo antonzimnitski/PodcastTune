@@ -63,11 +63,14 @@
 
 .top-header__nav-toogle {
   cursor: pointer;
-  height: $header-nav-toogle;
-  width: $header-nav-toogle;
   position: absolute;
   top: $small-space;
   left: $space;
+
+  & svg {
+    height: $header-nav-toogle;
+    width: $header-nav-toogle;
+  }
 }
 
 .page-content__main {
