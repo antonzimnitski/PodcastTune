@@ -2,6 +2,7 @@ import React from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
+import logo from "./../utils/logo";
 import PropTypes from "prop-types";
 
 const Header = ({ handleNavToggle, isNavOpen }) => {
@@ -11,7 +12,7 @@ const Header = ({ handleNavToggle, isNavOpen }) => {
         {isNavOpen ? xSvg : barsSvg}
       </div>
       <Link className="top-header__logo" to="/">
-        <img src="/images/logo.svg" alt="" />
+        <img src={logo} alt="Podcast tune - logo" />
       </Link>
     </div>
   );

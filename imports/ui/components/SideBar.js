@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Session } from "meteor/session";
+import logo from "./../utils/logo";
 
 import Auth from "./Auth";
 
@@ -8,7 +9,7 @@ const SideBar = () => {
   return (
     <nav>
       <Link className="sidebar__logo" to="/">
-        <img src="/images/logo.svg" alt="" />
+        <img src={logo} alt="Podcast tune - logo" />
       </Link>
       <div className="sidebar__links">
         <Link onClick={() => closeSidebar()} className="sidebar__link" to="/">
