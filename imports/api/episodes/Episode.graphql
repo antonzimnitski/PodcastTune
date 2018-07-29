@@ -18,5 +18,5 @@ type Episode {
 
 extend type Query {
   feed(podcastId: Int!, limit: Int!): [Episode]
-  episode(podcastId: Int!, id: String!): Episode
+  episode(id: String!, podcastId: Int!): Episode
 }

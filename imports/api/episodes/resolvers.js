@@ -9,7 +9,7 @@ export default {
         .slice(0, limit)
         .sort(sortByDate);
     },
-    episode(_, { podcastId, id }) {
+    episode(_, { id, podcastId }) {
       return getEpisodes(podcastId).find(el => el.id === id);
     }
   },

@@ -28,17 +28,17 @@ type Mutation {
   subscribe(podcastId: Int!): Podcast
   unsubscribe(podcastId: Int!): Podcast
 
-  setPlayingEpisode(podcastId: Int!, id: String!): Episode
+  setPlayingEpisode(id: String!, podcastId: Int!): Episode
   clearPlayingEpisode: EpisodeIds
 
-  addToUpnext(podcastId: Int!, id: String!): Episode
-  removeFromUpnext(podcastId: Int!, id: String!): Episode
+  addToUpnext(id: String!, podcastId: Int!): Episode
+  removeFromUpnext(id: String!, podcastId: Int!): Episode
 
-  addToFavorites(podcastId: Int!, id: String!): Episode
-  removeFromFavorites(podcastId: Int!, id: String!): Episode
+  addToFavorites(id: String!, podcastId: Int!): Episode
+  removeFromFavorites(id: String!, podcastId: Int!): Episode
 
-  markAsPlayed(podcastId: Int!, id: String!): Episode
-  markAsUnplayed(podcastId: Int!, id: String!): Episode
+  markAsPlayed(id: String!, podcastId: Int!): Episode
+  markAsUnplayed(id: String!, podcastId: Int!): Episode
 
   updatePlayedSeconds(
     id: String!

@@ -8,33 +8,37 @@ import EpisodeModal from "./helpers/EpisodeModal";
 import Episode from "./helpers/Episode";
 import LoginWarningModal from "./helpers/LoginWarningModal";
 
+// Queries for logged user
 import getInProgress from "./../queries/getInProgress";
 import getUpnext from "./../queries/getUpnext";
 import getFavorites from "./../queries/getFavorites";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 
-import removeFromUpnext from "./../queries/removeFromUpnext";
-import addToUpnext from "./../queries/addToUpnext";
-import removeFromFavorites from "./../queries/removeFromFavorites";
-import addToFavorites from "./../queries/addToFavorites";
-import markAsUnplayed from "./../queries/markAsUnplayed";
-import markAsPlayed from "./../queries/markAsPlayed";
-import setPlayingEpisode from "./../queries/setPlayingEpisode";
+// Mutations for logged user
+import removeFromUpnext from "./../mutations/removeFromUpnext";
+import addToUpnext from "./../mutations/addToUpnext";
+import removeFromFavorites from "./../mutations/removeFromFavorites";
+import addToFavorites from "./../mutations/addToFavorites";
+import markAsUnplayed from "./../mutations/markAsUnplayed";
+import markAsPlayed from "./../mutations/markAsPlayed";
+import setPlayingEpisode from "./../mutations/setPlayingEpisode";
+import clearPlayingEpisode from "./../mutations/clearPlayingEpisode";
 
-import setLocalPlayingEpisode from "./../../localData/queries/setLocalPlayingEpisode";
-import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
-import addToLocalUpnext from "./../../localData/queries/addToLocalUpnext";
-import removeFromLocalUpnext from "./../../localData/queries/removeFromLocalUpnext";
-import markLocalAsPlayed from "./../../localData/queries/markLocalAsPlayed";
-import markLocalAsUnplayed from "./../../localData/queries/markLocalAsUnplayed";
+// Queries for local state
 import getLocalUpnext from "./../../localData/queries/getLocalUpnext";
+import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
-import clearLocalPlayingEpisode from "./../../localData/queries/clearLocalPlayingEpisode";
-import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
+// Mutations for local state
+import setLocalPlayingEpisode from "./../../localData/mutations/setLocalPlayingEpisode";
+import addToLocalUpnext from "./../../localData/mutations/addToLocalUpnext";
+import removeFromLocalUpnext from "./../../localData/mutations/removeFromLocalUpnext";
+import markLocalAsPlayed from "./../../localData/mutations/markLocalAsPlayed";
+import markLocalAsUnplayed from "./../../localData/mutations/markLocalAsUnplayed";
+import clearLocalPlayingEpisode from "./../../localData/mutations/clearLocalPlayingEpisode";
 
 import isPLaying from "./../../localData/queries/isPlaying";
-import play from "./../../localData/queries/play";
-import pause from "./../../localData/queries/pause";
+import play from "./../../localData/mutations/play";
+import pause from "./../../localData/mutations/pause";
 
 class Feed extends Component {
   constructor(props) {

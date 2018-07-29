@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query Episode($podcastId: Int!, $id: String!) {
-    episode(podcastId: $podcastId, id: $id) {
+  query Episode($id: String!, $podcastId: Int!) {
+    episode(id: $id, podcastId: $podcastId) {
       title
       description
       author

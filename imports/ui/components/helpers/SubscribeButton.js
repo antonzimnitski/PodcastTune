@@ -7,10 +7,10 @@ import LoginWarningModal from "./LoginWarningModal";
 import UnsubscribeModal from "./UnsubscribeModal";
 
 import getNewReleases from "./../../queries/getNewReleases";
-
 import getSubscribedPodcasts from "./../../queries/getSubscribedPodcasts";
-import subscribeToPodcast from "./../../queries/subscribeToPodcast";
-import unsubscribeFromPodcast from "./../../queries/unsubscribeFromPodcast";
+
+import subscribeToPodcast from "./../../mutations/subscribeToPodcast";
+import unsubscribeFromPodcast from "./../../mutations/unsubscribeFromPodcast";
 
 class SubscribeButton extends Component {
   constructor(props) {

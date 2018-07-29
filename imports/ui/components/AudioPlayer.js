@@ -10,23 +10,27 @@ import update from "immutability-helper";
 import UpNextPopup from "./helpers/UpNextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
 
+// Queries for logged user
 import getUpnext from "./../queries/getUpnext";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 
-import markAsPlayed from "./../queries/markAsPlayed";
-import updatePlayedSeconds from "./../queries/updatePlayedSeconds";
-import clearPlayingEpisode from "./../queries/clearPlayingEpisode";
+// Mutations for logged user
+import markAsPlayed from "./../mutations/markAsPlayed";
+import updatePlayedSeconds from "./../mutations/updatePlayedSeconds";
+import clearPlayingEpisode from "./../mutations/clearPlayingEpisode";
 
-import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
+// Queries for local state
 import getLocalUpnext from "./../../localData/queries/getLocalUpnext";
+import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
-import markLocalAsPlayed from "./../../localData/queries/markLocalAsPlayed";
-import clearLocalPlayingEpisode from "./../../localData/queries/clearLocalPlayingEpisode";
-import updateLocalPlayedSeconds from "./../../localData/queries/updateLocalPlayedSeconds";
+// Mutations for local state
+import markLocalAsPlayed from "./../../localData/mutations/markLocalAsPlayed";
+import updateLocalPlayedSeconds from "./../../localData/mutations/updateLocalPlayedSeconds";
+import clearLocalPlayingEpisode from "./../../localData/mutations/clearLocalPlayingEpisode";
 
 import isPLaying from "./../../localData/queries/isPlaying";
-import play from "./../../localData/queries/play";
-import pause from "./../../localData/queries/pause";
+import play from "./../../localData/mutations/play";
+import pause from "./../../localData/mutations/pause";
 
 class AudioPlayer extends Component {
   constructor(props) {

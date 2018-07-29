@@ -32,12 +32,12 @@ export default {
             $pull: { upnext: { id } }
           }
         );
-        return getEpisode(podcastId, id);
+        return getEpisode(id, podcastId);
       }
 
       const { id, podcastId } = playingEpisode;
 
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     newReleases(_, __, { user }) {
       if (!user) return null;
@@ -141,7 +141,7 @@ export default {
         },
         { upsert: true }
       );
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     updatePlayedSeconds(_, { id, podcastId, playedSeconds }, { user }) {
       if (!user) return null;
@@ -168,7 +168,7 @@ export default {
         { $addToSet: { upnext: { id, podcastId } } },
         { upsert: true }
       );
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     removeFromUpnext(_, { id, podcastId }, { user }) {
       if (!user) return null;
@@ -178,7 +178,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { upnext: { id } } });
       }
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     addToFavorites(_, { id, podcastId }, { user }) {
       if (!user) return null;
@@ -189,7 +189,7 @@ export default {
         { $addToSet: { favorites: { id, podcastId } } },
         { upsert: true }
       );
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     removeFromFavorites(_, { id, podcastId }, { user }) {
       if (!user) return null;
@@ -199,7 +199,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { favorites: { id } } });
       }
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     markAsPlayed(_, { id, podcastId }, { user }) {
       if (!user) return null;
@@ -213,7 +213,7 @@ export default {
         },
         { upsert: true }
       );
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     },
     markAsUnplayed(_, { id, podcastId }, { user }) {
       if (!user) return null;
@@ -223,7 +223,7 @@ export default {
       if (userData) {
         UsersData.update({ _id }, { $pull: { played: { id } } });
       }
-      return getEpisode(podcastId, id);
+      return getEpisode(id, podcastId);
     }
   }
 };
@@ -234,7 +234,7 @@ function getUserData(_id, field) {
   return userData[field];
 }
 
-function getEpisode(podcastId, id) {
+function getEpisode(id, podcastId) {
   const podcast = Podcasts.findOne({ podcastId });
   if (podcast.episodes && podcast.episodes.length) {
     return find(podcast.episodes, { id });
@@ -245,7 +245,7 @@ function getEpisode(podcastId, id) {
 function getFeed(feed) {
   return !feed || !feed.length
     ? null
-    : feed.map(({ podcastId, id }) => getEpisode(podcastId, id));
+    : feed.map(({ id, podcastId }) => getEpisode(id, podcastId));
 }
 
 function sortByDate(a, b) {

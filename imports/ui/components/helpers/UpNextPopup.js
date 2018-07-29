@@ -8,15 +8,21 @@ import { removeFromCache } from "./../../utils/apolloCache";
 import ModalItem from "./ModalItem";
 import Loader from "./Loader";
 
-import removeFromUpnext from "./../../queries/removeFromUpnext";
+// Queries for logged user
 import getUpnext from "./../../queries/getUpnext";
 import getPlayingEpisode from "./../../queries/getPlayingEpisode";
-import setPlayingEpisode from "./../../queries/setPlayingEpisode";
 
+// Mutations for logged user
+import setPlayingEpisode from "./../../mutations/setPlayingEpisode";
+import removeFromUpnext from "./../../mutations/removeFromUpnext";
+
+// Queries for local state
 import getLocalUpnext from "./../../../localData/queries/getLocalUpnext";
 import getLocalPlayingEpisode from "./../../../localData/queries/getLocalPlayingEpisode";
-import setLocalPlayingEpisode from "./../../../localData/queries/setLocalPlayingEpisode";
-import removeFromLocalUpnext from "./../../../localData/queries/removeFromLocalUpnext";
+
+// Mutations for local state
+import setLocalPlayingEpisode from "./../../../localData/mutations/setLocalPlayingEpisode";
+import removeFromLocalUpnext from "./../../../localData/mutations/removeFromLocalUpnext";
 
 const UpNextPopup = ({
   loading,
