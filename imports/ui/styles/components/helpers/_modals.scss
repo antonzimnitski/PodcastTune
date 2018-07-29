@@ -29,6 +29,7 @@
 
 .modal__list {
   overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .modal__item {
@@ -82,6 +83,7 @@
 }
 
 .modal-item__info {
+  flex: 0 1 auto;
   overflow: hidden;
   min-width: 0;
   padding: $small-space; //https://stackoverflow.com/questions/45813304/text-overflow-ellipsis-on-flex-child-not-working
@@ -89,9 +91,7 @@
 
 .modal-item__title,
 .modal-item__author {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  @include text-overflow;
 }
 
 .modal-item__title {

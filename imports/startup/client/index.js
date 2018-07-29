@@ -1,4 +1,6 @@
 import "core-js/es6";
+import "classlist-polyfill";
+import "whatwg-fetch";
 
 import { Meteor } from "meteor/meteor";
 import React, { Component } from "react";
@@ -12,13 +14,13 @@ import {
   ApolloLink,
   defaultDataIdFromObject
 } from "apollo-boost";
+import { withClientState } from "apollo-link-state";
 import { CachePersistor } from "apollo-cache-persist";
-import { ApolloProvider } from "react-apollo";
-import "whatwg-fetch";
 import ApolloClient from "apollo-client";
+import { ApolloProvider } from "react-apollo";
 
 import App from "./../../ui/components/App";
-import { withClientState } from "apollo-link-state";
+import Loader from "./../../ui/components/helpers/Loader";
 
 import playingEpisode from "./../../localData/resolvers/playingEpisode";
 import playingStatus from "./../../localData/resolvers/playingStatus";
@@ -98,15 +100,15 @@ class Root extends Component {
   }
 
   render() {
-    return this.state.restored ? <ApolloApp /> : <div>Loading!!!</div>;
+    return this.state.restored ? (
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    ) : (
+      <Loader />
+    );
   }
 }
-
-const ApolloApp = () => (
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
-);
 
 Tracker.autorun(() => {
   const isNavOpen = Session.get("isNavOpen");

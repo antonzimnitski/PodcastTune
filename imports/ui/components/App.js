@@ -32,8 +32,9 @@ class App extends Component {
   }
 
   setAudioPlayer() {
-    if (this.props.playingEpisode || this.props.localPlayingEpisode)
-      Session.set("isPlayerOpen", true);
+    if (this.props.playingEpisode || this.props.localPlayingEpisode) {
+      this.props.handlePlayer();
+    }
   }
 
   render() {
@@ -94,6 +95,7 @@ App.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isPlayerOpen: PropTypes.bool.isRequired,
   handleNavToggle: PropTypes.func.isRequired,
+  handlePlayer: PropTypes.func.isRequired,
   playingEpisode: PropTypes.object,
   localPlayingEpisode: PropTypes.object
 };
@@ -102,7 +104,8 @@ export default withTracker(() => {
   return {
     isLoggedIn: !!Meteor.userId(),
     isPlayerOpen: Session.get("isPlayerOpen"),
-    handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen"))
+    handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen")),
+    handlePlayer: () => Session.set("isPlayerOpen", true)
   };
 })(
   compose(
