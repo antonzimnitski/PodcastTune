@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withApollo, graphql, compose } from "react-apollo";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
 import { removeFromCache, addToCache } from "./../utils/apolloCache";
 
 import EpisodeModal from "./helpers/EpisodeModal";
@@ -337,6 +338,30 @@ class Feed extends Component {
     );
   }
 }
+
+Feed.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  playingEpisode: PropTypes.object,
+  localPlayingEpisode: PropTypes.object,
+  isPlaying: PropTypes.bool.isRequired,
+  setPlayingEpisode: PropTypes.func.isRequired,
+  addToUpnext: PropTypes.func.isRequired,
+  removeFromUpnext: PropTypes.func.isRequired,
+  addToFavorites: PropTypes.func.isRequired,
+  removeFromFavorites: PropTypes.func.isRequired,
+  markAsPlayed: PropTypes.func.isRequired,
+  markAsUnplayed: PropTypes.func.isRequired,
+  markLocalAsPlayed: PropTypes.func.isRequired,
+  markLocalAsUnplayed: PropTypes.func.isRequired,
+  addToLocalUpnext: PropTypes.func.isRequired,
+  removeFromLocalUpnext: PropTypes.func.isRequired,
+  setLocalPlayingEpisode: PropTypes.func.isRequired,
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  clearPlayingEpisode: PropTypes.func.isRequired,
+  clearLocalPlayingEpisode: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

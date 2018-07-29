@@ -3,6 +3,7 @@ import { withApollo, compose, graphql } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import Modal from "react-modal";
+import PropTypes from "prop-types";
 import { removeFromCache } from "./../../utils/apolloCache";
 
 import ModalItem from "./ModalItem";
@@ -118,6 +119,20 @@ const UpNextPopup = ({
       {loading ? <Loader /> : renderContent(upnext || localUpnext)}
     </Modal>
   );
+};
+
+UpNextPopup.propTypes = {
+  loading: PropTypes.bool,
+  isModalOpen: PropTypes.bool.isRequired,
+  handleUpNextPopup: PropTypes.func.isRequired,
+  upnext: PropTypes.array,
+  localUpnext: PropTypes.array,
+  isLoggedIn: PropTypes.bool.isRequired,
+  setPlayingEpisode: PropTypes.func.isRequired,
+  removeFromUpnext: PropTypes.func.isRequired,
+  setLocalPlayingEpisode: PropTypes.func.isRequired,
+  removeFromLocalUpnext: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired
 };
 
 export default withTracker(() => {

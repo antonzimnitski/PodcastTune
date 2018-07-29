@@ -3,6 +3,7 @@ import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import PropTypes from "prop-types";
 import momentDurationFormatSetup from "moment-duration-format";
 import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
@@ -508,6 +509,21 @@ class AudioPlayer extends Component {
     );
   }
 }
+
+AudioPlayer.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  playingEpisode: PropTypes.object,
+  localPlayingEpisode: PropTypes.object,
+  updatePlayedSeconds: PropTypes.func.isRequired,
+  updateLocalPlayedSeconds: PropTypes.func.isRequired,
+  markAsPlayed: PropTypes.func.isRequired,
+  markLocalAsPlayed: PropTypes.func.isRequired,
+  clearPlayingEpisode: PropTypes.func.isRequired,
+  clearLocalPlayingEpisode: PropTypes.func.isRequired,
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

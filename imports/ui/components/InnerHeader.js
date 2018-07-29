@@ -1,6 +1,7 @@
 import React from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
 
 import SearchPopup from "./helpers/SearchPopup";
 
@@ -35,6 +36,11 @@ const InnerHeader = ({ title, isSearchModelOpen }) => {
 function openSearchModal() {
   Session.set("isSearchModelOpen", true);
 }
+
+InnerHeader.propTypes = {
+  title: PropTypes.string,
+  isSearchModelOpen: PropTypes.bool.isRequired
+};
 
 export default withTracker(() => {
   return {

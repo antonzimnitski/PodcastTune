@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import { Query } from "react-apollo";
+import PropTypes from "prop-types";
 
 import Loader from "./helpers/Loader";
 import InnerHeader from "./InnerHeader";
@@ -69,6 +70,11 @@ function renderPodcasts() {
     </Query>
   );
 }
+
+Podcasts.propTypes = {
+  title: PropTypes.string.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

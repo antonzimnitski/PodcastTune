@@ -1,6 +1,7 @@
 import React from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { Query } from "react-apollo";
+import PropTypes from "prop-types";
 
 import InnerHeader from "./InnerHeader";
 import Feed from "./Feed";
@@ -52,6 +53,11 @@ function renderFavorites() {
     </Query>
   );
 }
+
+Favorites.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

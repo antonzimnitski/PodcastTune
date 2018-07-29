@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { withTracker } from "meteor/react-meteor-data";
 import { withApollo, compose, graphql } from "react-apollo";
 import { removeFromCache, addToCache } from "./../../utils/apolloCache";
@@ -117,6 +118,13 @@ class SubscribeButton extends Component {
     );
   }
 }
+
+SubscribeButton.propTypes = {
+  podcastId: PropTypes.number.isRequired,
+  subscribe: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  client: PropTypes.object.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
@@ -92,6 +93,16 @@ function formatDuration(seconds) {
   if (!seconds) return "";
   return moment.duration(seconds, "seconds").format();
 }
+
+Episode.propTypes = {
+  episode: PropTypes.object.isRequired,
+  className: PropTypes.string.isRequired,
+  handleEpisodeModal: PropTypes.func.isRequired,
+  handleFavorites: PropTypes.func.isRequired,
+  handleStatus: PropTypes.func.isRequired,
+  handleUpnext: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired
+};
 
 export default Episode;
 

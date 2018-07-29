@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Accounts } from "meteor/accounts-base";
-import { Meteor } from "meteor/meteor";
 import PropTypes from "prop-types";
 
 export class Signup extends Component {
@@ -31,12 +30,13 @@ export class Signup extends Component {
     }
 
     Accounts.createUser({ email, password }, err => {
+      const { onClose, client } = this.props;
       if (err) {
         this.setState({ error: err.reason });
       } else {
         this.setState({ error: "" });
-        this.props.onClose();
-        this.props.client.resetStore();
+        onClose();
+        client.resetStore();
       }
     });
   }
@@ -86,13 +86,9 @@ export class Signup extends Component {
   }
 }
 
-// Signup.propTypes = {
-//   createUser: PropTypes.func.isRequired
-// };
+Signup.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired
+};
 
 export default Signup;
-// export default withTracker(() => {
-//   return {
-//     createUser: Accounts.createUser
-//   };
-// })(Signup);

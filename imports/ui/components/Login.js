@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
+import PropTypes from "prop-types";
 
 export class Login extends Component {
   constructor(props) {
@@ -28,8 +29,9 @@ export class Login extends Component {
       this.setState({ error: reason });
 
       if (!err) {
-        this.props.onClose();
-        this.props.client.resetStore();
+        const { onClose, client } = this.props;
+        onClose();
+        client.resetStore();
       }
     });
   }
@@ -79,8 +81,9 @@ export class Login extends Component {
   }
 }
 
-// Login.propTypes = {
-//   loginWithPassword: PropTypes.func.isRequired
-// };
+Login.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired
+};
 
 export default Login;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const ModalItem = ({ item, playIcon = false }) => {
   return (
@@ -20,6 +21,11 @@ const ModalItem = ({ item, playIcon = false }) => {
       </div>
     </React.Fragment>
   );
+};
+
+ModalItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  playIcon: PropTypes.bool
 };
 
 export default ModalItem;

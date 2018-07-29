@@ -4,6 +4,7 @@ import { Session } from "meteor/session";
 import Modal from "react-modal";
 import { Query, withApollo } from "react-apollo";
 import { withTracker } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
 
 import Login from "./Login";
 import Signup from "./Signup";
@@ -167,6 +168,11 @@ class Auth extends Component {
     );
   }
 }
+
+Auth.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  client: PropTypes.object.isRequired
+};
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };

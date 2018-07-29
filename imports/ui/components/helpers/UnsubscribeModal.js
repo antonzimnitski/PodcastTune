@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import PropTypes from "prop-types";
 
 const UnsubscribeModal = ({
   isModalOpen,
@@ -33,6 +34,13 @@ const UnsubscribeModal = ({
       </div>
     </Modal>
   );
+};
+
+UnsubscribeModal.propTypes = {
+  isModalOpen: PropTypes.bool.isRequired,
+  closeUnsubscribeModal: PropTypes.func.isRequired,
+  unsubscribe: PropTypes.func.isRequired,
+  podcastId: PropTypes.number.isRequired
 };
 
 export default UnsubscribeModal;

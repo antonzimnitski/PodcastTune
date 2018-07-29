@@ -3,6 +3,7 @@ import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { graphql, compose } from "react-apollo";
+import PropTypes from "prop-types";
 
 import Header from "./Header";
 import SideBar from "./SideBar";
@@ -78,6 +79,14 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  isPlayerOpen: PropTypes.bool.isRequired,
+  handleNavToggle: PropTypes.func.isRequired,
+  playingEpisode: PropTypes.object,
+  localPlayingEpisode: PropTypes.object
+};
 
 export default withTracker(() => {
   return {

@@ -2,6 +2,7 @@ import React from "react";
 import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Header = ({ handleNavToggle, isNavOpen }) => {
   return (
@@ -14,6 +15,11 @@ const Header = ({ handleNavToggle, isNavOpen }) => {
       </Link>
     </div>
   );
+};
+
+Header.propTypes = {
+  handleNavToggle: PropTypes.func.isRequired,
+  isNavOpen: PropTypes.bool.isRequired
 };
 
 export default withTracker(() => {

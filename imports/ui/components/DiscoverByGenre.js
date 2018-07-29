@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { graphql } from "react-apollo";
+import PropTypes from "prop-types";
 
 import InnerHeader from "./InnerHeader";
 import Loader from "./helpers/Loader";
@@ -79,6 +80,12 @@ class DiscoverByGenre extends Component {
     );
   }
 }
+
+DiscoverByGenre.propTypes = {
+  loading: PropTypes.bool,
+  error: PropTypes.object,
+  podcastsPreviews: PropTypes.array
+};
 
 export default graphql(fetchPodcastsPreviews, {
   props: ({ data: { loading, error, podcastsPreviews } }) => ({

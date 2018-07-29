@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import PropTypes from "prop-types";
 import moment from "moment";
 import { Query } from "react-apollo";
 
@@ -74,6 +75,13 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
       </Query>
     </Modal>
   );
+};
+
+EpisodeModal.propTypes = {
+  isModalOpen: PropTypes.bool.isRequired,
+  handleEpisodeModal: PropTypes.func.isRequired,
+  podcastId: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired
 };
 
 export default EpisodeModal;

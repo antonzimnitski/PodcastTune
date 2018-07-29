@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Session } from "meteor/session";
 import Modal from "react-modal";
+import PropTypes from "prop-types";
 
 import SearchResults from "./SearchResults";
 
@@ -73,5 +74,9 @@ class SearchPopup extends Component {
     );
   }
 }
+
+SearchPopup.propTypes = {
+  isSearchModelOpen: PropTypes.bool.isRequired
+};
 
 export default SearchPopup;

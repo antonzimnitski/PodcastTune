@@ -2,6 +2,7 @@ import React from "react";
 import { Session } from "meteor/session";
 import { graphql } from "react-apollo";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import Loader from "./Loader";
 import ModalItem from "./ModalItem";
@@ -36,6 +37,12 @@ function renderResults(results) {
 function closeSearchModal() {
   Session.set("isSearchModelOpen", false);
 }
+
+SearchResults.propTypes = {
+  loading: PropTypes.bool,
+  error: PropTypes.object,
+  searchPreviews: PropTypes.array
+};
 
 export default graphql(doSearch, {
   props: ({ data: { loading, error, searchPreviews } }) => ({
