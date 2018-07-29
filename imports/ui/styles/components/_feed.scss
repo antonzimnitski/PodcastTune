@@ -12,3 +12,11 @@
     font-size: 1.8rem;
   }
 }
+
+.feed + button {
+  margin-top: $small-space;
+
+  @include tablet {
+    margin-top: $space;
+  }
+}

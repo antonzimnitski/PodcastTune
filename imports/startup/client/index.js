@@ -1,7 +1,7 @@
 import "core-js/es6";
 
 import { Meteor } from "meteor/meteor";
-import React from "react";
+import React, { Component } from "react";
 import { Session } from "meteor/session";
 import { Tracker } from "meteor/tracker";
 import { render } from "react-dom";
@@ -12,7 +12,7 @@ import {
   ApolloLink,
   defaultDataIdFromObject
 } from "apollo-boost";
-import { persistCache } from "apollo-cache-persist";
+import { CachePersistor } from "apollo-cache-persist";
 import { ApolloProvider } from "react-apollo";
 import "whatwg-fetch";
 import ApolloClient from "apollo-client";
@@ -53,11 +53,11 @@ const cache = new InMemoryCache({
   }
 });
 
-// persistCache({
-//   cache,
-//   storage: window.localStorage,
-//   maxSize: 4194304 //4mb
-// });
+const persistor = new CachePersistor({
+  cache,
+  storage: window.localStorage,
+  maxSize: 4194304 //4mb
+});
 
 const defaultState = {
   isPlaying: false,
@@ -80,6 +80,28 @@ const client = new ApolloClient({
 
 client.onResetStore(stateLink.writeDefaults);
 
+// https://github.com/apollographql/apollo-link-state/issues/170
+// https://gist.github.com/randytorres/2d8c36f567a1be7ddb89bb7b8ca7929d
+class Root extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restored: false
+    };
+  }
+
+  componentDidMount() {
+    persistor
+      .restore()
+      .then(() => this.setState({ restored: true }))
+      .catch(err => console.log("Error in persistor.restore()", err));
+  }
+
+  render() {
+    return this.state.restored ? <ApolloApp /> : <div>Loading!!!</div>;
+  }
+}
+
 const ApolloApp = () => (
   <ApolloProvider client={client}>
     <App />
@@ -100,5 +122,5 @@ Meteor.startup(() => {
   Session.set("isSearchModelOpen", false);
   Session.set("isNavOpen", false);
   Session.set("isPlayerOpen", false);
-  render(<ApolloApp />, document.getElementById("app"));
+  render(<Root />, document.getElementById("app"));
 });

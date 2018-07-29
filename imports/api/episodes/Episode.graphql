@@ -11,9 +11,9 @@ type Episode {
   pubDateUnix: Float
   linkToEpisode: String
   playedSeconds: Float
-  inFavorites: Boolean
-  inUpnext: Boolean
-  isPlayed: Boolean
+  inFavorites: Boolean @cacheControl(maxAge: 0)
+  inUpnext: Boolean @cacheControl(maxAge: 0)
+  isPlayed: Boolean @cacheControl(maxAge: 0)
 }
 
 extend type Query {

@@ -1,7 +1,7 @@
 type UserData {
   _id: String!
   podcasts: [Podcast]
-  playingEpisode: Episode
+  playingEpisode: Episode @cacheControl(maxAge: 0)
   newReleases: [Episode]
   inProgress: [Episode]
   upnext: [Episode]

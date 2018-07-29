@@ -21,7 +21,17 @@ import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
 class App extends Component {
-  componentDidUpdate(prevProps, prevState) {
+  componentDidMount() {
+    // If episode in cache it will be available as props on mount
+    this.setAudioPlayer();
+  }
+
+  componentDidUpdate() {
+    // If episode NOT in cache it will be return from queries (if exists)
+    this.setAudioPlayer();
+  }
+
+  setAudioPlayer() {
     if (this.props.playingEpisode || this.props.localPlayingEpisode)
       Session.set("isPlayerOpen", true);
   }

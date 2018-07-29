@@ -19,14 +19,6 @@
   color: $light-gray;
 }
 
-.feed + button {
-  margin-top: $small-space;
-
-  @include tablet {
-    margin-top: $space;
-  }
-}
-
 .episode:hover .title__text {
   color: $light-blue;
 }

@@ -2,7 +2,7 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import merge from "lodash/merge";
 
-//da9\][74311d][\s
+//da93121111190
 import UsersSchema from "./../../api/users/User.graphql";
 import UsersResolvers from "./../../api/users/resolvers";
 
@@ -52,5 +52,5 @@ const schema = makeExecutableSchema({
 createApolloServer({
   schema,
   tracing: true,
-  cacheControl: {}
+  cacheControl: true
 });
