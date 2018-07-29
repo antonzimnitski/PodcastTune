@@ -76,9 +76,12 @@ class Feed extends Component {
     this.setState({ isWarningModalOpen: false });
   }
 
+  getPlayingEpisode() {
+    return this.props.playingEpisode || this.props.localPlayingEpisode;
+  }
+
   isPlayingEpisode(id) {
-    const playingEpisode =
-      this.props.playingEpisode || this.props.localPlayingEpisode;
+    const playingEpisode = this.getPlayingEpisode();
     if (!playingEpisode) return false;
 
     return playingEpisode.id === id;
@@ -193,9 +196,15 @@ class Feed extends Component {
 
   handleUpnext(id, podcastId, isInUpNext) {
     const isPlayingEpisode = this.isPlayingEpisode(id);
+    const playingEpisode = this.getPlayingEpisode();
 
     if (isPlayingEpisode) {
       console.log("currentEpisode");
+      return;
+    }
+
+    if (!playingEpisode) {
+      this.handleClick(id, podcastId);
       return;
     }
 
