@@ -1,5 +1,5 @@
-@mixin large-phone() {
-  @media (min-width: $breakpoint-large-phone) {
+@mixin phone-large() {
+  @media (min-width: $breakpoint-phone-large) {
     @content;
   }
 }

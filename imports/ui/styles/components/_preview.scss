@@ -15,7 +15,7 @@
   width: 50%;
   transition: all 0.3s ease;
 
-  @include large-phone {
+  @include phone-large {
     width: 33%;
   }
 
@@ -71,13 +71,12 @@
   font-size: $preview-title-font-size;
   line-height: 1.2;
   margin-bottom: $small-space;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 
   @include desktop {
     font-size: $preview-title-font-size * 1.2;
   }
+
+  @include text-overflow;
 }
 
 .preview__description {

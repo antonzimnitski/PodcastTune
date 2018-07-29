@@ -1,24 +1,21 @@
 .player {
-  display: none;
+  position: absolute;
   z-index: 100;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: $player-height-small;
-  position: fixed;
-  justify-content: space-between;
-  align-items: center;
   box-shadow: 0 0 0.5rem $black;
-
   @include tablet {
     height: $player-height;
   }
-
   @include desktop {
     height: $player-height-desktop;
   }
-
   @include noselect;
 }
 
@@ -30,28 +27,25 @@
 .player__skip-text {
   display: none;
   cursor: pointer;
-
   @include tablet {
     display: block;
-    width: 4rem;
-    height: 4rem;
+    width: $player-skip-size;
+    height: $player-skip-size;
   }
-
   @include desktop {
-    width: 6rem;
-    height: 6rem;
+    width: $player-skip-size-desktop;
+    height: $player-skip-size-desktop;
   }
 }
 
 .player__play {
   display: block;
+  width: $player-play-size;
+  height: $player-play-size;
   fill: $black;
-  width: 5rem;
-  height: 5rem;
-
   @include desktop {
-    width: 8rem;
-    height: 8rem;
+    width: $player-play-size-desktop;
+    height: $player-play-size-desktop;
   }
 }
 
@@ -64,25 +58,23 @@
 
 .player__link-to-podcast {
   display: none;
-
   @include tablet {
-    margin-left: $space;
     display: block;
+    margin-left: $space;
   }
-
   @include desktop {
     margin-left: $large-space;
   }
 }
 
 .player__podcast-atrwork {
-  height: 7rem;
-  width: 7rem;
+  width: $player-artwork-size;
+  height: $player-artwork-size;
   transition: all 0.3s ease;
   border: 0.1rem solid $black;
   @include desktop {
-    height: 9rem;
-    width: 9rem;
+    width: $player-artwork-size-desktop;
+    height: $player-artwork-size-desktop;
   }
 }
 
@@ -96,7 +88,6 @@
 
 .player__play {
   margin: 0 $small-space;
-
   @include desktop {
     margin: 0 $space;
   }
@@ -112,15 +103,14 @@
 }
 
 .player__skip-text {
-  text-align: center;
-  line-height: 4rem;
   display: block;
-  font-weight: 600;
+  text-align: center;
   color: $black;
-
+  font-weight: 600;
+  line-height: $player-skip-size;
   @include desktop {
     font-size: 2rem;
-    line-height: 6rem;
+    line-height: $player-skip-size-desktop;
   }
 }
 
@@ -149,65 +139,58 @@
 }
 
 .player__controls-center {
+  align-self: center;
+  flex: 1 1 100%;
   min-width: 0;
   max-width: 70rem;
-  flex: 1 1 100%;
-  align-self: center;
   text-align: center;
   @include tablet {
     margin: 0 $space;
   }
-
   @include desktop {
     max-width: 90rem;
   }
 }
 
 .player__title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   font-size: $player-title-font-size;
-
   @include desktop {
     margin-bottom: $small-space / 2;
     font-size: $player-title-font-size * 1.3;
   }
+  @include text-overflow;
 }
 
 .player__title-link:hover,
 .player__author a:hover {
-  text-decoration: underline;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .player__author {
   font-style: italic;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   @include desktop {
     font-size: 1.6rem;
   }
+  @include text-overflow;
 }
 
 .player__seek-bar {
   display: none;
   @include tablet {
+    position: relative;
     display: block;
     width: 100%;
-    position: relative;
     margin-top: 0.5rem;
   }
   @include desktop {
-    margin-top: 0.5rem;
+    margin-top: $small-space;
   }
 }
 
 .seek-bar__progress {
   width: 100%;
   height: 1rem;
-
   @include desktop {
     height: 1.5rem;
   }
@@ -219,23 +202,23 @@
 }
 
 .seek-bar__text {
-  font-weight: 500;
   display: inline-block;
+  font-weight: 500;
   @include laptop {
-    font-size: 1.6rem;
     margin-top: 0.5rem;
+    font-size: 1.6rem;
   }
 }
 
 .player__playback-rate {
   display: none;
   @include tablet {
-    width: 3rem;
-    margin-right: $space;
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    width: 3rem;
+    margin-right: $space;
   }
   @include desktop {
     margin-right: $large-space;
@@ -243,19 +226,17 @@
 }
 
 .playback-rate__control {
-  opacity: 0;
-  width: 2rem;
-  height: 2rem;
+  width: $player-playback-size;
+  height: $player-playback-size;
   transition: all 0.3s ease;
-
+  opacity: 0;
   @include laptop {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: $player-playback-size-laptop;
+    height: $player-playback-size-laptop;
   }
-
   @include desktop {
-    width: 3rem;
-    height: 3rem;
+    width: $player-playback-size-desktop;
+    height: $player-playback-size-desktop;
   }
 }
 
@@ -264,8 +245,8 @@
 }
 
 .playback-rate__button {
-  fill: $black;
   opacity: 0.5;
+  fill: $black;
 }
 
 .playback-rate__button:hover {
@@ -273,33 +254,31 @@
 }
 
 .playback-rate__text {
-  margin: $small-space / 2 0;
   width: 3.5rem;
   height: 2.5rem;
+  margin: $small-space / 2 0;
+  text-align: center;
+  border: 0.2rem solid $black;
+  border-radius: 0.5rem;
   font-size: 1.2rem;
   line-height: 2rem;
-  text-align: center;
-  border-radius: 0.5rem;
-  border: 0.2rem solid $black;
-
   @include laptop {
     font-size: 1.4rem;
   }
-
   @include desktop {
-    font-size: 1.6rem;
     margin: $small-space 0;
+    font-size: 1.6rem;
   }
 }
 
 .player__volume {
   display: none;
   @include tablet {
-    margin-right: $space;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     height: auto;
+    margin-right: $space;
   }
   @include desktop {
     margin-right: $large-space;
@@ -307,13 +286,13 @@
 }
 
 .volume__icon {
-  height: 3rem;
-  width: 4rem;
-  fill: $black;
+  width: $player-volume-width;
+  height: $player-volume-height;
   margin-right: $small-space / 2;
+  fill: $black;
   @include desktop {
-    width: 5rem;
-    height: 4rem;
+    width: $player-volume-width-desktop;
+    height: $player-volume-height-desktop;
   }
 }
 
@@ -327,7 +306,6 @@
 
 .volume__range {
   width: 6rem;
-
   @include desktop {
     width: 8rem;
   }
@@ -336,43 +314,37 @@
 .player__up-next {
   margin: 0 $small-space;
   @include tablet {
-    margin-left: 0;
     margin-right: $space;
+    margin-left: 0;
   }
-
   @include desktop {
     margin-right: $large-space;
   }
 }
 
 .up-next__icon {
-  width: 2.5rem;
-  height: 3rem;
+  width: $player-upnext-width;
+  height: $player-upnext-height;
   fill: $black;
-
   @include laptop {
-    width: 3rem;
-    height: 3.5rem;
+    width: $player-upnext-width-laptop;
+    height: $player-upnext-height-laptop;
   }
-
   @include desktop {
-    width: 4rem;
-    height: 4.5rem;
+    width: $player-upnext-width-desktop;
+    height: $player-upnext-height-desktop;
   }
 }
 
 //https://css-tricks.com/html5-progress-element/
-
 progress[value] {
+  /* For IE10 */
+  color: $black;
+  border: 0.1rem solid $black;
+  background: $white;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-
-  border: 0.1rem solid $black;
-  background: $white;
-
-  /* For IE10 */
-  color: $black;
 }
 
 progress[value]::-webkit-progress-bar {

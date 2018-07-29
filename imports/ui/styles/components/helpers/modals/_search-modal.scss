@@ -5,7 +5,7 @@
 
   height: 35rem;
   width: 100%;
-  @include large-phone {
+  @include phone-large {
     right: 0;
     width: 42rem;
   }

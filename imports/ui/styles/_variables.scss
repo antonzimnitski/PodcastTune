@@ -15,7 +15,7 @@ $body-default-color: $black;
 $body-default-font-family: Helvetica, Arial, sans-serif;
 
 //Media breakpoints
-$breakpoint-large-phone: 425px;
+$breakpoint-phone-large: 425px;
 $breakpoint-tablet-small: 600px;
 $breakpoint-tablet: 768px;
 $breakpoint-laptop: 1024px;
@@ -73,8 +73,25 @@ $player-height: 9rem;
 $player-height-small: 6rem;
 $player-height-desktop: 12rem;
 $player-title-font-size: 1.6rem;
-$player-controls-icons-size: 4rem;
-$player-controls-icons-size-desktop: 7rem;
+$player-skip-size: 4rem;
+$player-skip-size-desktop: 6rem;
+$player-play-size: 5rem;
+$player-play-size-desktop: 8rem;
+$player-artwork-size: 7rem;
+$player-artwork-size-desktop: 9rem;
+$player-playback-size: 2rem;
+$player-playback-size-laptop: 2.5rem;
+$player-playback-size-desktop: 3rem;
+$player-volume-height: 3rem;
+$player-volume-width: 4rem;
+$player-volume-height-desktop: 4rem;
+$player-volume-width-desktop: 5rem;
+$player-upnext-height: 3rem;
+$player-upnext-width: 2.5rem;
+$player-upnext-height-laptop: 3.5rem;
+$player-upnext-width-laptop: 3rem;
+$player-upnext-height-desktop: 4.5rem;
+$player-upnext-width-desktop: 4rem;
 // Input range
 $track-color: #fff;
 $thumb-color: $white;
