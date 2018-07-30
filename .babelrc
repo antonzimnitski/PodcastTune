@@ -1,3 +1,8 @@
 {
-  "plugins": ["babel-plugin-inline-import"]
+  "plugins": ["babel-plugin-inline-import"],
+  "env": {
+    "test": {
+      "presets": ["env", "react"]
+    }
+  }
 }

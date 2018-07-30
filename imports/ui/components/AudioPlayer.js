@@ -8,7 +8,7 @@ import momentDurationFormatSetup from "moment-duration-format";
 import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
-import UpNextPopup from "./helpers/UpNextPopup";
+import UpnextPopup from "./helpers/UpnextPopup";
 import EpisodeModal from "./helpers/EpisodeModal";
 
 // Queries for logged user
@@ -57,7 +57,7 @@ class AudioPlayer extends Component {
     };
 
     this.handleEpisodeModal = this.handleEpisodeModal.bind(this);
-    this.handleUpNextPopup = this.handleUpNextPopup.bind(this);
+    this.handleUpnextPopup = this.handleUpnextPopup.bind(this);
   }
 
   _lastVolume = 0;
@@ -324,7 +324,7 @@ class AudioPlayer extends Component {
     this.onMute(!this.state.isMuted);
   }
 
-  handleUpNextPopup() {
+  handleUpnextPopup() {
     this.setState({ isPopupOpen: !this.state.isPopupOpen });
   }
 
@@ -469,16 +469,16 @@ class AudioPlayer extends Component {
           </div>
           <div
             className="player__up-next"
-            onClick={() => this.handleUpNextPopup()}
+            onClick={() => this.handleUpnextPopup()}
           >
             {upnextSvg}
           </div>
         </div>
 
         {isPopupOpen ? (
-          <UpNextPopup
+          <UpnextPopup
             isModalOpen={isPopupOpen}
-            handleUpNextPopup={this.handleUpNextPopup}
+            handleUpnextPopup={this.handleUpnextPopup}
             onQueueItemClick={this.onQueueItemClick}
           />
         ) : null}

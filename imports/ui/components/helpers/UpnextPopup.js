@@ -25,10 +25,10 @@ import getLocalPlayingEpisode from "./../../../localData/queries/getLocalPlaying
 import setLocalPlayingEpisode from "./../../../localData/mutations/setLocalPlayingEpisode";
 import removeFromLocalUpnext from "./../../../localData/mutations/removeFromLocalUpnext";
 
-const UpNextPopup = ({
+const UpnextPopup = ({
   loading,
   isModalOpen,
-  handleUpNextPopup,
+  handleUpnextPopup,
   upnext,
   localUpnext,
   isLoggedIn,
@@ -107,24 +107,24 @@ const UpNextPopup = ({
   return (
     <Modal
       isOpen={isModalOpen}
-      onRequestClose={() => handleUpNextPopup()}
+      onRequestClose={() => handleUpnextPopup()}
       ariaHideApp={false}
       className="up-next__popup"
       overlayClassName="up-next__popup-overlay"
     >
       <div className="modal__header">
         <h2 className="modal__title">Up Next</h2>
-        <div className="modal__close" onClick={() => handleUpNextPopup()} />
+        <div className="modal__close" onClick={() => handleUpnextPopup()} />
       </div>
       {loading ? <Loader /> : renderContent(upnext || localUpnext)}
     </Modal>
   );
 };
 
-UpNextPopup.propTypes = {
+UpnextPopup.propTypes = {
   loading: PropTypes.bool,
   isModalOpen: PropTypes.bool.isRequired,
-  handleUpNextPopup: PropTypes.func.isRequired,
+  handleUpnextPopup: PropTypes.func.isRequired,
   upnext: PropTypes.array,
   localUpnext: PropTypes.array,
   isLoggedIn: PropTypes.bool.isRequired,
@@ -157,5 +157,5 @@ export default withTracker(() => {
     graphql(removeFromUpnext, { name: "removeFromUpnext" }),
     graphql(setLocalPlayingEpisode, { name: "setLocalPlayingEpisode" }),
     graphql(removeFromLocalUpnext, { name: "removeFromLocalUpnext" })
-  )(withApollo(UpNextPopup))
+  )(withApollo(UpnextPopup))
 );
