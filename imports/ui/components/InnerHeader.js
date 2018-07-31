@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import SearchPopup from "./helpers/SearchPopup";
 
-const InnerHeader = ({ title, isSearchModelOpen }) => {
+export const InnerHeader = ({ title, isSearchModelOpen }) => {
   return (
     <div className="inner-header">
       {title ? <h1 className="inner-header__title">{title}</h1> : null}

@@ -1,4 +1,6 @@
 module.exports = {
+  setupFiles: ["raf/polyfill", "<rootDir>/tests/setupTests.js"],
+  snapshotSerializers: ["enzyme-to-json/serializer"],
   moduleFileExtensions: ["js", "jsx"],
   modulePaths: [
     "<rootDir>/node_modules/",

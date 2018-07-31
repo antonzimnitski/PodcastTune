@@ -1,5 +1,3 @@
-module.export = {
-  Meteor: {
-    userId: jest.fn()
-  }
+export const Meteor = {
+  userId: jest.fn()
 };
