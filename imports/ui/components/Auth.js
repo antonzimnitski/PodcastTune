@@ -11,7 +11,7 @@ import Signup from "./Signup";
 
 import getLoggedUser from "./../queries/getLoggedUser";
 
-class Auth extends Component {
+export class Auth extends Component {
   constructor(props) {
     super(props);
 
@@ -43,6 +43,7 @@ class Auth extends Component {
     return (
       <React.Fragment>
         <div
+          id="signin"
           className="sidebar__link"
           onClick={() =>
             this.setState(
@@ -59,6 +60,7 @@ class Auth extends Component {
           Sign In
         </div>
         <div
+          id="signup"
           className="sidebar__link"
           onClick={() =>
             this.setState(
@@ -91,9 +93,10 @@ class Auth extends Component {
             <React.Fragment>
               <div className="sidebar__link">{data.user.email}</div>
               <div
+                id="logout"
                 className="sidebar__link"
                 onClick={() => {
-                  Meteor.logout(() => {
+                  this.props.logout(() => {
                     client.resetStore();
                     Session.set("isPlayerOpen", false);
                     closeSidebar();
@@ -171,9 +174,10 @@ class Auth extends Component {
 
 Auth.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
-  client: PropTypes.object.isRequired
+  client: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
 };
 
 export default withTracker(() => {
-  return { isLoggedIn: !!Meteor.userId() };
+  return { logout: Meteor.logout, isLoggedIn: !!Meteor.userId() };
 })(withApollo(Auth));

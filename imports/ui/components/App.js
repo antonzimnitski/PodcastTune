@@ -20,7 +20,7 @@ import Footer from "./Footer";
 import getPlayingEpisode from "./../queries/getPlayingEpisode";
 import getLocalPlayingEpisode from "./../../localData/queries/getLocalPlayingEpisode";
 
-class App extends Component {
+export class App extends Component {
   componentDidMount() {
     // If episode in cache it will be available as props on mount
     this.setAudioPlayer();

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import logo from "./../utils/logo";
 import PropTypes from "prop-types";
 
-const Header = ({ handleNavToggle, isNavOpen }) => {
+export const Header = ({ handleNavToggle, isNavOpen }) => {
   return (
     <div className="top-header">
       <div className="top-header__nav-toogle" onClick={() => handleNavToggle()}>

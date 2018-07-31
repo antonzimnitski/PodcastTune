@@ -46,7 +46,10 @@
     "enzyme-to-json": "^3.3.4",
     "jest": "^23.4.2",
     "jest-meteor-stubs": "^1.5.1",
+    "jsdom": "11.12.0",
+    "jsdom-global": "3.0.2",
     "raf": "^3.4.0",
-    "react-test-renderer": "^16.4.1"
+    "react-test-renderer": "^16.4.1",
+    "waait": "^1.0.2"
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import PropTypes from "prop-types";
+import { withTracker } from "meteor/react-meteor-data";
 
 export class Login extends Component {
   constructor(props) {
@@ -24,12 +25,13 @@ export class Login extends Component {
     let email = this.email.current.value.trim();
     let password = this.password.current.value.trim();
 
-    Meteor.loginWithPassword({ email }, password, err => {
+    const { onClose, client, loginWithPassword } = this.props;
+
+    loginWithPassword({ email }, password, err => {
       const reason = err ? "Unable to login. Check email and password." : "";
       this.setState({ error: reason });
 
       if (!err) {
-        const { onClose, client } = this.props;
         onClose();
         client.resetStore();
       }
@@ -82,8 +84,18 @@ export class Login extends Component {
 }
 
 Login.propTypes = {
+  onSwap: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  client: PropTypes.object.isRequired
+  client: PropTypes.object.isRequired,
+  loginWithPassword: PropTypes.func.isRequired
 };
 
-export default Login;
+Login.defaultProps = {
+  loginWithPassword: () => {}
+};
+
+export default withTracker(() => {
+  return {
+    loginWithPassword: Meteor.loginWithPassword
+  };
+})(Login);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Accounts } from "meteor/accounts-base";
 import PropTypes from "prop-types";
+import { withTracker } from "meteor/react-meteor-data";
 
 export class Signup extends Component {
   constructor(props) {
@@ -29,8 +30,9 @@ export class Signup extends Component {
       });
     }
 
-    Accounts.createUser({ email, password }, err => {
-      const { onClose, client } = this.props;
+    const { onClose, client, createUser } = this.props;
+
+    createUser({ email, password }, err => {
       if (err) {
         this.setState({ error: err.reason });
       } else {
@@ -88,7 +90,14 @@ export class Signup extends Component {
 
 Signup.propTypes = {
   onClose: PropTypes.func.isRequired,
-  client: PropTypes.object.isRequired
+  client: PropTypes.object.isRequired,
+  createUser: PropTypes.func.isRequired
 };
 
-export default Signup;
+Signup.defaultProps = {
+  createUser: () => {}
+};
+
+export default withTracker(() => {
+  return { createUser: Accounts.createUser };
+})(Signup);
