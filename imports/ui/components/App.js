@@ -48,32 +48,12 @@ export class App extends Component {
           <div className="page-content__main">
             <div className="main">
               <Switch>
-                <Route
-                  path="/"
-                  exact
-                  component={() => <Podcasts title="Podcasts" />}
-                />
-                <Route
-                  path="/in-progress"
-                  exact
-                  component={() => <InProgress title="In Progress" />}
-                />
-                <Route
-                  path="/favorites"
-                  exact
-                  component={() => <Favorites title="Favorites" />}
-                />
-                <Route
-                  path="/new-releases"
-                  exact
-                  component={() => <NewReleases title="New Releases" />}
-                />
+                <Route path="/" exact component={Podcasts} />
+                <Route path="/in-progress" exact component={InProgress} />
+                <Route path="/favorites" exact component={Favorites} />
+                <Route path="/new-releases" exact component={NewReleases} />
                 <Route path="/podcasts/:podcastId" component={PodcastPage} />
-                <Route
-                  path="/discover"
-                  exact
-                  component={() => <Discover title="Discover" />}
-                />
+                <Route path="/discover" exact component={Discover} />
                 <Route path="/discover/:genreId" component={DiscoverByGenre} />
                 <Redirect to="/" />
               </Switch>
@@ -98,6 +78,15 @@ App.propTypes = {
   handlePlayer: PropTypes.func.isRequired,
   playingEpisode: PropTypes.object,
   localPlayingEpisode: PropTypes.object
+};
+
+App.defaultProps = {
+  isLoggedIn: false,
+  isPlayerOpen: false,
+  handleNavToggle: () => {},
+  handlePlayer: () => {},
+  playingEpisode: {},
+  localPlayingEpisode: {}
 };
 
 export default withTracker(() => {

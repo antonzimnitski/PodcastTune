@@ -1,5 +1,9 @@
 module.exports = {
   coverageDirectory: "<rootDir>/imports/tests/coverage/",
+  collectCoverageFrom: [
+    "**/ui/components/**/*.{js,jsx}",
+    "!**/node_modules/**"
+  ],
   setupFiles: ["raf/polyfill", "<rootDir>/imports/tests/setupTests.js"],
   snapshotSerializers: ["enzyme-to-json/serializer"],
   moduleFileExtensions: ["js", "jsx"],

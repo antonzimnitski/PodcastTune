@@ -23,6 +23,11 @@ Header.propTypes = {
   isNavOpen: PropTypes.bool.isRequired
 };
 
+Header.defaultProps = {
+  handleNavToggle: () => {},
+  isNavOpen: false
+};
+
 export default withTracker(() => {
   return {
     handleNavToggle: () => Session.set("isNavOpen", !Session.get("isNavOpen")),

@@ -12,7 +12,13 @@ import getPodcast from "./../queries/getPodcast";
 import getFeed from "./../queries/getFeed";
 
 class PodcastPage extends Component {
-  _limit = 100;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      limit: 100
+    };
+  }
 
   // To prevent refetching episodes when parent component updates
   shouldComponentUpdate(nextProps) {
@@ -29,7 +35,7 @@ class PodcastPage extends Component {
         query={getFeed}
         variables={{
           podcastId,
-          limit: this._limit
+          limit: this.state.limit
         }}
       >
         {({ loading, error, data, refetch, fetchMore }) => {
@@ -49,22 +55,23 @@ class PodcastPage extends Component {
             <React.Fragment>
               <Feed feed={feed} />
 
-              {feed.length >= this._limit ? (
+              {feed.length >= this.state.limit ? (
                 <button
                   className="button button--load"
                   onClick={() => {
-                    this._limit = feed.length + 100;
-                    //https://www.apollographql.com/docs/react/features/pagination.html#numbered-pages
-                    fetchMore({
-                      variables: {
-                        limit: this._limit
-                      },
-                      updateQuery: (prev, { fetchMoreResult }) => {
-                        if (!fetchMoreResult) return prev;
-                        return Object.assign({}, prev, {
-                          feed: fetchMoreResult.feed
-                        });
-                      }
+                    this.setState({ limit: feed.length + 100 }, () => {
+                      //https://www.apollographql.com/docs/react/features/pagination.html#numbered-pages
+                      fetchMore({
+                        variables: {
+                          limit: this.state.limit
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          if (!fetchMoreResult) return prev;
+                          return Object.assign({}, prev, {
+                            feed: fetchMoreResult.feed
+                          });
+                        }
+                      });
                     });
                   }}
                 >
@@ -89,7 +96,6 @@ class PodcastPage extends Component {
         {({ loading, error, data }) => {
           if (loading) return <Loader />;
           if (error || !data.podcast) {
-            console.error(error);
             return <div>Sorry! There was an error loading your podcast.</div>;
           }
           const {

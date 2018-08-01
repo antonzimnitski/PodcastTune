@@ -33,7 +33,7 @@ import isPLaying from "./../../localData/queries/isPlaying";
 import play from "./../../localData/mutations/play";
 import pause from "./../../localData/mutations/pause";
 
-class AudioPlayer extends Component {
+export class AudioPlayer extends Component {
   constructor(props) {
     super(props);
 
@@ -111,7 +111,7 @@ class AudioPlayer extends Component {
     }
   }
 
-  getSeconds = () => {
+  getSeconds() {
     const { episode, isReady, isPlaying } = this.state;
     if (episode && this.player.current && isReady && isPlaying) {
       this.setState({
@@ -120,10 +120,12 @@ class AudioPlayer extends Component {
         })
       });
     }
-    this.getSecondsTimeout = setTimeout(this.getSeconds, 500);
-  };
 
-  updatePlayedSeconds = () => {
+    const that = this;
+    this.getSecondsTimeout = setTimeout(() => that.getSeconds(), 500);
+  }
+
+  updatePlayedSeconds() {
     const { episode, isReady, isPlaying } = this.state;
     const {
       isLoggedIn,
@@ -143,11 +145,12 @@ class AudioPlayer extends Component {
           );
     }
 
+    const that = this;
     this.updatePlayedSecondsTimeout = setTimeout(
-      this.updatePlayedSeconds,
+      () => that.updatePlayedSeconds(),
       3000
     );
-  };
+  }
 
   clearEpisode() {
     if (!this.state.episode) return;
@@ -272,6 +275,9 @@ class AudioPlayer extends Component {
       },
       () => {
         this.player.current.currentTime = this.state.episode.playedSeconds;
+
+        clearTimeout(this.updatePlayedSecondsTimeout);
+        this.updatePlayedSeconds();
       }
     );
   }

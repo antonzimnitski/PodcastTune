@@ -38,7 +38,7 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
           } = data.episode;
 
           return (
-            <>
+            <React.Fragment>
               <div className="modal__header">
                 <h2 className="modal__title">{title}</h2>
                 <div
@@ -69,7 +69,7 @@ const EpisodeModal = ({ isModalOpen, handleEpisodeModal, podcastId, id }) => {
                   }}
                 />
               </div>
-            </>
+            </React.Fragment>
           );
         }}
       </Query>
