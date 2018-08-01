@@ -51,7 +51,7 @@ export default (resolvers = {
 
       setLocalInProgress(cache, data);
 
-      return null;
+      return { __typename: "Episode", id, playedSeconds };
     },
     async setLocalPlayingEpisode(_, { id, podcastId }, { cache }) {
       let episodeData;

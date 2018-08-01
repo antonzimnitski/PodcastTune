@@ -10,6 +10,10 @@ export default gql`
       id: $id
       podcastId: $podcastId
       playedSeconds: $playedSeconds
-    )
+    ) {
+      id
+      podcastId
+      playedSeconds
+    }
   }
 `;

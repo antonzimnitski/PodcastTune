@@ -1,7 +1,7 @@
 type UserData {
   _id: String!
   podcasts: [Podcast]
-  playingEpisode: Episode @cacheControl(maxAge: 0)
+  playingEpisode: Episode
   newReleases: [Episode]
   inProgress: [Episode]
   upnext: [Episode]
@@ -44,5 +44,5 @@ type Mutation {
     id: String!
     podcastId: Int!
     playedSeconds: Float!
-  ): Float
+  ): Episode
 }

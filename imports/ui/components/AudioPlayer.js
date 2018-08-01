@@ -47,6 +47,7 @@ class AudioPlayer extends Component {
       isLoading: true,
       isMuted: false,
       volume: 1,
+      lastVolume: 0,
       duration: 0,
       playbackRate: 1,
       minPlaybackRate: 0.5,
@@ -60,11 +61,10 @@ class AudioPlayer extends Component {
     this.handleUpnextPopup = this.handleUpnextPopup.bind(this);
   }
 
-  _lastVolume = 0;
-
   componentDidMount() {
     const playingEpisode =
       this.props.playingEpisode || this.props.localPlayingEpisode;
+
     this.setState({ mounted: true });
     if (playingEpisode) {
       this.setState({ episode: playingEpisode });
@@ -135,10 +135,12 @@ class AudioPlayer extends Component {
       isLoggedIn
         ? updatePlayedSeconds({
             variables: { id, podcastId, playedSeconds }
-          })
+          }).catch(err => console.log("Error in updatePlayedSeconds", err))
         : updateLocalPlayedSeconds({
             variables: { id, playedSeconds }
-          });
+          }).catch(err =>
+            console.log("Error in updateLocalPlayedSeconds", err)
+          );
     }
 
     this.updatePlayedSecondsTimeout = setTimeout(
@@ -279,7 +281,8 @@ class AudioPlayer extends Component {
     if (isMuted !== this.state.isMuted) {
       this.onMute(isMuted);
     } else {
-      this._lastVolume = volume !== 0 ? volume : this._lastVolume;
+      const newLastVolume = volume !== 0 ? volume : this.state.lastVolume;
+      this.setState({ lastVolume: newLastVolume });
     }
     this.setState({ volume }, () => {
       this.player.current.volume = this.state.volume;
@@ -288,12 +291,11 @@ class AudioPlayer extends Component {
 
   onMute(isMuted) {
     if (isMuted) {
-      this._lastVolume = this.state.volume;
-      this.setState({ isMuted: true }, () => {
+      this.setState({ isMuted: true, lastVolume: this.state.volume }, () => {
         this.setVolume(0);
       });
     } else {
-      const volume = this._lastVolume > 0 ? this._lastVolume : 0.1;
+      const volume = this.state.lastVolume > 0 ? this.state.lastVolume : 0.1;
       this.setState({ isMuted: false }, () => {
         this.setVolume(volume);
       });

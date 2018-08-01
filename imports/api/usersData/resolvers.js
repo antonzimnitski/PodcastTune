@@ -157,7 +157,7 @@ export default {
         { _id },
         { $push: { inProgress: { id, podcastId, playedSeconds } } }
       );
-      return playedSeconds;
+      return { id, podcastId, playedSeconds };
     },
     addToUpnext(_, { id, podcastId }, { user }) {
       if (!user) return null;

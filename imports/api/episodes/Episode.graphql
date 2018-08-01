@@ -10,7 +10,7 @@ type Episode {
   pubDate: String
   pubDateUnix: Float
   linkToEpisode: String
-  playedSeconds: Float
+  playedSeconds: Float @cacheControl(maxAge: 0)
   inFavorites: Boolean @cacheControl(maxAge: 0)
   inUpnext: Boolean @cacheControl(maxAge: 0)
   isPlayed: Boolean @cacheControl(maxAge: 0)
