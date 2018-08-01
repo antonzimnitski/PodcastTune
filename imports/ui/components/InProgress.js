@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
-import { Query } from "react-apollo";
+import { graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
 import InnerHeader from "./InnerHeader";
@@ -10,13 +10,13 @@ import Loader from "./helpers/Loader";
 
 import getInProgress from "./../queries/getInProgress";
 
-const InProgress = ({ title, isLoggedIn }) => {
+export const InProgress = props => {
   return (
     <React.Fragment>
-      <InnerHeader title={title} />
+      <InnerHeader title="In Progress" />
       <div className="in-progress">
-        {isLoggedIn ? (
-          renderInProgress()
+        {props.isLoggedIn ? (
+          renderInProgress(props)
         ) : (
           <div className="in-progress__content">
             <h2>To see your in progress episodes Login or Signup.</h2>
@@ -26,41 +26,60 @@ const InProgress = ({ title, isLoggedIn }) => {
     </React.Fragment>
   );
 };
-function renderInProgress() {
-  return (
-    <Query query={getInProgress} pollInterval={30000}>
-      {({ loading, error, data }) => {
-        if (loading) return <Loader />;
-        if (error) {
-          return (
-            <div>Sorry! There was an error loading In Progress episodes.</div>
-          );
-        }
 
-        if (!data || !data.inProgress || !data.inProgress.length) {
-          return (
-            <div className="in-progress__content">
-              <h2>No episodes in progress.</h2>
-              <div>
-                Press play on <Link to="/discover">something new</Link>. You
-                know you want to.
-              </div>
-            </div>
-          );
-        }
-        const filterFeed = data.inProgress.filter(episode => !episode.isPlayed);
+function renderInProgress(props) {
+  const { loading, error, inProgress } = props;
 
-        return <Feed feed={filterFeed} />;
-      }}
-    </Query>
-  );
+  if (loading) return <Loader />;
+  if (error) {
+    return (
+      <div className="error__message">
+        Sorry! There was an error loading In Progress episodes.
+      </div>
+    );
+  }
+
+  if (!inProgress || !inProgress.length) {
+    return (
+      <div className="in-progress__content">
+        <h2>No episodes in progress.</h2>
+        <div>
+          Press play on <Link to="/discover">something new</Link>. You know you
+          want to.
+        </div>
+      </div>
+    );
+  }
+
+  const filterFeed = inProgress.filter(episode => !episode.isPlayed);
+
+  return <Feed feed={filterFeed} />;
 }
 
 InProgress.propTypes = {
-  title: PropTypes.string.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
+  error: PropTypes.object,
+  inProgress: PropTypes.array
+};
+
+InProgress.defaultProps = {
+  isLoggedIn: false,
+  loading: false,
+  error: undefined,
+  inProgress: []
 };
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
-})(InProgress);
+})(
+  graphql(getInProgress, {
+    skip: props => !props.isLoggedIn,
+    pollInterval: 30000,
+    props: ({ data: { loading, error, inProgress } }) => ({
+      loading,
+      error,
+      inProgress
+    })
+  })(InProgress)
+);

@@ -42,6 +42,10 @@ InnerHeader.propTypes = {
   isSearchModelOpen: PropTypes.bool.isRequired
 };
 
+InnerHeader.defaultProps = {
+  isSearchModelOpen: false
+};
+
 export default withTracker(() => {
   return {
     isSearchModelOpen: Session.get("isSearchModelOpen")

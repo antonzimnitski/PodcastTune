@@ -41,7 +41,11 @@ class PodcastPage extends Component {
         {({ loading, error, data, refetch, fetchMore }) => {
           if (loading) return <Loader />;
           if (error) {
-            return <div>Sorry! There was an error loading feed.</div>;
+            return (
+              <div className="error__message">
+                Sorry! There was an error loading feed.
+              </div>
+            );
           }
 
           const { feed, podcast } = data;

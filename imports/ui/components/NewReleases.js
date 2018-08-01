@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
-import { Query } from "react-apollo";
+import { graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
 import InnerHeader from "./InnerHeader";
@@ -10,13 +10,13 @@ import Feed from "./Feed";
 
 import getNewReleases from "./../queries/getNewReleases";
 
-const NewReleases = ({ title, isLoggedIn }) => {
+export const NewReleases = props => {
   return (
     <React.Fragment>
-      <InnerHeader title={title} />
+      <InnerHeader title="New Releases" />
       <div className="new-releases">
-        {isLoggedIn ? (
-          renderNewReleases()
+        {props.isLoggedIn ? (
+          renderNewReleases(props)
         ) : (
           <div className="new-releases__content">
             <h2>
@@ -29,40 +29,59 @@ const NewReleases = ({ title, isLoggedIn }) => {
   );
 };
 
-function renderNewReleases() {
-  return (
-    <Query query={getNewReleases} pollInterval={10000}>
-      {({ loading, error, data }) => {
-        if (loading) return <Loader />;
-        if (error) {
-          return <div>Sorry! There was an error loading New Releases.</div>;
-        }
+function renderNewReleases(props) {
+  const { loading, error, newReleases } = props;
 
-        if (!data || !data.newReleases || !data.newReleases.length) {
-          return (
-            <div className="new-releases__content">
-              <h2>All caught up!.</h2>
-              <div>
-                It's time to subscribe to some{" "}
-                <Link to="/discover">more podcasts</Link>.
-              </div>
-            </div>
-          );
-        }
+  if (loading) return <Loader />;
+  if (error) {
+    return (
+      <div className="error__message">
+        Sorry! There was an error loading New Releases.
+      </div>
+    );
+  }
 
-        const feed = data.newReleases.filter(el => !el.isPlayed);
+  if (!newReleases || !newReleases.length) {
+    return (
+      <div className="new-releases__content">
+        <h2>All caught up!.</h2>
+        <div>
+          It's time to subscribe to some{" "}
+          <Link to="/discover">more podcasts</Link>.
+        </div>
+      </div>
+    );
+  }
 
-        return <Feed feed={feed} />;
-      }}
-    </Query>
-  );
+  const feed = newReleases.filter(el => !el.isPlayed);
+
+  return <Feed feed={feed} />;
 }
 
 NewReleases.propTypes = {
-  title: PropTypes.string.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
+  error: PropTypes.object,
+  inProgress: PropTypes.array
+};
+
+NewReleases.defaultProps = {
+  isLoggedIn: false,
+  loading: false,
+  error: undefined,
+  inProgress: []
 };
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
-})(NewReleases);
+})(
+  graphql(getNewReleases, {
+    skip: props => !props.isLoggedIn,
+    pollInterval: 30000,
+    props: ({ data: { loading, error, newReleases } }) => ({
+      loading,
+      error,
+      newReleases
+    })
+  })(NewReleases)
+);

@@ -85,8 +85,8 @@ App.defaultProps = {
   isPlayerOpen: false,
   handleNavToggle: () => {},
   handlePlayer: () => {},
-  playingEpisode: {},
-  localPlayingEpisode: {}
+  playingEpisode: null,
+  localPlayingEpisode: null
 };
 
 export default withTracker(() => {

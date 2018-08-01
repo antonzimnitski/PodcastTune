@@ -1,6 +1,6 @@
 import React from "react";
 import { withTracker } from "meteor/react-meteor-data";
-import { Query } from "react-apollo";
+import { graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
 import InnerHeader from "./InnerHeader";
@@ -9,13 +9,13 @@ import Loader from "./helpers/Loader";
 
 import getFavorites from "./../queries/getFavorites";
 
-const Favorites = ({ title, isLoggedIn }) => {
+export const Favorites = props => {
   return (
     <React.Fragment>
-      <InnerHeader title={title} />
+      <InnerHeader title="Favorites" />
       <div className="favorites">
-        {isLoggedIn ? (
-          renderFavorites()
+        {props.isLoggedIn ? (
+          renderFavorites(props)
         ) : (
           <div className="favorites__content">
             <h2>To see your in favorite episodes Login or Signup.</h2>
@@ -26,39 +26,54 @@ const Favorites = ({ title, isLoggedIn }) => {
   );
 };
 
-function renderFavorites() {
-  return (
-    <Query query={getFavorites} pollInterval={30000}>
-      {({ loading, error, data }) => {
-        if (loading) return <Loader />;
-        if (error) {
-          return (
-            <div>
-              Sorry! There was an error loading your favourite episodes.
-            </div>
-          );
-        }
+function renderFavorites(props) {
+  const { loading, error, favorites } = props;
 
-        if (!data || !data.favorites || !data.favorites.length) {
-          return (
-            <div className="favorites__content">
-              <h2>No favorites episodes available.</h2>
-              <div>It's time to find some new favourites.</div>
-            </div>
-          );
-        }
+  if (loading) return <Loader />;
+  if (error) {
+    return (
+      <div className="error__message">
+        Sorry! There was an error loading your favourite episodes.
+      </div>
+    );
+  }
 
-        return <Feed feed={data.favorites} />;
-      }}
-    </Query>
-  );
+  if (!favorites || !favorites.length) {
+    return (
+      <div className="favorites__content">
+        <h2>No favorites episodes available.</h2>
+        <div>It's time to find some new favourites.</div>
+      </div>
+    );
+  }
+
+  return <Feed feed={favorites} />;
 }
 
 Favorites.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired
+  loading: PropTypes.bool,
+  error: PropTypes.object,
+  favorites: PropTypes.array
+};
+
+Favorites.defaultProps = {
+  isLoggedIn: false,
+  loading: false,
+  error: undefined,
+  favorites: []
 };
 
 export default withTracker(() => {
   return { isLoggedIn: !!Meteor.userId() };
-})(Favorites);
+})(
+  graphql(getFavorites, {
+    skip: props => !props.isLoggedIn,
+    pollInterval: 30000,
+    props: ({ data: { loading, error, favorites } }) => ({
+      loading,
+      error,
+      favorites
+    })
+  })(Favorites)
+);

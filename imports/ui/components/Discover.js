@@ -8,7 +8,7 @@ import Loader from "./helpers/Loader";
 
 import fetchGenres from "./../queries/fetchGenres";
 
-export const Discover = ({ title, loading, error, genres }) => {
+export const Discover = ({ loading, error, genres }) => {
   if (error) {
     return (
       <div className="error__message">
