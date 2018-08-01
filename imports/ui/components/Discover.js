@@ -8,14 +8,18 @@ import Loader from "./helpers/Loader";
 
 import fetchGenres from "./../queries/fetchGenres";
 
-const Discover = ({ title, loading, error, genres }) => {
+export const Discover = ({ title, loading, error, genres }) => {
   if (error) {
-    return <div>Sorry! There was an error loading genres.</div>;
+    return (
+      <div className="error__message">
+        Sorry! There was an error loading genres.
+      </div>
+    );
   }
 
   return (
     <React.Fragment>
-      <InnerHeader title={title} />
+      <InnerHeader title="Discover" />
       {loading ? <Loader /> : renderGenres(genres)}
     </React.Fragment>
   );

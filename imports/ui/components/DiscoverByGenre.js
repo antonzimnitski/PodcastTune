@@ -8,7 +8,7 @@ import Loader from "./helpers/Loader";
 
 import fetchPodcastsPreviews from "./../queries/fetchPodcastsPreviews";
 
-class DiscoverByGenre extends Component {
+export class DiscoverByGenre extends Component {
   constructor(props) {
     super(props);
 
@@ -69,7 +69,11 @@ class DiscoverByGenre extends Component {
     if (loading) return <Loader />;
 
     if (error) {
-      return <div>Sorry! There was an error loading podcast previews.</div>;
+      return (
+        <div className="error__message">
+          Sorry! There was an error loading podcast previews.
+        </div>
+      );
     }
 
     return (
