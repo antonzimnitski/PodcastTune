@@ -79,4 +79,8 @@ SearchPopup.propTypes = {
   isSearchModelOpen: PropTypes.bool.isRequired
 };
 
+SearchPopup.defaultProps = {
+  isSearchModelOpen: true
+};
+
 export default SearchPopup;
