@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { isEmpty } from "lodash";
 
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
@@ -27,6 +28,10 @@ const Episode = ({
     duration
   } = episode;
 
+  if (isEmpty(episode)) {
+    return null;
+  }
+
   return (
     <div className={className}>
       {podcastArtworkUrl ? (
@@ -49,7 +54,10 @@ const Episode = ({
             >
               {title}
             </p>
-            <div onClick={() => handleFavorites(id, podcastId, inFavorites)}>
+            <div
+              id="star__icon"
+              onClick={() => handleFavorites(id, podcastId, inFavorites)}
+            >
               {starSvg}
             </div>
           </div>
@@ -68,13 +76,21 @@ const Episode = ({
         <p>{formatDuration(duration)}</p>
       </div>
       <div className="episode__controls">
-        <div onClick={() => handleStatus(id, podcastId, isPlayed)}>
+        <div
+          id="controls__status-icon"
+          onClick={() => handleStatus(id, podcastId, isPlayed)}
+        >
           {statusSvg}
         </div>
-        <div onClick={() => handleUpnext(id, podcastId, inUpnext)}>
+        <div
+          id="controls__up-next"
+          onClick={() => handleUpnext(id, podcastId, inUpnext)}
+        >
           {upnextSvg}
         </div>
-        <div onClick={() => handleClick(id, podcastId)}>{playSvg}</div>
+        <div id="controls__play" onClick={() => handleClick(id, podcastId)}>
+          {playSvg}
+        </div>
       </div>
     </div>
   );
@@ -102,6 +118,16 @@ Episode.propTypes = {
   handleStatus: PropTypes.func.isRequired,
   handleUpnext: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired
+};
+
+Episode.defaultProps = {
+  episode: null,
+  className: "episode",
+  handleEpisodeModal: () => {},
+  handleFavorites: () => {},
+  handleStatus: () => {},
+  handleUpnext: () => {},
+  handleClick: () => {}
 };
 
 export default Episode;

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const LoginWarningModal = ({ isModalOpen, closeWarningModal }) => {
   setTimeout(closeWarningModal, 3000);
+
   return (
     <Modal
       isOpen={isModalOpen}
@@ -23,6 +24,11 @@ const LoginWarningModal = ({ isModalOpen, closeWarningModal }) => {
 LoginWarningModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   closeWarningModal: PropTypes.func.isRequired
+};
+
+LoginWarningModal.defaultProps = {
+  isModalOpen: true,
+  closeWarningModal: () => {}
 };
 
 export default LoginWarningModal;

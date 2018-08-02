@@ -18,7 +18,11 @@ const UnsubscribeModal = ({
     >
       <h2 className="unsubscribe-modal__header">Are you sure?</h2>
       <div className="unsubscribe-modal__controls">
-        <button onClick={() => closeUnsubscribeModal()} className="button">
+        <button
+          onClick={() => closeUnsubscribeModal()}
+          id="cancel"
+          className="button"
+        >
           Cancel
         </button>
 
@@ -27,6 +31,7 @@ const UnsubscribeModal = ({
             unsubscribe(podcastId);
             closeUnsubscribeModal();
           }}
+          id="unsubscribe"
           className="button button--danger"
         >
           Unsubscribe
@@ -41,6 +46,13 @@ UnsubscribeModal.propTypes = {
   closeUnsubscribeModal: PropTypes.func.isRequired,
   unsubscribe: PropTypes.func.isRequired,
   podcastId: PropTypes.number.isRequired
+};
+
+UnsubscribeModal.defaultProps = {
+  isModalOpen: true,
+  closeUnsubscribeModal: () => {},
+  unsubscribe: () => {},
+  podcastId: 1
 };
 
 export default UnsubscribeModal;

@@ -1,7 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { isEmpty } from "lodash";
 
 const ModalItem = ({ item, playIcon = false }) => {
+  if (isEmpty(item)) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <div

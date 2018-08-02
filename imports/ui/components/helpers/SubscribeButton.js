@@ -13,7 +13,7 @@ import getSubscribedPodcasts from "./../../queries/getSubscribedPodcasts";
 import subscribeToPodcast from "./../../mutations/subscribeToPodcast";
 import unsubscribeFromPodcast from "./../../mutations/unsubscribeFromPodcast";
 
-class SubscribeButton extends Component {
+export class SubscribeButton extends Component {
   constructor(props) {
     super(props);
 
@@ -44,16 +44,17 @@ class SubscribeButton extends Component {
   }
 
   handleSubscibe(subscribed) {
+    this.props.isLoggedIn
+      ? this.loggedHandleSubscibe(subscribed)
+      : this.openWarningModal();
+  }
+
+  loggedHandleSubscibe(subscribed) {
     subscribed ? this.openUnsubscribeModal() : this.subscribe();
   }
 
   subscribe() {
-    const { podcastId, subscribe, isLoggedIn, client } = this.props;
-
-    if (!isLoggedIn) {
-      this.openWarningModal();
-      return;
-    }
+    const { podcastId, subscribe, client } = this.props;
 
     subscribe({
       variables: { podcastId },
@@ -121,9 +122,18 @@ class SubscribeButton extends Component {
 
 SubscribeButton.propTypes = {
   podcastId: PropTypes.number.isRequired,
+  subscribed: PropTypes.bool.isRequired,
   subscribe: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   client: PropTypes.object.isRequired
+};
+
+SubscribeButton.defaultProps = {
+  podcastId: 928159684,
+  subscribed: false,
+  subscribe: () => {},
+  isLoggedIn: false,
+  client: {}
 };
 
 export default withTracker(() => {
