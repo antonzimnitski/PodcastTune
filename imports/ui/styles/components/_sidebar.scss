@@ -33,6 +33,8 @@
     font-size: $sidebar-font-size * 1.3;
     line-height: $sidebar-font-size * 1.3;
   }
+
+  @include text-overflow;
 }
 
 .sidebar__link--selected,
