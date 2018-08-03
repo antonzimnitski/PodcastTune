@@ -178,6 +178,12 @@ Auth.propTypes = {
   logout: PropTypes.func.isRequired
 };
 
+Auth.defaultProps = {
+  isLoggedIn: false,
+  client: {},
+  logout: () => {}
+};
+
 export default withTracker(() => {
   return { logout: Meteor.logout, isLoggedIn: !!Meteor.userId() };
 })(withApollo(Auth));

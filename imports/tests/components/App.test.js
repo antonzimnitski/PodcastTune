@@ -20,6 +20,7 @@ test("should render AudioPlayer component if isPlayerOpen if true", () => {
 test("should call handleNavToggle() on .top-header__overlay click", () => {
   const handleNavToggle = jest.fn();
   const wrapper = shallow(<App handleNavToggle={handleNavToggle} />);
+  expect(handleNavToggle).not.toHaveBeenCalled();
 
   wrapper.find(".top-header__overlay").simulate("click");
 

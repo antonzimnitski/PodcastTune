@@ -41,7 +41,7 @@ import isPLaying from "./../../localData/queries/isPlaying";
 import play from "./../../localData/mutations/play";
 import pause from "./../../localData/mutations/pause";
 
-class Feed extends Component {
+export class Feed extends Component {
   constructor(props) {
     super(props);
 
@@ -282,7 +282,7 @@ class Feed extends Component {
 
   renderFeed() {
     const { feed, isPlaying } = this.props;
-    if (feed.length === 0) return <div>There is no episodes.</div>;
+    if (!feed || !feed.length) return <div>There is no episodes.</div>;
     return (
       <div className="feed">
         <div className="feed__header">
@@ -350,6 +350,7 @@ class Feed extends Component {
 
 Feed.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
+  feed: PropTypes.array,
   playingEpisode: PropTypes.object,
   localPlayingEpisode: PropTypes.object,
   isPlaying: PropTypes.bool.isRequired,
@@ -370,6 +371,31 @@ Feed.propTypes = {
   clearPlayingEpisode: PropTypes.func.isRequired,
   clearLocalPlayingEpisode: PropTypes.func.isRequired,
   client: PropTypes.object.isRequired
+};
+
+Feed.defaultProps = {
+  isLoggedIn: false,
+  feed: null,
+  playingEpisode: null,
+  localPlayingEpisode: null,
+  isPlaying: false,
+  setPlayingEpisode: () => {},
+  addToUpnext: () => {},
+  removeFromUpnext: () => {},
+  addToFavorites: () => {},
+  removeFromFavorites: () => {},
+  markAsPlayed: () => {},
+  markAsUnplayed: () => {},
+  markLocalAsPlayed: () => {},
+  markLocalAsUnplayed: () => {},
+  addToLocalUpnext: () => {},
+  removeFromLocalUpnext: () => {},
+  setLocalPlayingEpisode: () => {},
+  play: () => {},
+  pause: () => {},
+  clearPlayingEpisode: () => {},
+  clearLocalPlayingEpisode: () => {},
+  client: {}
 };
 
 export default withTracker(() => {
